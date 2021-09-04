@@ -1,4 +1,4 @@
-import 'package:elis_analytics_dashboard/model/data/room_data.dart';
+import 'package:elis_analytics_dashboard/model/data/room.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 
 class SensorData implements Comparable<SensorData> {
