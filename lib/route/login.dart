@@ -16,18 +16,40 @@ class RouteLogin extends StatelessWidget {
         key: formKey,
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(
-              child: TextFormField(
-                controller: emailController,
-                validator: (value) => (value ?? '').contains('@') && (value ?? '').contains('.')
-                  ? null : 'Non è un indirizzo email',
+            SliverPadding(
+              padding: EdgeInsets.only(
+                left: 8.0,
+                right: 8.0,
+                top: 12.0,
+              ),
+              sliver: SliverToBoxAdapter(
+                child: TextFormField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Email',
+                  ),
+                  validator: (value) => (value ?? '').contains('@') && (value ?? '').contains('.')
+                    ? null : 'Non è un indirizzo email',
+                ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: TextFormField(
-                controller: passwordController,
-                validator: (value) => (value ?? '').length > 0
-                  ? null : 'La password non può essere vuota',
+            SliverPadding(
+              padding: EdgeInsets.only(
+                left: 8.0,
+                right: 8.0,
+                top: 12.0,
+              ),
+              sliver: SliverToBoxAdapter(
+                child: TextFormField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  ),
+                  validator: (value) => (value ?? '').length > 0
+                    ? null : 'La password non può essere vuota',
+                ),
               ),
             ),
             SliverToBoxAdapter(

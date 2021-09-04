@@ -14,8 +14,7 @@ class ResponsiveLayout extends StatefulWidget {
 
 }
 
-class _ResponsiveLayoutState extends State<ResponsiveLayout>
-  with WidgetsBindingObserver {
+class _ResponsiveLayoutState extends State<ResponsiveLayout> with WidgetsBindingObserver {
 
   bool _isTabletMode = false;
 
