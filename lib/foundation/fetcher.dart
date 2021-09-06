@@ -35,17 +35,15 @@ class Fetcher extends BaseClient {
   Session? _session;
 
   @override
-  Future<Response> get(Uri url, {Map<String, String>? headers}) {
+  Future<Response> get(dynamic url, {Map<String, String>? headers}) {
     // Resolve the uri
-    Uri completeUrl = _baseUrl.resolveUri(url);
-    // Check if blacklisted on in _futureCache
+    Uri completeUrl = _baseUrl.resolve(url);
+    // Check if blacklisted
     if (_cacheBlacklist.contains(completeUrl)) {
       return super.get(completeUrl, headers: headers);
-    } else if (!_futureCache.containsKey(completeUrl)) {
-      _futureCache[completeUrl] = super.get(completeUrl, headers: headers);
+    } else {
+      return _futureCache.putIfAbsent(completeUrl, () => super.get(completeUrl, headers: headers));
     }
-    // Return from the cache
-    return _futureCache[completeUrl]!;
   }
 
   @override

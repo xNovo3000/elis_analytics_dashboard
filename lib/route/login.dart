@@ -111,8 +111,6 @@ class _LoginButtonState extends State<_LoginButton> {
 
   Future<void> _onLoginPressed() async {
     setState(() => _isLoggingIn = true);
-    // TEST: state testing
-    await Future.delayed(const Duration(seconds: 2));
     // TODO: login logic here
     setState(() => _isLoggingIn = false);
   }
