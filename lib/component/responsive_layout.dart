@@ -21,7 +21,7 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> with WidgetsBinding
   @override
   void initState() {
     super.initState();
-    // Zero-call optimization
+    // Optimization when there is only one layout
     if (widget.tabletWidget != null && widget.tabletWidget != widget.smartphoneWidget) {
       WidgetsBinding.instance!.addObserver(this);
     }
@@ -29,7 +29,7 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> with WidgetsBinding
 
   @override
   void dispose() {
-    // Zero-call optimization
+    // Optimization when there is only one layout
     if (widget.tabletWidget != null && widget.tabletWidget != widget.smartphoneWidget) {
       WidgetsBinding.instance!.removeObserver(this);
     }

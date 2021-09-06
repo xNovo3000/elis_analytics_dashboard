@@ -1,6 +1,6 @@
 class Session {
 
-  factory Session.fromJson(final Map<String, dynamic> map) => Session(
+  factory Session.fromMap(final Map<String, dynamic> map) => Session(
     token: map['token'],
     refreshToken: map['refreshToken']
   );

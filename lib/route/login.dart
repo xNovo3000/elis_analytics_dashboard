@@ -96,7 +96,11 @@ class _LoginButtonState extends State<_LoginButton> {
     return _isLoggingIn
       ? ElevatedButton.icon(
         label: const Text('Login'),
-        icon: const CircularProgressIndicator(),
+        icon: const SizedBox(
+          width: 20.0,
+          height: 20.0,
+          child: const CircularProgressIndicator(),
+        ),
         onPressed: null,
       )
       : ElevatedButton(
@@ -106,7 +110,11 @@ class _LoginButtonState extends State<_LoginButton> {
   }
 
   Future<void> _onLoginPressed() async {
+    setState(() => _isLoggingIn = true);
+    // TEST: state testing
+    await Future.delayed(const Duration(seconds: 2));
     // TODO: login logic here
+    setState(() => _isLoggingIn = false);
   }
 
 }

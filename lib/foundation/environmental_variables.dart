@@ -18,7 +18,7 @@ class EnvironmentalVariables extends InheritedWidget {
 
   @override
   bool updateShouldNotify(EnvironmentalVariables old) {
-    return sharedPreferences != old.sharedPreferences;
+    return sharedPreferences != old.sharedPreferences && fetcher != old.fetcher;
   }
 
 }
