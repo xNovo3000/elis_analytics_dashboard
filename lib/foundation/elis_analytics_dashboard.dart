@@ -1,6 +1,10 @@
+import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:elis_analytics_dashboard/route/login.dart';
 import 'package:elis_analytics_dashboard/route/realtime.dart';
+import 'package:elis_analytics_dashboard/view/realtime_smartphone/data.dart';
+import 'package:elis_analytics_dashboard/view/test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class ELISAnalyticsDashboard extends StatelessWidget {
 
@@ -10,10 +14,24 @@ class ELISAnalyticsDashboard extends StatelessWidget {
     // Build the application
     return MaterialApp(
       title: 'ELIS Analytics Dashboard',
-      initialRoute: '/',
+      initialRoute: '/test',
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('it')
+      ],
       routes: {
         '/login': (context) => RouteLogin(),
         '/': (context) => RouteRealtime(),
+        // TEST: used only for testing purposes
+        '/test': (context) => ModelInheritedRealtimeData.test(
+          child: ViewTest(
+            body: ViewRealtimeSmartphoneData(),
+          ),
+        ),
       },
       theme: _lightTheme,
       darkTheme: _lightTheme,  // TODO: create dark theme (?)
@@ -21,7 +39,8 @@ class ELISAnalyticsDashboard extends StatelessWidget {
   }
 
   static final ThemeData _lightTheme = ThemeData(
-
+    fontFamily: 'Raleway',
+    primaryColor: Colors.white,
   );
 
 }

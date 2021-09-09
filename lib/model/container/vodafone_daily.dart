@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
+import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 
 class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<VodafoneDaily> {
 

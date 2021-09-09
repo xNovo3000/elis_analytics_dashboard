@@ -5,6 +5,18 @@ import 'package:flutter/material.dart';
 
 class ModelInheritedRealtimeData extends InheritedWidget {
 
+  // TEST: used only for testing purposes
+  factory ModelInheritedRealtimeData.test({
+    required Widget child,
+  }) => ModelInheritedRealtimeData(
+    child: child,
+    weather: WeatherInstant.test(),
+    yesterdaySensorData: SensorData.test(),
+    realtimeSensorData: SensorData.test(),
+    campusVodafoneData: VodafoneDailyList([]),
+    neighborhoodVodafoneData: VodafoneDailyList([]),
+  );
+
   ModelInheritedRealtimeData({
     required Widget child,
     required this.weather,

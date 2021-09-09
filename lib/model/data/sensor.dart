@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:elis_analytics_dashboard/model/data/room.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 
@@ -16,6 +18,24 @@ class SensorData implements Comparable<SensorData> {
     returnRate: map['tasso_di_ritorno'] / 100,
     dwellTime: Duration(minutes: map['tempo_medio_permanenza']),
   );
+
+  // TEST: used only for testing purposes
+  factory SensorData.test() {
+    final random = Random();
+    return SensorData(
+      timestamp: DateTime.now(),
+      roomsData: List.generate(
+        Room.values.length,
+          (index) => RoomData(
+            room: Room.values[index],
+            occupancy: random.nextInt(20),
+          ),
+        growable: false
+      ),
+      returnRate: random.nextDouble(),
+      dwellTime: Duration(minutes: random.nextInt(20)),
+    );
+  }
 
   const SensorData({
     required this.timestamp,
