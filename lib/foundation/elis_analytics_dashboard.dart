@@ -1,6 +1,5 @@
-import 'package:elis_analytics_dashboard/component/responsive_layout.dart';
 import 'package:elis_analytics_dashboard/route/login.dart';
-import 'package:elis_analytics_dashboard/route/realtime_smartphone.dart';
+import 'package:elis_analytics_dashboard/route/realtime.dart';
 import 'package:flutter/material.dart';
 
 class ELISAnalyticsDashboard extends StatelessWidget {
@@ -13,12 +12,8 @@ class ELISAnalyticsDashboard extends StatelessWidget {
       title: 'ELIS Analytics Dashboard',
       initialRoute: '/',
       routes: {
-        '/login': (context) => ResponsiveLayout(
-          smartphoneWidget: RouteLogin(),
-        ),
-        '/': (context) => ResponsiveLayout(
-          smartphoneWidget: RouteRealtimeSmartphone(),
-        ),
+        '/login': (context) => RouteLogin(),
+        '/': (context) => RouteRealtime(),
       },
       theme: _lightTheme,
       darkTheme: _lightTheme,  // TODO: create dark theme (?)

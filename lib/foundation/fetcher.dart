@@ -11,24 +11,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Fetcher extends BaseClient {
 
-  /* Lazy loading */
+  /* Base Thingsboard url */
   static final Uri _baseUrl = Uri.parse('https://iothings.netcomgroup.eu/api/');
-  static final Set<Uri> _cacheBlacklist = HashSet.of(List.generate(
-    ThingsboardDevice.values.length,
-    (index) => _baseUrl.resolve('plugins/telemetry/DEVICE/${ThingsboardDevice.values[index].uri}/values/timeseries'),
-    growable: false
-  ));
 
-  /* Singleton pattern with lazy loading */
+  /* Singleton pattern */
   static final Fetcher _instance = Fetcher._();
   factory Fetcher() => _instance;
 
   /* Private constructor */
   Fetcher._() :
+    _cacheBlacklist = HashSet.of(
+      List.generate(
+        ThingsboardDevice.values.length,
+        (index) => _baseUrl.resolve('plugins/telemetry/DEVICE/${ThingsboardDevice.values[index].uri}/values/timeseries'),
+        growable: false
+      )
+    ),
     _futureCache = HashMap<Uri, Future<Response>>(),
     _sessionMutex = Mutex(),
     _client = Client();
 
+  final Set<Uri> _cacheBlacklist;
   final Map<Uri, Future<Response>> _futureCache;
   final Mutex _sessionMutex;
   final Client _client;
@@ -54,7 +57,7 @@ class Fetcher extends BaseClient {
       if (_session == null || _session!.expired) {
         // Try to get username and password from SharedPreferences
         SharedPreferences preferences = await SharedPreferences.getInstance();
-        if (preferences.containsKey('Username') && preferences.containsKey('Password')) {
+        if (preferences.containsKey('Email') && preferences.containsKey('Password')) {
           // Try to get a new token
           try {
             Response response = await _client.post(
@@ -64,7 +67,7 @@ class Fetcher extends BaseClient {
                 'Accept': 'application/json'
               },
               body: json.encode(<String, String>{
-                'username': preferences.getString('Username')!,
+                'username': preferences.getString('Email')!,
                 'password': preferences.getString('Password')!,
               })
             );

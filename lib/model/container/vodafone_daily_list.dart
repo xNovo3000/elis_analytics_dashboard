@@ -4,9 +4,9 @@ import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
 
 // TODO: maybe this class is useless
-class VodafoneWeekly extends ListBase<VodafoneDaily> {
+class VodafoneDailyList extends ListBase<VodafoneDaily> {
 
-  VodafoneWeekly(this._list);
+  VodafoneDailyList(this._list);
 
   final List<VodafoneDaily> _list;
 
