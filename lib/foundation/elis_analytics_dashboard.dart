@@ -1,6 +1,7 @@
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:elis_analytics_dashboard/route/login.dart';
 import 'package:elis_analytics_dashboard/route/realtime.dart';
+import 'package:elis_analytics_dashboard/route/weather_report.dart';
 import 'package:elis_analytics_dashboard/view/realtime_smartphone/data.dart';
 import 'package:elis_analytics_dashboard/view/test.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class ELISAnalyticsDashboard extends StatelessWidget {
       routes: {
         '/login': (context) => RouteLogin(),
         '/': (context) => RouteRealtime(),
+        '/weather_report': (context) => RouteWeatherReport(),
         // TEST: used only for testing purposes
         '/test': (context) => ModelInheritedRealtimeData.test(
           child: ViewTest(

@@ -24,7 +24,7 @@ class ModelInheritedRealtimeData extends InheritedWidget {
     required this.realtimeSensorData,
     required this.campusVodafoneData,
     required this.neighborhoodVodafoneData,
-  }) : super(key: ValueKey(weather.timestamp), child: child);
+  }) : super(key: ValueKey(weather), child: child);
 
   final WeatherInstant weather;
   final SensorData yesterdaySensorData;

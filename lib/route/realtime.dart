@@ -5,6 +5,7 @@ import 'package:elis_analytics_dashboard/component/responsive_layout.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/foundation/fetcher.dart';
+import 'package:elis_analytics_dashboard/view/realtime_smartphone.dart';
 import 'package:flutter/material.dart';
 
 class RouteRealtime extends StatefulWidget {
@@ -38,7 +39,7 @@ class _RouteRealtimeState extends State<RouteRealtime> {
   Widget build(BuildContext context) {
     // Generate child using ResponsiveLayout
     final child = ResponsiveLayout(
-      smartphoneWidget: Placeholder(),
+      smartphoneWidget: ViewRealtimeSmartphone(),
     );
     // Return using the FutureBuilder
     return ComponentManagedFutureBuilder<Map<String, dynamic>>(
