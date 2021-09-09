@@ -34,6 +34,18 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
   @override VodafoneCluster operator [](int index) => _list[index];
   @override void operator []=(int index, VodafoneCluster value) => _list[index] = value;
 
+  int get visitors {
+    int total = 0;
+    forEach((cluster) => total += cluster.visitors);
+    return total;
+  }
+
+  int getVisitorsFromGender(final Gender gender) {
+    int total = 0;
+    forEach((cluster) => cluster.gender == gender ? total += cluster.visitors : null);
+    return total;
+  }
+
   @override int compareTo(VodafoneDaily other) => date.compareTo(other.date);
 
 }

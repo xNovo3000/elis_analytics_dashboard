@@ -17,14 +17,16 @@ class VodafoneDailyList extends ListBase<VodafoneDaily> {
 
   Area get area => _list.isNotEmpty ? _list.first.area : Area.na;
 
-  Map<Gender, int> get genderVisitors {
-    final result = {
-      Gender.male: 0,
-      Gender.female: 0,
-      Gender.na: 0,
-    };
-    _list.forEach((data) => data.forEach((cluster) => result[cluster.gender] = result[cluster.gender]! + cluster.visitors));
-    return result;
+  int get visitors {
+    int total = 0;
+    forEach((element) => total += element.visitors);
+    return total;
+  }
+
+  int getVisitorsFromGender(final Gender gender) {
+    int total = 0;
+    forEach((element) => total += element.getVisitorsFromGender(gender));
+    return total;
   }
 
 }

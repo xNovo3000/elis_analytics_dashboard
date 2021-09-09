@@ -1,4 +1,6 @@
 import 'package:elis_analytics_dashboard/component/gender_bar.dart';
+import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
+import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +14,9 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
   Widget build(BuildContext context) {
     // Obtain data (always exists)
     final realtimeData = ModelInheritedRealtimeData.of(context);
+    final isVodafoneDataConsistent = _isVodafoneDataConsistent(
+      realtimeData.campusVodafoneData, realtimeData.neighborhoodVodafoneData
+    );
     // Build the view
     return ListView(
       children: [
@@ -110,13 +115,24 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
           ),
           subtitle: Text('Rispetto $_weekString precedenti'),
         ),
-        Padding(
+        if (!isVodafoneDataConsistent) ListTile(
+          leading: Icon(Icons.error, color: Theme.of(context).errorColor),
+          title: const Text('Attenzione! Le stime non sono consistenti'),
+        ),
+        // TODO: re-add tests
+        /* if (isVodafoneDataConsistent) */ Padding(
           padding: EdgeInsets.all(16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ComponentGenderBar(
-                data: realtimeData.campusVodafoneData.genderVisitors,
+              LinearProgressIndicator(
+                value: _getMaleVisitorsPercentage(realtimeData.campusVodafoneData, 0.65),
+                valueColor: AlwaysStoppedAnimation(Gender.male.color),
+                backgroundColor: Gender.female.color,
+                minHeight: 10,
               ),
+              SizedBox(height: 2),
+              Text('Distribuzione genere nel campus', textScaleFactor: 1.2),
             ],
           ),
         ),
@@ -129,6 +145,19 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
     final now = DateTime.now();
     return '${now.weekday == DateTime.sunday ? 'alle' : 'ai'} '
            '${_weekdayResolver.format(DateTime.now())}';
+  }
+
+  bool _isVodafoneDataConsistent(final VodafoneDailyList first, final VodafoneDailyList second) {
+    return first.length > 0 && second.length > 0 && first.length == second.length;
+  }
+
+  double _getMaleVisitorsPercentage(final VodafoneDailyList list, [double absorbNa = 0]) {
+    final visitors = list.visitors;
+    // NaN avoid system
+    if (visitors == 0) return 0;
+    double result = list.getVisitorsFromGender(Gender.male) / visitors;
+    result += list.getVisitorsFromGender(Gender.na) / visitors * absorbNa;
+    return result;
   }
 
 }
