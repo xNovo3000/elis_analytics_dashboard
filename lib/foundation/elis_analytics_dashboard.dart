@@ -25,8 +25,8 @@ class ELISAnalyticsDashboard extends StatelessWidget {
         Locale('it')
       ],
       routes: {
-        '/login': (context) => RouteLogin(),
         '/': (context) => RouteRealtime(),
+        '/login': (context) => RouteLogin(),
         '/weather_report': (context) => RouteWeatherReport(),
         // TEST: used only for testing purposes
         '/test': (context) => ModelInheritedRealtimeData.test(
@@ -42,7 +42,9 @@ class ELISAnalyticsDashboard extends StatelessWidget {
 
   static final ThemeData _lightTheme = ThemeData(
     fontFamily: 'Raleway',
-    primaryColor: Colors.white,
+    colorScheme: ColorScheme.fromSwatch(
+      primarySwatch: Colors.green,
+    ),
   );
 
 }

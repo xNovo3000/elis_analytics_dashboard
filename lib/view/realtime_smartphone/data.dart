@@ -1,4 +1,3 @@
-import 'package:elis_analytics_dashboard/component/gender_bar.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
 import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
@@ -23,11 +22,17 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
         ListTile(
           title: Text(
             'RAPPORTO METEO',
-            style: TextStyle(color: Theme.of(context).accentColor)
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
           trailing: OutlinedButton(
             child: const Text('DETTAGLI'),
-            onPressed: () => null,
+            onPressed: () => Navigator.pushNamed(
+              context,
+              '/weather_report',
+              arguments: {
+                'weather_report': realtimeData.weather,
+              }
+            ),
           ),
         ),
         Padding(
@@ -74,7 +79,7 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
         ListTile(
           title: Text(
             'OCCUPAZIONE AULE',
-            style: TextStyle(color: Theme.of(context).accentColor)
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
           trailing: OutlinedButton(
             child: const Text('VEDI MAPPA'),
@@ -111,7 +116,7 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
         ListTile(
           title: Text(
             'PREVISIONI',
-            style: TextStyle(color: Theme.of(context).accentColor)
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
           subtitle: Text('Rispetto $_weekString precedenti'),
         ),

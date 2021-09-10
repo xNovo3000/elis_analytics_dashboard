@@ -9,6 +9,8 @@ class ViewRealtimeSmartphone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // DEBUG: rebuild
+    print('Rebuild');
     // Check data
     final realtimeData = ModelInheritedRealtimeData.maybeOf(context);
     final error = ModelInheritedError.maybeOf(context);

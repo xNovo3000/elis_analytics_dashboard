@@ -1,5 +1,6 @@
 import 'package:elis_analytics_dashboard/model/inherited/weather_report.dart';
 import 'package:elis_analytics_dashboard/view/error.dart';
+import 'package:elis_analytics_dashboard/view/weather_report/data.dart';
 import 'package:flutter/material.dart';
 
 class ViewWeatherReport extends StatelessWidget {
@@ -14,7 +15,7 @@ class ViewWeatherReport extends StatelessWidget {
         title: const Text('Rapporto meteo'),
       ),
       body: report != null
-        ? null  // TODO: add info to the body
+        ? ViewWeatherReportData()
         : ViewError(error: 'Si è verificato un errore sconosciuto'),
     );
   }

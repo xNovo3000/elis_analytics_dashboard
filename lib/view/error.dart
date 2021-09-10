@@ -11,9 +11,10 @@ class ViewError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error, color: Theme.of(context).errorColor),
+          Icon(Icons.error, color: Theme.of(context).errorColor, size: 48),
           SizedBox(height: 4),
           Text(error, maxLines: null),
         ],
