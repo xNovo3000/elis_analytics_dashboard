@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ViewWait extends StatelessWidget {
+class ComponentModalFullscreenWait extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(),
           SizedBox(height: 4),

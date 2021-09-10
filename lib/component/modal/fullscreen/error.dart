@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ViewError extends StatelessWidget {
+class ComponentModalFullscreenError extends StatelessWidget {
 
-  const ViewError({
+  const ComponentModalFullscreenError({
     required this.error,
   });
 
