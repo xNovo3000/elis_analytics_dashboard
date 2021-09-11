@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:elis_analytics_dashboard/component/managed_future_builder.dart';
 import 'package:elis_analytics_dashboard/component/responsive_layout.dart';
+import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/data/weather_instant.dart';
+import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/foundation/fetcher.dart';
@@ -24,8 +28,8 @@ class _RouteRealtimeState extends State<RouteRealtime> {
   @override
   void initState() {
     super.initState();
-    // Every 1 minute updates the data
-    timer = Timer.periodic(const Duration(minutes: 1), (_) => setState(() => null));
+    // Auto-update system
+    timer = Timer.periodic(const Duration(seconds: 4), _onTimerTick);
   }
 
   @override
@@ -60,8 +64,20 @@ class _RouteRealtimeState extends State<RouteRealtime> {
     );
   }
 
-  Future<Map<String, dynamic>> _getRealtimeData() async =>
-    throw Exception('Custom error test');
+  // Every 1 minute updates the data
+  void _onTimerTick(final Timer timer) {
+    if (mounted) setState(() => null);
+  }
+
+  // TEST: just for testing
+  Future<Map<String, dynamic>> _getRealtimeData() =>
+    Future.delayed(const Duration(seconds: 2), () => {
+      'weather': WeatherInstant.test(),
+      'realtime_sensor_data': SensorData.test(),
+      'yesterday_sensor_data': SensorData.test(),
+      'campus_vodafone_data': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.campus),
+      'neighborhood_vodafone_data': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.neighborhood),
+    });
 
   // TODO: add all (async) sub-functions
   // Future<WeatherInstant> _getWeatherData() async

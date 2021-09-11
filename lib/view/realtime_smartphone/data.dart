@@ -1,6 +1,7 @@
 import 'package:elis_analytics_dashboard/component/bar_graph.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
 import 'package:elis_analytics_dashboard/model/enum/gender.dart';
+import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,8 +18,11 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
     final isVodafoneDataConsistent = _isVodafoneDataConsistent(
       realtimeData.campusVodafoneData, realtimeData.neighborhoodVodafoneData
     );
+    final foreignersPercentage = _getForeignersPercentage(realtimeData.campusVodafoneData);
+    final captureRatio = realtimeData.campusVodafoneData.visitors / realtimeData.neighborhoodVodafoneData.visitors * 100;
     // Build the view
     return ListView(
+      key: PageStorageKey('Valore'),
       children: [
         ListTile(
           title: Text(
@@ -119,7 +123,7 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
             'PREVISIONI',
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
-          subtitle: Text('Rispetto $_weekString precedenti'),
+          subtitle: Text('Nel campus rispetto $_weekString precedenti'),
         ),
         if (!isVodafoneDataConsistent) ListTile(
           leading: Icon(Icons.error, color: Theme.of(context).errorColor),
@@ -133,9 +137,42 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
             children: [
               ComponentBarGraph(
                 data: _getVisitorsByGender(realtimeData.neighborhoodVodafoneData),
+                crossAxisSize: 10,
               ),
               SizedBox(height: 2),
-              Text('Distribuzione genere nel campus', textScaleFactor: 1.2),
+              Text('Distribuzione genere', textScaleFactor: 1.2),
+            ],
+          ),
+        ),
+        /* if (isVodafoneDataConsistent) */ Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              LinearProgressIndicator(
+                value: foreignersPercentage / 100,
+                backgroundColor: Colors.grey.withOpacity(0.5),
+                minHeight: 10,
+              ),
+              SizedBox(height: 2),
+              Text('Percentuale di stranieri: ${foreignersPercentage.toStringAsFixed(2)}%', textScaleFactor: 1.2),
+            ],
+          ),
+        ),
+        /* if (isVodafoneDataConsistent) */ Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              LinearProgressIndicator(
+                value: captureRatio / 100,
+                backgroundColor: Colors.grey.withOpacity(0.5),
+                minHeight: 10,
+              ),
+              SizedBox(height: 2),
+              Text('Tasso di cattura: ${captureRatio.toStringAsFixed(2)}%', textScaleFactor: 1.2),
             ],
           ),
         ),
@@ -163,6 +200,18 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
       ));
     }
     return result;
+  }
+
+  double _getForeignersPercentage(final VodafoneDailyList list) {
+    double result = 0.0;
+    list.forEach(
+      (daily) => daily.forEach(
+        (cluster) => cluster.nationality == Nationality.foreigner
+          ? result += cluster.visitors
+          : null
+      )
+    );
+    return result / list.visitors * 100;
   }
 
 }

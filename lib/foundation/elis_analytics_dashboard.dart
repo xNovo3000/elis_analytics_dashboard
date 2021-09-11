@@ -15,7 +15,7 @@ class ELISAnalyticsDashboard extends StatelessWidget {
     // Build the application
     return MaterialApp(
       title: 'ELIS Analytics Dashboard',
-      initialRoute: '/test',
+      initialRoute: '/',
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -28,12 +28,6 @@ class ELISAnalyticsDashboard extends StatelessWidget {
         '/': (context) => RouteRealtime(),
         '/login': (context) => RouteLogin(),
         '/weather_report': (context) => RouteWeatherReport(),
-        // TEST: used only for testing purposes
-        '/test': (context) => ModelInheritedRealtimeData.test(
-          child: ViewTest(
-            body: ViewRealtimeSmartphoneData(),
-          ),
-        ),
       },
       theme: _lightTheme,
       darkTheme: _lightTheme,  // TODO: create dark theme (?)

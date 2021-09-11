@@ -2,7 +2,7 @@ import 'package:elis_analytics_dashboard/component/bar_graph.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:flutter/material.dart';
 
-class RoomData implements Comparable<RoomData>, ComponentBarGraphModel {
+class RoomData implements Comparable<RoomData> {
 
   const RoomData.withPercentage({
     required this.room,
@@ -19,19 +19,13 @@ class RoomData implements Comparable<RoomData>, ComponentBarGraphModel {
 
   double get percentage => occupancy / room.capacity;
 
-  @override
-  Color get color {
+  Color? get color {
     if (percentage >= 1) {
       return Colors.red;
     } else if (percentage >= 0.75) {
       return Colors.yellow;
-    } else {
-      return Colors.green;
     }
   }
-
-  @override
-  int get size => occupancy;
 
   @override String toString() => 'RoomData(room: $room, occupancy: $occupancy)';
   @override bool operator ==(Object other) => other is RoomData ? room == other.room : false;
