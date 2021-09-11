@@ -14,7 +14,7 @@ class ComponentModalFullscreenError extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error, color: Theme.of(context).errorColor, size: 48),
+          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
           SizedBox(height: 4),
           Text(error, maxLines: null),
         ],

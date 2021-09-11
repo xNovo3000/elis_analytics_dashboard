@@ -1,10 +1,24 @@
 import 'dart:collection';
 
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
+import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
-import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 
 class VodafoneDailyList extends ListBase<VodafoneDaily> {
+
+  factory VodafoneDailyList.test({
+    required DateTime startingDate,
+    required Area area,
+  }) => VodafoneDailyList(
+    List.generate(
+      7,
+      (index) => VodafoneDaily.test(
+        date: startingDate.add(Duration(days: index)),
+        area: area,
+      ),
+      growable: false
+    )
+  );
 
   VodafoneDailyList(this._list);
 
@@ -23,10 +37,14 @@ class VodafoneDailyList extends ListBase<VodafoneDaily> {
     return total;
   }
 
-  int getVisitorsFromGender(final Gender gender) {
-    int total = 0;
-    forEach((element) => total += element.getVisitorsFromGender(gender));
-    return total;
+  VodafoneDailyList whereCondition(bool Function(VodafoneCluster element) test) {
+    return VodafoneDailyList(
+      List.generate(
+        length,
+        (index) => this[index].whereCondition(test),
+        growable: false,
+      )
+    );
   }
 
 }

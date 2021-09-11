@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:elis_analytics_dashboard/model/enum/age.dart';
 import 'package:elis_analytics_dashboard/model/enum/distance.dart';
 import 'package:elis_analytics_dashboard/model/enum/gender.dart';
@@ -5,6 +7,24 @@ import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 import 'package:elis_analytics_dashboard/model/enum/region.dart';
 
 class VodafoneCluster {
+
+  factory VodafoneCluster.test() {
+    final random = Random();
+    return VodafoneCluster(
+      gender: Gender.values[random.nextInt(3)],
+      age: Age.values[random.nextInt(7)],
+      nationality: Nationality.values[random.nextInt(2)],
+      country: 'ITALIA',
+      region: Region.values[random.nextInt(21)],
+      province: 'ROMA',
+      municipality: 'ROMA',
+      homeDistance: Distance.values[random.nextInt(7)],
+      workDistance: Distance.values[random.nextInt(7)],
+      visits: random.nextInt(50) + 400,
+      visitors: random.nextInt(50) + 200,
+      totalDwellTime: Duration(minutes: random.nextInt(55) + 5),
+    );
+  }
 
   factory VodafoneCluster.fromMap(final Map<String, dynamic> map) => VodafoneCluster(
     gender: Gender.fromTechnicalName(map['gender']),
@@ -48,6 +68,9 @@ class VodafoneCluster {
   final int visits;
   final int visitors;
   final Duration totalDwellTime;
+
+  @override
+  String toString() => 'VodafoneCluster()';
 
   @override
   bool operator ==(Object other) =>

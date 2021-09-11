@@ -20,7 +20,7 @@ class ViewWeatherReportData extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            vertical: 8,
+            vertical: 8, horizontal: 16,
           ),
           child: Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,

@@ -1,3 +1,4 @@
+import 'package:elis_analytics_dashboard/component/bar_graph.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
 import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
@@ -130,11 +131,14 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              LinearProgressIndicator(
-                value: _getMaleVisitorsPercentage(realtimeData.campusVodafoneData, 0.65),
-                valueColor: AlwaysStoppedAnimation(Gender.male.color),
-                backgroundColor: Gender.female.color,
-                minHeight: 10,
+              // LinearProgressIndicator(
+              //   value: _getMaleVisitorsPercentage(realtimeData.campusVodafoneData, 0.65),
+              //   valueColor: AlwaysStoppedAnimation(Gender.male.color),
+              //   backgroundColor: Gender.female.color,
+              //   minHeight: 10,
+              // ),
+              ComponentBarGraph(
+                data: _getVisitorsByGender(realtimeData.neighborhoodVodafoneData),
               ),
               SizedBox(height: 2),
               Text('Distribuzione genere nel campus', textScaleFactor: 1.2),
@@ -160,9 +164,35 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
     final visitors = list.visitors;
     // NaN avoid system
     if (visitors == 0) return 0;
-    double result = list.getVisitorsFromGender(Gender.male) / visitors;
-    result += list.getVisitorsFromGender(Gender.na) / visitors * absorbNa;
+    double result = list.whereCondition((cluster) => cluster.gender == Gender.male).visitors / visitors;
+    result += list.whereCondition((cluster) => cluster.gender == Gender.na).visitors / visitors * absorbNa;
     return result;
   }
+
+  List<_GenderGraphModelImplementation> _getVisitorsByGender(final VodafoneDailyList list, [double absorbNa = 0]) {
+    final result = <_GenderGraphModelImplementation>[];
+    for (var gender in Gender.values) {
+      result.add(_GenderGraphModelImplementation(
+        gender: gender,
+        size: list.whereCondition((cluster) => cluster.gender == gender).visitors,
+      ));
+    }
+    return result;
+  }
+
+}
+
+class _GenderGraphModelImplementation implements ComponentBarGraphModel {
+
+  const _GenderGraphModelImplementation({
+    required this.gender,
+    required this.size,
+  });
+
+  final Gender gender;
+  final int size;
+
+  @override
+  Color get color => gender.color;
 
 }
