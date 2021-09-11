@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:collection';
 
 import 'package:elis_analytics_dashboard/model/data/session.dart';
 import 'package:elis_analytics_dashboard/model/enum/thingsboard_device.dart';
@@ -20,14 +19,14 @@ class Fetcher extends BaseClient {
 
   /* Private constructor */
   Fetcher._() :
-    _cacheBlacklist = HashSet.of(
+    _cacheBlacklist = Set.of(
       List.generate(
         ThingsboardDevice.values.length,
         (index) => _baseUrl.resolve('plugins/telemetry/DEVICE/${ThingsboardDevice.values[index].uri}/values/timeseries'),
         growable: false
       )
     ),
-    _futureCache = HashMap<Uri, Future<Response>>(),
+    _futureCache = <Uri, Future<Response>>{},
     _sessionMutex = Mutex(),
     _client = Client();
 
@@ -73,8 +72,12 @@ class Fetcher extends BaseClient {
             );
             if (response.statusCode == 200) {
               _session = Session.fromMap(json.decode(response.body));
+            } else {  // Force catch
+              throw response.statusCode;
             }
           } catch (e) {
+            await preferences.remove('Email');
+            await preferences.remove('Password');
             throw InvalidTokenException(e);
           }
         } else {
