@@ -131,12 +131,6 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // LinearProgressIndicator(
-              //   value: _getMaleVisitorsPercentage(realtimeData.campusVodafoneData, 0.65),
-              //   valueColor: AlwaysStoppedAnimation(Gender.male.color),
-              //   backgroundColor: Gender.female.color,
-              //   minHeight: 10,
-              // ),
               ComponentBarGraph(
                 data: _getVisitorsByGender(realtimeData.neighborhoodVodafoneData),
               ),
@@ -158,15 +152,6 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
 
   bool _isVodafoneDataConsistent(final VodafoneDailyList first, final VodafoneDailyList second) {
     return first.length > 0 && second.length > 0 && first.length == second.length;
-  }
-
-  double _getMaleVisitorsPercentage(final VodafoneDailyList list, [double absorbNa = 0]) {
-    final visitors = list.visitors;
-    // NaN avoid system
-    if (visitors == 0) return 0;
-    double result = list.whereCondition((cluster) => cluster.gender == Gender.male).visitors / visitors;
-    result += list.whereCondition((cluster) => cluster.gender == Gender.na).visitors / visitors * absorbNa;
-    return result;
   }
 
   List<_GenderGraphModelImplementation> _getVisitorsByGender(final VodafoneDailyList list, [double absorbNa = 0]) {
