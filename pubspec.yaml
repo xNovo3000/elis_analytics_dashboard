@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  syncfusion_flutter_maps: ^19.2.60-beta
   shared_preferences: ^2.0.7
   weather_icons: ^3.0.0
   mutex: ^3.0.0
