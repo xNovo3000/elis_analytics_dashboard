@@ -15,6 +15,7 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
   Widget build(BuildContext context) {
     // Obtain data (always exists)
     final realtimeData = ModelInheritedRealtimeData.of(context);
+    // Calculate data only one time
     final isVodafoneDataConsistent = _isVodafoneDataConsistent(
       realtimeData.campusVodafoneData, realtimeData.neighborhoodVodafoneData
     );
@@ -22,7 +23,7 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
     final captureRatio = realtimeData.campusVodafoneData.visitors / realtimeData.neighborhoodVodafoneData.visitors * 100;
     // Build the view
     return ListView(
-      key: PageStorageKey('Valore'),
+      key: PageStorageKey('ViewRealtimeSmartphoneDataListView'),
       children: [
         ListTile(
           title: Text(
@@ -86,6 +87,7 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
             'OCCUPAZIONE AULE',
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
+          subtitle: Text('Tempo medio di permanenza: ${realtimeData.realtimeSensorData.dwellTime.inMinutes} minuti'),
           trailing: OutlinedButton(
             child: const Text('VEDI MAPPA'),
             onPressed: () => null,
@@ -116,6 +118,30 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
               ],
             ),
           ),
+        Padding(
+          padding: EdgeInsets.only(
+            left: 16, right: 16, top: 24,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              LinearProgressIndicator(
+                value: realtimeData.realtimeSensorData.returnRate / 100,
+                valueColor: AlwaysStoppedAnimation(Colors.blue),
+                backgroundColor: Colors.grey.withOpacity(0.5),
+                minHeight: 10,
+              ),
+              SizedBox(height: 2),
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                children: [
+                  Text('Tasso di ritorno', textScaleFactor: 1.2),
+                  Text('${realtimeData.realtimeSensorData.returnRate.toStringAsFixed(2)}%', textScaleFactor: 1.2),
+                ],
+              ),
+            ],
+          ),
+        ),
         SizedBox(height: 16),
         Divider(indent: 8, endIndent: 8),
         ListTile(
@@ -184,7 +210,7 @@ class ViewRealtimeSmartphoneData extends StatelessWidget {
   String get _weekString {
     final now = DateTime.now();
     return '${now.weekday == DateTime.sunday ? 'alle' : 'ai'} '
-           '${_weekdayResolver.format(DateTime.now())}';
+           '${now.weekday == DateTime.sunday ? 'domeniche' : _weekdayResolver.format(DateTime.now())}';
   }
 
   bool _isVodafoneDataConsistent(final VodafoneDailyList first, final VodafoneDailyList second) {

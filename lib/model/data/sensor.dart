@@ -15,7 +15,7 @@ class SensorData implements Comparable<SensorData> {
       ),
       growable: false
     ),
-    returnRate: map['tasso_di_ritorno'] / 100,
+    returnRate: map['tasso_di_ritorno'],
     dwellTime: Duration(minutes: map['tempo_medio_permanenza']),
   );
 
@@ -32,7 +32,7 @@ class SensorData implements Comparable<SensorData> {
           ),
         growable: false
       ),
-      returnRate: random.nextDouble(),
+      returnRate: random.nextDouble() * 100,
       dwellTime: Duration(minutes: random.nextInt(20)),
     );
   }
@@ -48,6 +48,12 @@ class SensorData implements Comparable<SensorData> {
   final List<RoomData> roomsData;
   final double returnRate;
   final Duration dwellTime;
+
+  int get total {
+    int result = 0;
+    roomsData.forEach((room) => result += room.occupancy);
+    return result;
+  }
 
   @override String toString() => 'SensorData(timestamp: $timestamp, roomsData: $roomsData), '
     'returnRate: $returnRate, dwellTime: $dwellTime)';
