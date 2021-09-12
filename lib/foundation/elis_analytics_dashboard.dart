@@ -1,9 +1,6 @@
-import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:elis_analytics_dashboard/route/login.dart';
 import 'package:elis_analytics_dashboard/route/realtime.dart';
 import 'package:elis_analytics_dashboard/route/weather_report.dart';
-import 'package:elis_analytics_dashboard/view/realtime_smartphone/data.dart';
-import 'package:elis_analytics_dashboard/view/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
