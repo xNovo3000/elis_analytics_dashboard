@@ -48,7 +48,7 @@ class _ViewRealtimeSmartphoneData extends StatelessWidget {
     final captureRatio = realtimeData.campusVodafoneData.visitors / realtimeData.neighborhoodVodafoneData.visitors * 100;
     // Build the view
     return ListView(
-      key: PageStorageKey('ViewRealtimeSmartphoneDataListView'),
+      key: PageStorageKey('_ViewRealtimeSmartphoneDataListView'),
       children: [
         ListTile(
           title: Text(

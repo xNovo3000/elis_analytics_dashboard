@@ -41,10 +41,10 @@ class ModelInheritedRealtimeData extends InheritedWidget {
 
   @override
   bool updateShouldNotify(ModelInheritedRealtimeData old) {
-    return weather != old.weather &&
-           yesterdaySensorData != old.yesterdaySensorData &&
-           realtimeSensorData != old.realtimeSensorData &&
-           campusVodafoneData != old.campusVodafoneData &&
+    return weather != old.weather ||
+           yesterdaySensorData != old.yesterdaySensorData ||
+           realtimeSensorData != old.realtimeSensorData ||
+           campusVodafoneData != old.campusVodafoneData ||
            neighborhoodVodafoneData != old.neighborhoodVodafoneData;
   }
 

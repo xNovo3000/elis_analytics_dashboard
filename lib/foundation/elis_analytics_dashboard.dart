@@ -32,7 +32,7 @@ class ELISAnalyticsDashboard extends StatelessWidget {
   }
 
   static final ThemeData _lightTheme = ThemeData(
-    fontFamily: 'Raleway',
+    fontFamily: 'OpenSans',
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: Colors.green,
     ),
