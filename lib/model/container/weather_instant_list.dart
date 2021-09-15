@@ -4,6 +4,16 @@ import 'package:elis_analytics_dashboard/model/data/weather_instant.dart';
 
 class WeatherInstantList extends ListBase<WeatherInstant> {
 
+  factory WeatherInstantList.test({
+    required int length
+  }) => WeatherInstantList(
+    List.generate(
+      length,
+      (index) => WeatherInstant.test(),
+      growable: false
+    ),
+  );
+
   factory WeatherInstantList.fromListAndTotalDuration(
     final List<Map<String, dynamic>> list, [Duration duration = const Duration(seconds: 0)]
   ) => WeatherInstantList(

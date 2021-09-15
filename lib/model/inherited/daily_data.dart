@@ -5,6 +5,15 @@ import 'package:flutter/material.dart';
 
 class ModelInheritedDailyData extends InheritedWidget {
 
+  factory ModelInheritedDailyData.test({
+    required Widget child,
+  }) => ModelInheritedDailyData(
+    child: child,
+    weathers: WeatherInstantList.test(length: 4),
+    dailySensor: SensorData.test(),
+    timedSensor: List.generate(48, (index) => SensorData.test(), growable: false),
+  );
+
   const ModelInheritedDailyData({
     required Widget child,
     required this.weathers,

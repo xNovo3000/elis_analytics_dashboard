@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_icons/weather_icons.dart';
 
+enum _PopupAction {
+  daily, weekly, gpdr, settings
+}
+
 class ViewRealtimeSmartphone extends StatelessWidget {
 
   @override
@@ -21,6 +25,21 @@ class ViewRealtimeSmartphone extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ELIS Analytics Dashboard'),
+        actions: [
+          PopupMenuButton<_PopupAction>(
+            onSelected: (action) => _onPopupEntrySelected(context, action),
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: _PopupAction.daily,
+                child: ListTile(
+                  leading: Icon(Icons.history),
+                  title: Text('Giornaliero'),
+                  visualDensity: VisualDensity.compact,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       body: realtimeData != null
         ? _ViewRealtimeSmartphoneData()
@@ -30,11 +49,25 @@ class ViewRealtimeSmartphone extends StatelessWidget {
     );
   }
 
+  void _onPopupEntrySelected(BuildContext context, _PopupAction action) {
+    switch (action) {
+      case _PopupAction.daily:
+        // Generate day
+        final now = DateTime.now();
+        final day = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 1));
+        // Push daily route
+        Navigator.of(context).pushNamed('/daily', arguments: {'day': day});
+        break;
+      default:
+        break;
+    }
+  }
+
 }
 
 class _ViewRealtimeSmartphoneData extends StatelessWidget {
 
-  static final DateFormat _weekdayResolver = DateFormat('EEEE', 'it');
+  static final _weekdayResolver = DateFormat('EEEE', 'it');
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +85,17 @@ class _ViewRealtimeSmartphoneData extends StatelessWidget {
       children: [
         ListTile(
           title: Text(
-              'RAPPORTO METEO',
-              style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+            'RAPPORTO METEO',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
           trailing: OutlinedButton(
             child: const Text('DETTAGLI'),
             onPressed: () => Navigator.pushNamed(
-                context,
-                '/weather_report',
-                arguments: {
-                  'weather_report': realtimeData.weather,
-                }
+              context,
+              '/realtime/weather_report',
+              arguments: {
+                'weather_report': realtimeData.weather,
+              }
             ),
           ),
         ),
@@ -281,4 +314,3 @@ class _GenderGraphModelImplementation implements ComponentBarGraphModel {
   Color get color => gender.color;
 
 }
-
