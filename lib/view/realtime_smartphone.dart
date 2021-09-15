@@ -8,10 +8,11 @@ import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 enum _PopupAction {
-  daily, weekly, gpdr, settings
+  daily, weekly, gpdr, info
 }
 
 class ViewRealtimeSmartphone extends StatelessWidget {
@@ -28,13 +29,27 @@ class ViewRealtimeSmartphone extends StatelessWidget {
         actions: [
           PopupMenuButton<_PopupAction>(
             onSelected: (action) => _onPopupEntrySelected(context, action),
-            itemBuilder: (context) => const [
+            itemBuilder: (context) => [
               PopupMenuItem(
                 value: _PopupAction.daily,
-                child: ListTile(
-                  leading: Icon(Icons.history),
-                  title: Text('Giornaliero'),
-                  visualDensity: VisualDensity.compact,
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Icon(Icons.history, color: Theme.of(context).colorScheme.onSurface),
+                    SizedBox(width: 16),
+                    Text('Giornaliero'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: _PopupAction.info,
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Icon(Icons.info, color: Theme.of(context).colorScheme.onSurface),
+                    SizedBox(width: 16),
+                    Text('Informazioni'),
+                  ],
                 ),
               ),
             ],
@@ -57,6 +72,14 @@ class ViewRealtimeSmartphone extends StatelessWidget {
         final day = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 1));
         // Push daily route
         Navigator.of(context).pushNamed('/daily', arguments: {'day': day});
+        break;
+      case _PopupAction.info:
+        PackageInfo.fromPlatform().then((info) => showAboutDialog(
+          context: context,
+          applicationName: 'ELIS Analytics Dashboard',
+          applicationVersion: info.version,
+          applicationLegalese: '© 2021 ELIS Innovation Team',
+        ));
         break;
       default:
         break;

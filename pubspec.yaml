@@ -1,17 +1,19 @@
 name: elis_analytics_dashboard
 description: ELIS responsive analytics dashboard
 publish_to: 'none'  # DO NOT REMOVE
-version: 0.1.0
+version: 1.1.0-alpha.1
 
 environment:
-  sdk: ">=2.14.0 <3.0.0"
+  sdk: ^2.14.0
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  syncfusion_flutter_maps: ^19.2.60-beta
+  syncfusion_flutter_charts: ^19.2.62
+  syncfusion_flutter_maps: ^19.2.62-beta
+  package_info_plus: ^1.0.6
   shared_preferences: ^2.0.7
   weather_icons: ^3.0.0
   mutex: ^3.0.0

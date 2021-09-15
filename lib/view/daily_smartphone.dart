@@ -32,6 +32,7 @@ class ViewDailySmartphone extends StatelessWidget {
 
 class _ViewDailySmartphoneData extends StatelessWidget {
 
+  static const _oneDay = Duration(days: 1);
   static final _dateResolver = DateFormat('EEEE d MMMM y', 'it');
   static final _hourResolver = DateFormat('HH');
 
@@ -58,13 +59,13 @@ class _ViewDailySmartphoneData extends StatelessWidget {
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => _onDateBackPressed(context),
               ),
-              if (_canGoForwardInTime) IconButton(
-                icon: const Icon(Icons.arrow_forward),
-                onPressed: () => _onDateForwardPressed(context),
-              ),
               IconButton(
                 icon: const Icon(Icons.calendar_today),
                 onPressed: () => _onDateSelectPressed(context),
+              ),
+              if (_canGoForwardInTime) IconButton(
+                icon: const Icon(Icons.arrow_forward),
+                onPressed: () => _onDateForwardPressed(context),
               ),
             ],
           ),
@@ -89,11 +90,11 @@ class _ViewDailySmartphoneData extends StatelessWidget {
   }
 
   void _onDateBackPressed(BuildContext context) {
-
+    Navigator.of(context).popAndPushNamed('/daily', arguments: {'day': day.subtract(_oneDay)});
   }
 
   void _onDateForwardPressed(BuildContext context) {
-
+    Navigator.of(context).popAndPushNamed('/daily', arguments: {'day': day.add(_oneDay)});
   }
 
   void _onDateSelectPressed(BuildContext context) {
@@ -101,6 +102,6 @@ class _ViewDailySmartphoneData extends StatelessWidget {
   }
 
   bool get _canGoBackwardInTime => day.isAfter(DateTime(2021, 06, 28));
-  bool get _canGoForwardInTime => day.add(const Duration(days: 1)).isBefore(DateTime.now().subtract(const Duration(days: 1)));
+  bool get _canGoForwardInTime => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
 
 }
