@@ -37,6 +37,9 @@ class Region {
   static const Region veneto = Region._(name: 'Veneto', technicalName: 'VENETO');
   static const Region na = Region._(name: 'N/A', technicalName: '');
 
+  // special instance for clusters (also not included in enumeration)
+  static const Region other = Region._(name: 'Altro', technicalName: '');
+
   // recursive enumeration
   static const List<Region> values = const <Region>[
     abruzzo, basilicata, calabria, campania, emiliaRomagna, friuliVeneziaGiulia,

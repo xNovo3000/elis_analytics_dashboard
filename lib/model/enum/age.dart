@@ -23,6 +23,9 @@ class Age {
   static const Age from65plus = Age._(name: '65+', technicalName: '>65');
   static const Age na = Age._(name: 'N/A', technicalName: '');
 
+  // special instance for clusters (also not included in enumeration)
+  static const Age other = Age._(name: 'Altro', technicalName: '');
+
   // recursive enumeration
   static const List<Age> values = const <Age>[
     from15to25, from25to35, from35to45, from45to55,

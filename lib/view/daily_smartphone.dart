@@ -1,6 +1,7 @@
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
@@ -51,6 +52,9 @@ class _ViewDailySmartphoneData extends StatelessWidget {
   Widget build(BuildContext context) {
     // Extract data
     final dailyData = ModelInheritedDailyData.of(context);
+    // Generate custom data
+    final campusByRegion = dailyData.campusVodafone?.collapseFromKPI(KPI.region, 6);
+    final neighborhoodByRegion = dailyData.neighborhoodVodafone?.collapseFromKPI(KPI.region, 6);
     // Build UI
     return ListView(
       key: PageStorageKey('_ViewDailySmartphoneDataList'),
@@ -125,7 +129,28 @@ class _ViewDailySmartphoneData extends StatelessWidget {
         Divider(indent: 8, endIndent: 8),
         ListTile(
           title: Text(
-            'PROVENIENZE PER REGIONE E CITTÀ',
+            'PROVENIENZE PER REGIONE NEL CAMPUS',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+        ),
+        Divider(indent: 8, endIndent: 8),
+        ListTile(
+          title: Text(
+            'PROVENIENZE PER CITTA NEL CAMPUS',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+        ),
+        Divider(indent: 8, endIndent: 8),
+        ListTile(
+          title: Text(
+            'PROVENIENZE PER REGIONE NEL QUARTIERE',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+        ),
+        Divider(indent: 8, endIndent: 8),
+        ListTile(
+          title: Text(
+            'PROVENIENZE PER CITTA NEL QUARTIERE',
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
         ),

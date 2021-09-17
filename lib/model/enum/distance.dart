@@ -23,6 +23,9 @@ class Distance {
   static const Distance from50plus = Distance._(name: '50+', technicalName: '50+');
   static const Distance na = Distance._(name: 'N/A', technicalName: '');
 
+  // special instance for clusters (also not included in enumeration)
+  static const Distance other = Distance._(name: 'Altro', technicalName: '');
+
   // recursive enumeration
   static const List<Distance> values = const <Distance>[
     from0to10, from10to20, from20to30, from30to40,

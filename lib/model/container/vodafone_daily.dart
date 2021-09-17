@@ -1,8 +1,11 @@
 import 'dart:collection';
 
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
+import 'package:elis_analytics_dashboard/model/enum/age.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/enum/gender.dart';
+import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
+import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 
 class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<VodafoneDaily> {
 
@@ -58,6 +61,96 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
     date: date,
     area: area
   );
+
+  VodafoneDaily collapseFromKPI(final KPI kpi, [int maxClusters = 0xFFFFFFFF]) {
+    final result = <VodafoneCluster>[];
+    for (VodafoneCluster cluster in this) {
+      try {
+        var cx;
+        switch (kpi) {
+          case KPI.homeDistance:
+            cx = result.singleWhere((resultCluster) => cluster.homeDistance == resultCluster.homeDistance);
+            break;
+          case KPI.workDistance:
+            cx = result.singleWhere((resultCluster) => cluster.workDistance == resultCluster.workDistance);
+            break;
+          case KPI.gender:
+            cx = result.singleWhere((resultCluster) => cluster.gender == resultCluster.gender);
+            break;
+          case KPI.nationality:
+            cx = result.singleWhere((resultCluster) => cluster.nationality == resultCluster.nationality);
+            break;
+          case KPI.region:
+            cx = result.singleWhere((resultCluster) => cluster.region == resultCluster.region);
+            break;
+          default:
+            throw UnimplementedError("VodafoneDaily#collapseFromKPI(kpi: $kpi)");
+        }
+        var cy = cx + cluster;
+        result.remove(cx);
+        result.add(cy);
+      } on StateError catch (_) {
+        switch (kpi) {
+          case KPI.homeDistance:
+            result.add(VodafoneCluster.empty(
+              homeDistance: cluster.homeDistance,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          case KPI.workDistance:
+            result.add(VodafoneCluster.empty(
+              workDistance: cluster.workDistance,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          case KPI.gender:
+            result.add(VodafoneCluster.empty(
+              gender: cluster.gender,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          case KPI.nationality:
+            result.add(VodafoneCluster.empty(
+              nationality: cluster.nationality,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          case KPI.region:
+            result.add(VodafoneCluster.empty(
+              region: cluster.region,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          default:
+            throw UnimplementedError("VodafoneDaily#collapseFromKPI(kpi: $kpi)");
+        }
+      }
+    }
+    // Sort data first
+    result.sort();
+    // Collapse clusters if needed
+    if (result.length > maxClusters) {
+      final toRemove = <VodafoneCluster>[];
+      VodafoneCluster other = VodafoneCluster.other();
+      for (int i = maxClusters; i < result.length; i++) {
+        other += result[i];
+        toRemove.add(result[i]);
+      }
+      result.add(other);
+      toRemove.forEach((rm) => result.remove(rm));
+    }
+    return VodafoneDaily(result, date: date, area: area);
+  }
 
   @override int compareTo(VodafoneDaily other) => date.compareTo(other.date);
 

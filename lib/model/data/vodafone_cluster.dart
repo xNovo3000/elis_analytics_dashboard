@@ -6,7 +6,7 @@ import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 import 'package:elis_analytics_dashboard/model/enum/region.dart';
 
-class VodafoneCluster {
+class VodafoneCluster implements Comparable<VodafoneCluster> {
 
   factory VodafoneCluster.test() {
     final random = Random();
@@ -56,6 +56,36 @@ class VodafoneCluster {
     required this.totalDwellTime,
   });
 
+  const VodafoneCluster.empty({
+    this.gender = Gender.na,
+    this.age = Age.na,
+    this.nationality = Nationality.na,
+    this.country = '',
+    this.region = Region.na,
+    this.province = '',
+    this.municipality = '',
+    this.homeDistance = Distance.na,
+    this.workDistance = Distance.na,
+    this.visits = 0,
+    this.visitors = 0,
+    this.totalDwellTime = const Duration(seconds: 0),
+  });
+
+  const VodafoneCluster.other({
+    this.gender = Gender.other,
+    this.age = Age.other,
+    this.nationality = Nationality.other,
+    this.country = 'Altro',
+    this.region = Region.other,
+    this.province = 'Altro',
+    this.municipality = 'Altro',
+    this.homeDistance = Distance.other,
+    this.workDistance = Distance.other,
+    this.visits = 0,
+    this.visitors = 0,
+    this.totalDwellTime = const Duration(seconds: 0),
+  });
+
   final Gender gender;
   final Age age;
   final Nationality nationality;
@@ -69,8 +99,37 @@ class VodafoneCluster {
   final int visitors;
   final Duration totalDwellTime;
 
+  VodafoneCluster operator +(VodafoneCluster other) => VodafoneCluster(
+    gender: gender,
+    age: age,
+    nationality: nationality,
+    country: country,
+    region: region,
+    province: province,
+    municipality: municipality,
+    homeDistance: homeDistance,
+    workDistance: workDistance,
+    visits: visits + other.visits,
+    visitors: visitors + other.visitors,
+    totalDwellTime: totalDwellTime + other.totalDwellTime
+  );
+
   @override
-  String toString() => 'VodafoneCluster()';
+  String toString() =>
+    'VodafoneCluster('
+    'gender: $gender, '
+    'age: $age, '
+    'nationality: $nationality, '
+    'country: $country, '
+    'region: $region, '
+    'province: $province, '
+    'municipality: $municipality, '
+    'homeDistance: $homeDistance, '
+    'workDistance: $workDistance, '
+    'visits: $visits, '
+    'visitors: $visitors, '
+    'totalDwellTime: $totalDwellTime, '
+    ')';
 
   @override
   bool operator ==(Object other) =>
@@ -102,5 +161,8 @@ class VodafoneCluster {
     visits.hashCode +
     visitors.hashCode +
     totalDwellTime.hashCode;
+
+  @override
+  int compareTo(VodafoneCluster other) => other.visitors.compareTo(visitors);
 
 }

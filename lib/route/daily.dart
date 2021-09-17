@@ -1,7 +1,9 @@
 import 'package:elis_analytics_dashboard/component/managed_future_builder.dart';
 import 'package:elis_analytics_dashboard/component/responsive_layout.dart';
+import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/container/weather_instant_list.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/view/daily_smartphone.dart';
@@ -49,6 +51,8 @@ class RouteDaily extends StatelessWidget {
     'weathers': WeatherInstantList.test(length: 4),
     'daily_sensor': SensorData.test(),
     'timed_sensor': List.generate(48, (index) => SensorData.test(index), growable: false),
+    'campus_vodafone': VodafoneDaily.test(date: DateTime.now(), area: Area.campus),
+    'neighborhood_vodafone': VodafoneDaily.test(date: DateTime.now(), area: Area.neighborhood),
   };
 
   // TODO: create other futures to get data
