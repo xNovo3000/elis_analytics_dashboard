@@ -20,10 +20,10 @@ class SensorData implements Comparable<SensorData> {
   );
 
   // TEST: used only for testing purposes
-  factory SensorData.test() {
+  factory SensorData.test([int index = 0]) {
     final random = Random();
     return SensorData(
-      timestamp: DateTime.now(),
+      timestamp: DateTime.now().add(Duration(minutes: index * 30)),
       roomsData: List.generate(
         Room.values.length,
           (index) => RoomData(

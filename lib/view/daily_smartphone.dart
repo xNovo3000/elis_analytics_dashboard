@@ -1,9 +1,12 @@
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class ViewDailySmartphone extends StatelessWidget {
@@ -35,6 +38,7 @@ class _ViewDailySmartphoneData extends StatelessWidget {
   static const _oneDay = Duration(days: 1);
   static final _dateResolver = DateFormat('EEEE d MMMM y', 'it');
   static final _hourResolver = DateFormat('HH');
+  static final _chartTimeOfDayResolver = DateFormat('HH:mm');
   static final _minimumDate = DateTime(2021, 6, 28);
 
   const _ViewDailySmartphoneData({
@@ -84,11 +88,44 @@ class _ViewDailySmartphoneData extends StatelessWidget {
             title: Text('${weather.ambientTemperature.floor()}°C'),
             subtitle: Text('Umidità: ${weather.humidity.floor()}% · Vento: ${weather.windSpeed.floor()} km/h ${weather.windDirection}'),
             trailing: Text('${_hourResolver.format(weather.beginTimestamp)}-${_hourResolver.format(weather.endTimestamp)}'),
+            onTap: () => Navigator.of(context).pushNamed('/daily/weather_report', arguments: {'weather_report': weather}),
           ),
         Divider(indent: 8, endIndent: 8),
         ListTile(
           title: Text(
             'OCCUPAZIONE GIORNALIERA',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+        ),
+        SizedBox(
+          width: double.infinity, height: MediaQuery.of(context).size.height / 2,
+          child: SfCartesianChart(
+            margin: EdgeInsets.all(8),
+            primaryXAxis: CategoryAxis(),
+            zoomPanBehavior: ZoomPanBehavior(
+              enablePinching: true,
+            ),
+            legend: Legend(
+              isVisible: true,
+              position: LegendPosition.bottom,
+              overflowMode: LegendItemOverflowMode.scroll,
+            ),
+            series: [
+              for (Room room in Room.values)
+                StackedColumnSeries<SensorData, String>(
+                  dataSource: dailyData.timedSensor,
+                  xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
+                  yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
+                  legendItemText: '$room',
+                  animationDuration: 0,
+                ),
+            ],
+          ),
+        ),
+        Divider(indent: 8, endIndent: 8),
+        ListTile(
+          title: Text(
+            'PROVENIENZE PER REGIONE E CITTÀ',
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
         ),

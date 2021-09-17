@@ -11,7 +11,7 @@ class ModelInheritedDailyData extends InheritedWidget {
     child: child,
     weathers: WeatherInstantList.test(length: 4),
     dailySensor: SensorData.test(),
-    timedSensor: List.generate(48, (index) => SensorData.test(), growable: false),
+    timedSensor: List.generate(48, (index) => SensorData.test(index), growable: false),
   );
 
   const ModelInheritedDailyData({

@@ -48,7 +48,7 @@ class RouteDaily extends StatelessWidget {
   Future<Map<String, dynamic>> _getDailyData(final DateTime day) async => {
     'weathers': WeatherInstantList.test(length: 4),
     'daily_sensor': SensorData.test(),
-    'timed_sensor': List.generate(48, (index) => SensorData.test(), growable: false),
+    'timed_sensor': List.generate(48, (index) => SensorData.test(index), growable: false),
   };
 
   // TODO: create other futures to get data

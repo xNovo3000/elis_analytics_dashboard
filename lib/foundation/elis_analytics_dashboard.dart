@@ -33,6 +33,7 @@ class ELISAnalyticsDashboard extends StatelessWidget {
         '/realtime': (context) => RouteRealtime(),
         '/realtime/weather_report': (context) => RouteWeatherReport(),
         '/daily': (context) => RouteDaily(),
+        '/daily/weather_report': (context) => RouteWeatherReport(),
       },
       onUnknownRoute: (settings) {
         Navigator.pushNamedAndRemoveUntil(context, '/realtime', (route) => false);
