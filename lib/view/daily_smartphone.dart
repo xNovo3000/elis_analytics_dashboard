@@ -1,5 +1,7 @@
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
+import 'package:elis_analytics_dashboard/component/modal/tile/info.dart';
+import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
 import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
@@ -133,6 +135,9 @@ class _ViewDailySmartphoneData extends StatelessWidget {
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
         ),
+        campusByRegion != null
+          ? _ViewDailySmartphoneByRegion(data: campusByRegion)
+          : ComponentModalTileInfo(message: 'I dati non sono ancora disponibili'),
         Divider(indent: 8, endIndent: 8),
         ListTile(
           title: Text(
@@ -189,3 +194,49 @@ class _ViewDailySmartphoneData extends StatelessWidget {
   bool get _canGoForwardInTime => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
 
 }
+
+class _ViewDailySmartphoneByRegion extends StatelessWidget {
+
+  const _ViewDailySmartphoneByRegion({
+    required this.data,
+  });
+
+  final VodafoneDaily data;
+
+  @override
+  Widget build(BuildContext context) {
+    // Cache total
+    final total = data.visitors;
+    // Build UI
+    return Column(
+      children: [
+        for (var cluster in data)
+          Padding(
+            padding: EdgeInsets.only(
+              left: 16, right: 16, top: 16,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                LinearProgressIndicator(
+                  value: cluster.visitors / total,
+                  backgroundColor: Colors.grey.withOpacity(0.5),
+                  minHeight: 10,
+                ),
+                SizedBox(height: 2),
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  children: [
+                    Text('${cluster.region}: ${cluster.visitors}', textScaleFactor: 1.2),
+                    Text('${(cluster.visitors / total * 100).toStringAsFixed(2)}%', textScaleFactor: 1.2),
+                  ],
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+}
+
