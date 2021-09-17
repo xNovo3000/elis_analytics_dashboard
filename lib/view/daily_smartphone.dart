@@ -35,6 +35,7 @@ class _ViewDailySmartphoneData extends StatelessWidget {
   static const _oneDay = Duration(days: 1);
   static final _dateResolver = DateFormat('EEEE d MMMM y', 'it');
   static final _hourResolver = DateFormat('HH');
+  static final _minimumDate = DateTime(2021, 6, 28);
 
   const _ViewDailySmartphoneData({
     required this.day,
@@ -85,6 +86,13 @@ class _ViewDailySmartphoneData extends StatelessWidget {
             trailing: Text('${_hourResolver.format(weather.beginTimestamp)}-${_hourResolver.format(weather.endTimestamp)}'),
           ),
         Divider(indent: 8, endIndent: 8),
+        ListTile(
+          title: Text(
+            'OCCUPAZIONE GIORNALIERA',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+        ),
+        SizedBox(height: 88),  // 88dp padding at the end
       ],
     );
   }
@@ -97,11 +105,25 @@ class _ViewDailySmartphoneData extends StatelessWidget {
     Navigator.of(context).popAndPushNamed('/daily', arguments: {'day': day.add(_oneDay)});
   }
 
-  void _onDateSelectPressed(BuildContext context) {
-
+  Future<void> _onDateSelectPressed(BuildContext context) async {
+    // Generate lastDate
+    final now = DateTime.now();
+    final lastDate = DateTime(now.year, now.month, now.day).subtract(_oneDay);
+    // Show DatePicker
+    DateTime? chosenDate = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2021, 6, 28),
+      initialDate: day,
+      lastDate: lastDate,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+    );
+    // Go to specific date if present
+    if (chosenDate != null) {
+      Navigator.popAndPushNamed(context, '/daily', arguments: {'day': chosenDate});
+    }
   }
 
-  bool get _canGoBackwardInTime => day.isAfter(DateTime(2021, 06, 28));
+  bool get _canGoBackwardInTime => day.isAfter(_minimumDate);
   bool get _canGoForwardInTime => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
 
 }
