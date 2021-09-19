@@ -1,11 +1,8 @@
 import 'dart:collection';
 
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
-import 'package:elis_analytics_dashboard/model/enum/age.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
-import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
-import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 
 class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<VodafoneDaily> {
 
@@ -68,20 +65,32 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
       try {
         var cx;
         switch (kpi) {
+          case KPI.gender:
+            cx = result.singleWhere((resultCluster) => cluster.gender == resultCluster.gender);
+            break;
+          case KPI.age:
+            cx = result.singleWhere((resultCluster) => cluster.age == resultCluster.age);
+            break;
+          case KPI.nationality:
+            cx = result.singleWhere((resultCluster) => cluster.nationality == resultCluster.nationality);
+            break;
+          case KPI.country:
+            cx = result.singleWhere((resultCluster) => cluster.country == resultCluster.country);
+            break;
+          case KPI.region:
+            cx = result.singleWhere((resultCluster) => cluster.region == resultCluster.region);
+            break;
+          case KPI.province:
+            cx = result.singleWhere((resultCluster) => cluster.province == resultCluster.province);
+            break;
+          case KPI.municipality:
+            cx = result.singleWhere((resultCluster) => cluster.municipality == resultCluster.municipality);
+            break;
           case KPI.homeDistance:
             cx = result.singleWhere((resultCluster) => cluster.homeDistance == resultCluster.homeDistance);
             break;
           case KPI.workDistance:
             cx = result.singleWhere((resultCluster) => cluster.workDistance == resultCluster.workDistance);
-            break;
-          case KPI.gender:
-            cx = result.singleWhere((resultCluster) => cluster.gender == resultCluster.gender);
-            break;
-          case KPI.nationality:
-            cx = result.singleWhere((resultCluster) => cluster.nationality == resultCluster.nationality);
-            break;
-          case KPI.region:
-            cx = result.singleWhere((resultCluster) => cluster.region == resultCluster.region);
             break;
           default:
             throw UnimplementedError("VodafoneDaily#collapseFromKPI(kpi: $kpi)");
@@ -91,25 +100,17 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
         result.add(cy);
       } on StateError catch (_) {
         switch (kpi) {
-          case KPI.homeDistance:
-            result.add(VodafoneCluster.empty(
-              homeDistance: cluster.homeDistance,
-              visitors: cluster.visitors,
-              visits: cluster.visits,
-              totalDwellTime: cluster.totalDwellTime,
-            ));
-            break;
-          case KPI.workDistance:
-            result.add(VodafoneCluster.empty(
-              workDistance: cluster.workDistance,
-              visitors: cluster.visitors,
-              visits: cluster.visits,
-              totalDwellTime: cluster.totalDwellTime,
-            ));
-            break;
           case KPI.gender:
             result.add(VodafoneCluster.empty(
               gender: cluster.gender,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          case KPI.age:
+            result.add(VodafoneCluster.empty(
+              age: cluster.age,
               visitors: cluster.visitors,
               visits: cluster.visits,
               totalDwellTime: cluster.totalDwellTime,
@@ -123,9 +124,49 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
               totalDwellTime: cluster.totalDwellTime,
             ));
             break;
+          case KPI.country:
+            result.add(VodafoneCluster.empty(
+              country: cluster.country,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
           case KPI.region:
             result.add(VodafoneCluster.empty(
               region: cluster.region,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          case KPI.province:
+            result.add(VodafoneCluster.empty(
+              province: cluster.province,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          case KPI.municipality:
+            result.add(VodafoneCluster.empty(
+              municipality: cluster.municipality,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          case KPI.homeDistance:
+            result.add(VodafoneCluster.empty(
+              homeDistance: cluster.homeDistance,
+              visitors: cluster.visitors,
+              visits: cluster.visits,
+              totalDwellTime: cluster.totalDwellTime,
+            ));
+            break;
+          case KPI.workDistance:
+            result.add(VodafoneCluster.empty(
+              workDistance: cluster.workDistance,
               visitors: cluster.visitors,
               visits: cluster.visits,
               totalDwellTime: cluster.totalDwellTime,
