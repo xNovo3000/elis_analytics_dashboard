@@ -1,5 +1,6 @@
 import 'package:elis_analytics_dashboard/route/daily.dart';
 import 'package:elis_analytics_dashboard/route/login.dart';
+import 'package:elis_analytics_dashboard/route/map_viewer.dart';
 import 'package:elis_analytics_dashboard/route/realtime.dart';
 import 'package:elis_analytics_dashboard/route/weather_report.dart';
 import 'package:flutter/foundation.dart';
@@ -34,6 +35,7 @@ class ELISAnalyticsDashboard extends StatelessWidget {
         '/realtime/weather_report': (context) => RouteWeatherReport(),
         '/daily': (context) => RouteDaily(),
         '/daily/weather_report': (context) => RouteWeatherReport(),
+        '/daily/region_map': (context) => RouteMapViewer(),
       },
       onUnknownRoute: (settings) {
         Navigator.pushNamedAndRemoveUntil(context, '/realtime', (route) => false);

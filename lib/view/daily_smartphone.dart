@@ -5,12 +5,14 @@ import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
+import 'package:elis_analytics_dashboard/model/enum/region.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_maps/maps.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class ViewDailySmartphone extends StatelessWidget {
@@ -57,6 +59,7 @@ class _ViewDailySmartphoneData extends StatelessWidget {
     // Generate custom data
     final campusByMunicipality = dailyData.campusVodafone?.collapseFromKPI(KPI.municipality, 6);
     final neighborhoodByRegion = dailyData.neighborhoodVodafone?.collapseFromKPI(KPI.region, 6);
+    final neighborhoodByRegionMap = dailyData.neighborhoodVodafone?.collapseFromKPI(KPI.region);
     // Build UI
     return ListView(
       key: PageStorageKey('_ViewDailySmartphoneDataList'),
@@ -68,7 +71,10 @@ class _ViewDailySmartphoneData extends StatelessWidget {
             children: [
               if (_canGoBackwardInTime) IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => _onDateBackPressed(context),
+                onPressed: () => Navigator.of(context).popAndPushNamed(
+                  '/daily',
+                  arguments: {'day': day.subtract(_oneDay)}
+                ),
               ),
               IconButton(
                 icon: const Icon(Icons.calendar_today),
@@ -76,7 +82,10 @@ class _ViewDailySmartphoneData extends StatelessWidget {
               ),
               if (_canGoForwardInTime) IconButton(
                 icon: const Icon(Icons.arrow_forward),
-                onPressed: () => _onDateForwardPressed(context),
+                onPressed: () => Navigator.of(context).popAndPushNamed(
+                  '/daily',
+                  arguments: {'day': day.add(_oneDay)}
+                ),
               ),
             ],
           ),
@@ -130,6 +139,9 @@ class _ViewDailySmartphoneData extends StatelessWidget {
             'PROVENIENZE PER REGIONE NEL QUARTIERE',
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
+          trailing: neighborhoodByRegionMap != null
+            ? _ViewDailySmartphoneShowMap(vodafoneDaily: neighborhoodByRegionMap)
+            : null,
         ),
         neighborhoodByRegion != null
           ? _ViewDailySmartphoneByKPI(
@@ -141,14 +153,6 @@ class _ViewDailySmartphoneData extends StatelessWidget {
         SizedBox(height: 88),  // 88dp padding at the end
       ],
     );
-  }
-
-  void _onDateBackPressed(BuildContext context) {
-    Navigator.of(context).popAndPushNamed('/daily', arguments: {'day': day.subtract(_oneDay)});
-  }
-
-  void _onDateForwardPressed(BuildContext context) {
-    Navigator.of(context).popAndPushNamed('/daily', arguments: {'day': day.add(_oneDay)});
   }
 
   Future<void> _onDateSelectPressed(BuildContext context) async {
@@ -171,69 +175,6 @@ class _ViewDailySmartphoneData extends StatelessWidget {
 
   bool get _canGoBackwardInTime => day.isAfter(_minimumDate);
   bool get _canGoForwardInTime => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
-
-
-
-}
-
-class _ViewDailySmartphoneByKPI extends StatelessWidget {
-
-  const _ViewDailySmartphoneByKPI({
-    required this.data,
-    required this.kpi,
-  });
-
-  final VodafoneDaily data;
-  final KPI kpi;
-
-  @override
-  Widget build(BuildContext context) {
-    // Cache total
-    final total = data.visitors;
-    // Build UI
-    return Column(
-      children: [
-        for (var cluster in data)
-          Padding(
-            padding: EdgeInsets.only(
-              left: 16, right: 16, top: 16,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                LinearProgressIndicator(
-                  value: cluster.visitors / total,
-                  backgroundColor: Colors.grey.withOpacity(0.5),
-                  minHeight: 10,
-                ),
-                SizedBox(height: 2),
-                Wrap(
-                  alignment: WrapAlignment.spaceBetween,
-                  children: [
-                    Text('${_getClusterRequiredName(cluster)}: ${cluster.visitors}'),
-                    Text('${(cluster.visitors / total * 100).toStringAsFixed(2)}%'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-
-  String _getClusterRequiredName(final VodafoneCluster cluster) {
-    switch (kpi) {
-      case KPI.region:
-        return '${cluster.region}';
-      case KPI.municipality:
-        return cluster.municipality;
-      default:
-        throw UnimplementedError(
-          '_ViewDailySmartphoneByMunicipality#_clusterRequiredName('
-          'kpi: $kpi, cluster $cluster)'
-        );
-    }
-  }
 
 }
 
@@ -296,9 +237,9 @@ class _ViewDailySmartphoneChart extends StatelessWidget {
         ),
         SizedBox(width: 4.0),
         Text(
-          '${series.legendItemText!}: '
-          '${daily?.roomsData.singleWhere((roomData) => roomData.room == Room.values[seriesIndex]).occupancy ?? 'N/A'}',
-          textScaleFactor: 1
+            '${series.legendItemText!}: '
+                '${daily?.roomsData.singleWhere((roomData) => roomData.room == Room.values[seriesIndex]).occupancy ?? 'N/A'}',
+            textScaleFactor: 1
         ),
         SizedBox(width: 16.0),
       ],
@@ -307,3 +248,129 @@ class _ViewDailySmartphoneChart extends StatelessWidget {
 
 }
 
+class _ViewDailySmartphoneShowMap extends StatelessWidget {
+
+  static final _mapNumberFormat = NumberFormat('###,###,##0');
+
+  const _ViewDailySmartphoneShowMap({
+    required this.vodafoneDaily,
+  });
+
+  final VodafoneDaily vodafoneDaily;
+
+  @override
+  Widget build(BuildContext context) {
+    // Cache results
+    final total = vodafoneDaily.visitors;
+    // Build the button
+    return OutlinedButton(
+      child: Text('VEDI MAPPA'),
+      onPressed: () => Navigator.of(context).pushNamed(
+        '/daily/region_map',
+        arguments: {
+          'title': 'Mappa delle provenienze',
+          'map_shape_source': MapShapeSource.asset(
+            'assets/maps/italy.geojson',
+            shapeDataField: 'reg_name',
+            dataCount: 20,
+            primaryValueMapper: (index) => Region.values[index].name,
+            dataLabelMapper: (index) => _mapNumberFormat.format(
+              vodafoneDaily.singleWhere(
+                (cluster) => cluster.region == Region.values[index],
+                orElse: () => VodafoneCluster.empty(),
+              ).visitors
+            ),
+            shapeColorValueMapper: (index) => _getRegionColorByPercentage(
+              visitors: vodafoneDaily.singleWhere(
+                (cluster) => cluster.region == Region.values[index],
+                orElse: () => VodafoneCluster.empty(),
+              ).visitors,
+              total: total,
+            ),
+          ),
+        }
+      ),
+    );
+  }
+
+  Color? _getRegionColorByPercentage({
+    required int visitors,
+    required int total,
+  }) {
+    // Cache percentage
+    final percentage = visitors / total;
+    // Generate color
+    if (percentage > 0.9) {
+      return Colors.red;
+    } else if (percentage > 0.75) {
+      return Colors.yellow;
+    } else if (percentage > 0.5) {
+      return Colors.green;
+    } else if (percentage > 0) {
+      return Colors.blue;
+    }
+  }
+
+}
+
+
+class _ViewDailySmartphoneByKPI extends StatelessWidget {
+
+  const _ViewDailySmartphoneByKPI({
+    required this.data,
+    required this.kpi,
+  });
+
+  final VodafoneDaily data;
+  final KPI kpi;
+
+  @override
+  Widget build(BuildContext context) {
+    // Cache total
+    final total = data.visitors;
+    // Build UI
+    return Column(
+      children: [
+        for (var cluster in data)
+          Padding(
+            padding: EdgeInsets.only(
+              left: 16, right: 16, top: 16,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                LinearProgressIndicator(
+                  value: cluster.visitors / total,
+                  backgroundColor: Colors.grey.withOpacity(0.5),
+                  minHeight: 10,
+                ),
+                SizedBox(height: 2),
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  children: [
+                    Text('${_getClusterRequiredName(cluster)}: ${cluster.visitors}'),
+                    Text('${(cluster.visitors / total * 100).toStringAsFixed(2)}%'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  String _getClusterRequiredName(final VodafoneCluster cluster) {
+    switch (kpi) {
+      case KPI.region:
+        return '${cluster.region}';
+      case KPI.municipality:
+        return cluster.municipality;
+      default:
+        throw UnimplementedError(
+          '_ViewDailySmartphoneByMunicipality#_clusterRequiredName('
+          'kpi: $kpi, cluster $cluster)'
+        );
+    }
+  }
+
+}
