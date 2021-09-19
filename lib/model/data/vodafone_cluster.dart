@@ -17,7 +17,7 @@ class VodafoneCluster implements Comparable<VodafoneCluster> {
       country: 'ITALIA',
       region: Region.values[random.nextInt(21)],
       province: 'ROMA',
-      municipality: 'ROMA',
+      municipality: ['ROMA', 'LATINA', 'FROSINONE', 'RIETI', 'VITERBO'][random.nextInt(5)],
       homeDistance: Distance.values[random.nextInt(7)],
       workDistance: Distance.values[random.nextInt(7)],
       visits: random.nextInt(50) + 400,

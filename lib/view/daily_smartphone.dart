@@ -3,6 +3,7 @@ import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
 import 'package:elis_analytics_dashboard/component/modal/tile/info.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
@@ -41,7 +42,6 @@ class _ViewDailySmartphoneData extends StatelessWidget {
   static const _oneDay = Duration(days: 1);
   static final _dateResolver = DateFormat('EEEE d MMMM y', 'it');
   static final _hourResolver = DateFormat('HH');
-  static final _chartTimeOfDayResolver = DateFormat('HH:mm');
   static final _minimumDate = DateTime(2021, 6, 28);
 
   const _ViewDailySmartphoneData({
@@ -55,7 +55,7 @@ class _ViewDailySmartphoneData extends StatelessWidget {
     // Extract data
     final dailyData = ModelInheritedDailyData.of(context);
     // Generate custom data
-    final campusByRegion = dailyData.campusVodafone?.collapseFromKPI(KPI.region, 6);
+    final campusByMunicipality = dailyData.campusVodafone?.collapseFromKPI(KPI.municipality, 6);
     final neighborhoodByRegion = dailyData.neighborhoodVodafone?.collapseFromKPI(KPI.region, 6);
     // Build UI
     return ListView(
@@ -105,39 +105,11 @@ class _ViewDailySmartphoneData extends StatelessWidget {
         ),
         SizedBox(
           width: double.infinity, height: MediaQuery.of(context).size.height / 2,
-          child: SfCartesianChart(
-            margin: EdgeInsets.all(8),
-            primaryXAxis: CategoryAxis(),
-            zoomPanBehavior: ZoomPanBehavior(
-              enablePinching: true,
-            ),
-            legend: Legend(
-              isVisible: true,
-              position: LegendPosition.bottom,
-              overflowMode: LegendItemOverflowMode.scroll,
-            ),
-            series: [
-              for (Room room in Room.values)
-                StackedColumnSeries<SensorData, String>(
-                  dataSource: dailyData.timedSensor,
-                  xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
-                  yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
-                  legendItemText: '$room',
-                  animationDuration: 0,
-                ),
-            ],
+          child: _ViewDailySmartphoneChart(
+            timed: dailyData.timedSensor,
+            daily: dailyData.dailySensor,
           ),
         ),
-        Divider(indent: 8, endIndent: 8),
-        ListTile(
-          title: Text(
-            'PROVENIENZE PER REGIONE NEL CAMPUS',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-        ),
-        campusByRegion != null
-          ? _ViewDailySmartphoneByRegion(data: campusByRegion)
-          : ComponentModalTileInfo(message: 'I dati non sono ancora disponibili'),
         Divider(indent: 8, endIndent: 8),
         ListTile(
           title: Text(
@@ -145,6 +117,13 @@ class _ViewDailySmartphoneData extends StatelessWidget {
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
         ),
+        campusByMunicipality != null
+          ? _ViewDailySmartphoneByKPI(
+              data: campusByMunicipality,
+              kpi: KPI.municipality,
+            )
+          : ComponentModalTileInfo(message: 'I dati non sono ancora disponibili'),
+        SizedBox(height: 16),
         Divider(indent: 8, endIndent: 8),
         ListTile(
           title: Text(
@@ -152,13 +131,13 @@ class _ViewDailySmartphoneData extends StatelessWidget {
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
         ),
-        Divider(indent: 8, endIndent: 8),
-        ListTile(
-          title: Text(
-            'PROVENIENZE PER CITTA NEL QUARTIERE',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-        ),
+        neighborhoodByRegion != null
+          ? _ViewDailySmartphoneByKPI(
+              data: neighborhoodByRegion,
+              kpi: KPI.region,
+            )
+          : ComponentModalTileInfo(message: 'I dati non sono ancora disponibili'),
+        SizedBox(height: 16),
         SizedBox(height: 88),  // 88dp padding at the end
       ],
     );
@@ -193,15 +172,19 @@ class _ViewDailySmartphoneData extends StatelessWidget {
   bool get _canGoBackwardInTime => day.isAfter(_minimumDate);
   bool get _canGoForwardInTime => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
 
+
+
 }
 
-class _ViewDailySmartphoneByRegion extends StatelessWidget {
+class _ViewDailySmartphoneByKPI extends StatelessWidget {
 
-  const _ViewDailySmartphoneByRegion({
+  const _ViewDailySmartphoneByKPI({
     required this.data,
+    required this.kpi,
   });
 
   final VodafoneDaily data;
+  final KPI kpi;
 
   @override
   Widget build(BuildContext context) {
@@ -227,13 +210,97 @@ class _ViewDailySmartphoneByRegion extends StatelessWidget {
                 Wrap(
                   alignment: WrapAlignment.spaceBetween,
                   children: [
-                    Text('${cluster.region}: ${cluster.visitors}', textScaleFactor: 1.2),
-                    Text('${(cluster.visitors / total * 100).toStringAsFixed(2)}%', textScaleFactor: 1.2),
+                    Text('${_getClusterRequiredName(cluster)}: ${cluster.visitors}'),
+                    Text('${(cluster.visitors / total * 100).toStringAsFixed(2)}%'),
                   ],
                 ),
               ],
             ),
           ),
+      ],
+    );
+  }
+
+  String _getClusterRequiredName(final VodafoneCluster cluster) {
+    switch (kpi) {
+      case KPI.region:
+        return '${cluster.region}';
+      case KPI.municipality:
+        return cluster.municipality;
+      default:
+        throw UnimplementedError(
+          '_ViewDailySmartphoneByMunicipality#_clusterRequiredName('
+          'kpi: $kpi, cluster $cluster)'
+        );
+    }
+  }
+
+}
+
+class _ViewDailySmartphoneChart extends StatelessWidget {
+
+  static const _palette = <Color>[
+    Color.fromRGBO(75, 135, 185, 1),
+    Color.fromRGBO(192, 108, 132, 1),
+    Color.fromRGBO(246, 114, 128, 1),
+    Color.fromRGBO(248, 177, 149, 1),
+    Color.fromRGBO(116, 180, 155, 1),
+    Color.fromRGBO(0, 168, 181, 1),
+    Color.fromRGBO(73, 76, 162, 1),
+    Color.fromRGBO(255, 205, 96, 1),
+    Color.fromRGBO(255, 240, 219, 1),
+    Color.fromRGBO(238, 238, 238, 1)
+  ];
+  static final _chartTimeOfDayResolver = DateFormat('HH:mm');
+
+  const _ViewDailySmartphoneChart({
+    required this.timed,
+    this.daily,
+  });
+
+  final List<SensorData> timed;
+  final SensorData? daily;
+
+  @override
+  Widget build(BuildContext context) {
+    return SfCartesianChart(
+      margin: EdgeInsets.all(8),
+      primaryXAxis: CategoryAxis(),
+      legend: Legend(
+        isVisible: true,
+        position: LegendPosition.bottom,
+        overflowMode: LegendItemOverflowMode.scroll,
+        legendItemBuilder: _legendItemBuilder,
+      ),
+      series: [
+        for (Room room in Room.values)
+          StackedColumnSeries<SensorData, String>(
+            dataSource: timed,
+            xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
+            yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
+            legendItemText: '$room',
+            animationDuration: 0,
+          ),
+      ],
+    );
+  }
+
+  Widget _legendItemBuilder(String legendText, dynamic series, dynamic point, int seriesIndex) {
+    series as StackedColumnSeries<SensorData, String>;
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: <Widget>[
+        Container(
+          width: 14, height: 14,
+          color: _palette[seriesIndex % _palette.length],
+        ),
+        SizedBox(width: 4.0),
+        Text(
+          '${series.legendItemText!}: '
+          '${daily?.roomsData.singleWhere((roomData) => roomData.room == Room.values[seriesIndex]).occupancy ?? 'N/A'}',
+          textScaleFactor: 1
+        ),
+        SizedBox(width: 16.0),
       ],
     );
   }

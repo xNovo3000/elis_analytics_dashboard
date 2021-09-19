@@ -17,14 +17,14 @@ class ModelInheritedDailyData extends InheritedWidget {
   const ModelInheritedDailyData({
     required Widget child,
     required this.weathers,
-    required this.dailySensor,
+    this.dailySensor,
     required this.timedSensor,
     this.campusVodafone,
     this.neighborhoodVodafone,
   }) : super(child: child);
 
   final WeatherInstantList weathers;
-  final SensorData dailySensor;
+  final SensorData? dailySensor;
   final List<SensorData> timedSensor;
   final VodafoneDaily? campusVodafone;
   final VodafoneDaily? neighborhoodVodafone;
