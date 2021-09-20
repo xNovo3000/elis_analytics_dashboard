@@ -5,10 +5,10 @@ import 'package:weather_icons/weather_icons.dart';
 
 class WeatherDaily implements Comparable<WeatherDaily> {
 
-  factory WeatherDaily.test() {
+  factory WeatherDaily.test([int days = 0]) {
     final random = Random();
     return WeatherDaily(
-      timestamp: DateTime.now(),
+      timestamp: DateTime.now().add(Duration(days: days)),
       ambientTemperatureMin: random.nextInt(5) + 15,
       ambientTemperatureMax: random.nextInt(3) + 22,
       windSpeedMean: random.nextDouble() * 5,

@@ -25,9 +25,9 @@ class ViewRealtimeSmartphone extends StatelessWidget {
     // Build the view
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ELIS Analytics Dashboard'),
+        title: const Text('Tempo reale'),
         actions: [
-          PopupMenuButton<_PopupAction>(
+          if (realtimeData != null) PopupMenuButton<_PopupAction>(
             onSelected: (action) => _onPopupEntrySelected(context, action),
             itemBuilder: (context) => [
               PopupMenuItem(
