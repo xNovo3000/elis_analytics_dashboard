@@ -237,9 +237,9 @@ class _ViewDailySmartphoneChart extends StatelessWidget {
         ),
         SizedBox(width: 4.0),
         Text(
-            '${series.legendItemText!}: '
-                '${daily?.roomsData.singleWhere((roomData) => roomData.room == Room.values[seriesIndex]).occupancy ?? 'N/A'}',
-            textScaleFactor: 1
+          '${series.legendItemText!}: '
+          '${daily?.roomsData.singleWhere((roomData) => roomData.room == Room.values[seriesIndex]).occupancy ?? 'N/A'}',
+          textScaleFactor: 1
         ),
         SizedBox(width: 16.0),
       ],
@@ -312,7 +312,6 @@ class _ViewDailySmartphoneShowMap extends StatelessWidget {
   }
 
 }
-
 
 class _ViewDailySmartphoneByKPI extends StatelessWidget {
 
