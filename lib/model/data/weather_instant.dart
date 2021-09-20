@@ -80,7 +80,7 @@ class WeatherInstant implements Comparable<WeatherInstant> {
     // return logic
     if (timestamp.hour < 20 && timestamp.hour > 6) { // day
       if (rainfall > rainfallThreshold) {
-        return WeatherIcons.day_rain;
+        return WeatherIcons.rain;
       } else if (rainfall > 0) {
         return WeatherIcons.cloud;
       } else {
@@ -88,7 +88,7 @@ class WeatherInstant implements Comparable<WeatherInstant> {
       }
     } else { // night
       if (rainfall > rainfallThreshold) {
-        return WeatherIcons.night_rain;
+        return WeatherIcons.rain;
       } else if (rainfall > 0) {
         return WeatherIcons.cloud;
       } else {
