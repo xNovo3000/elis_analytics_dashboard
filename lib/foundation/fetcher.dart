@@ -37,9 +37,9 @@ class Fetcher extends BaseClient {
   Session? _session;
 
   @override
-  Future<Response> get(dynamic url, {Map<String, String>? headers}) {
+  Future<Response> get(Uri url, {Map<String, String>? headers}) {
     // Resolve the uri
-    Uri completeUrl = _baseUrl.resolve(url);
+    Uri completeUrl = _baseUrl.resolveUri(url);
     // Check if blacklisted
     if (_cacheBlacklist.contains(completeUrl)) {
       return super.get(completeUrl, headers: headers);
@@ -78,9 +78,11 @@ class Fetcher extends BaseClient {
           } catch (e) {
             await preferences.remove('Email');
             await preferences.remove('Password');
-            throw InvalidTokenException(e);
+            throw InvalidTokenException('Status code: $e');
           }
         } else {
+          await preferences.remove('Email');
+          await preferences.remove('Password');
           throw NoSessionException();
         }
       }
