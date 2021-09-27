@@ -42,6 +42,17 @@ class ViewRealtimeSmartphone extends StatelessWidget {
                 ),
               ),
               PopupMenuItem(
+                value: _PopupAction.weekly,
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Icon(Icons.date_range, color: Theme.of(context).colorScheme.onSurface),
+                    SizedBox(width: 16),
+                    Text('Settimanale'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
                 value: _PopupAction.info,
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -72,6 +83,17 @@ class ViewRealtimeSmartphone extends StatelessWidget {
         final day = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 1));
         // Push daily route
         Navigator.of(context).pushNamed('/daily', arguments: {'day': day});
+        break;
+      case _PopupAction.weekly:
+        // Generate week range
+        final now = DateTime.now();
+        final end = DateTime(now.year, now.month, now.day - now.weekday);
+        final weekRange = DateTimeRange(
+          start: end.subtract(const Duration(days: 6)),
+          end: end.add(const Duration(days: 1)),
+        );
+        // Push weekly route
+        Navigator.of(context).pushNamed('/weekly', arguments: {'week': weekRange});
         break;
       case _PopupAction.info:
         PackageInfo.fromPlatform().then((info) => showAboutDialog(
@@ -133,9 +155,9 @@ class _ViewRealtimeSmartphoneData extends StatelessWidget {
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  BoxedIcon(realtimeData.weather.icon, size: 72),
+                  BoxedIcon(realtimeData.weather.icon, size: 48),
                   SizedBox(width: 16),
-                  Text('${realtimeData.weather.ambientTemperature.round()}°C', textScaleFactor: 3),
+                  Text('${realtimeData.weather.ambientTemperature.round()}°C', textScaleFactor: 2.5),
                 ],
               ),
               Wrap(
@@ -144,17 +166,17 @@ class _ViewRealtimeSmartphoneData extends StatelessWidget {
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      BoxedIcon(WeatherIcons.raindrop, color: Colors.lightBlue, size: 36),
+                      BoxedIcon(WeatherIcons.raindrop, color: Colors.lightBlue, size: 24),
                       SizedBox(width: 16),
-                      Text('${realtimeData.weather.humidity.round()}%', textScaleFactor: 1.5),
+                      Text('${realtimeData.weather.humidity.round()}%', textScaleFactor: 1.25),
                     ],
                   ),
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      BoxedIcon(WeatherIcons.strong_wind, size: 36),
+                      BoxedIcon(WeatherIcons.strong_wind, size: 24),
                       SizedBox(width: 16),
-                      Text('${realtimeData.weather.windSpeed.round()} km/h ${realtimeData.weather.windDirection}', textScaleFactor: 1.5),
+                      Text('${realtimeData.weather.windSpeed.round()} km/h ${realtimeData.weather.windDirection}', textScaleFactor: 1.25),
                     ],
                   ),
                 ],

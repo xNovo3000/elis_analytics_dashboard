@@ -3,6 +3,7 @@ import 'package:elis_analytics_dashboard/route/login.dart';
 import 'package:elis_analytics_dashboard/route/map_viewer.dart';
 import 'package:elis_analytics_dashboard/route/realtime.dart';
 import 'package:elis_analytics_dashboard/route/weather_report.dart';
+import 'package:elis_analytics_dashboard/route/weekly.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +37,7 @@ class ELISAnalyticsDashboard extends StatelessWidget {
         '/daily': (context) => RouteDaily(),
         '/daily/weather_report': (context) => RouteWeatherReport(),
         '/daily/region_map': (context) => RouteMapViewer(),
+        '/weekly': (context) => RouteWeekly(),
       },
       onUnknownRoute: (settings) {
         Navigator.pushNamedAndRemoveUntil(context, '/realtime', (route) => false);
@@ -49,6 +51,16 @@ class ELISAnalyticsDashboard extends StatelessWidget {
     fontFamily: 'OpenSans',
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: Colors.green,
+    ),
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+        TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
+        TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+        TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+        TargetPlatform.fuchsia: ZoomPageTransitionsBuilder(),
+        TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
+      },
     ),
   );
 

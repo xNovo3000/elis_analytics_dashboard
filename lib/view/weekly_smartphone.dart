@@ -4,6 +4,7 @@ import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/weekly_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 class ViewWeeklySmartphone extends StatelessWidget {
 
@@ -33,7 +34,8 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
   static const _epsilonTime = Duration(microseconds: 1);
   static final _minimumDate = DateTime(2021, 6, 28);
   static final _startDateResolver = DateFormat('d', 'it');
-  static final _endDateResolver = DateFormat('d/M/yyyy', 'it');
+  static final _endDateResolver = DateFormat('d MMMM yyyy', 'it');
+  static final _weatherDateResolver = DateFormat('EEEE d MMMM y', 'it');
 
   const _ViewWeeklySmartphoneData({
     required this.weekRange,
@@ -51,13 +53,45 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
       children: [
         ListTile(
           title: Text('${_startDateResolver.format(weekRange.start)}-${_endDateResolver.format(weekRange.end)}'),
-          subtitle: const Text('Settimana'),
+          // subtitle: const Text('Settimana'),
           trailing: Wrap(
             children: [
-
+              if (_canGoBackwardInTime) IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).popAndPushNamed(
+                  '/weekly',
+                  arguments: {'week': DateTimeRange(
+                    start: weekRange.start.subtract(_oneWeek),
+                    end: weekRange.end.subtract(_oneWeek),
+                  )}
+                ),
+              ),
+              if (_canGoForwardInTime) IconButton(
+                icon: const Icon(Icons.arrow_forward),
+                onPressed: () => Navigator.of(context).popAndPushNamed(
+                  '/weekly',
+                  arguments: {'week': DateTimeRange(
+                    start: weekRange.start.add(_oneWeek),
+                    end: weekRange.end.add(_oneWeek),
+                  )}
+                ),
+              ),
             ],
           ),
         ),
+        Divider(indent: 8, endIndent: 8),
+        ListTile(
+          title: Text(
+            'RAPPORTO METEO',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+        ),
+        for (var weather in weeklyData.weathers)
+          ListTile(
+            leading: BoxedIcon(weather.icon),
+            title: Text('${weather.ambientTemperatureMin.floor()}°C / ${weather.ambientTemperatureMax.floor()}°C'),
+            subtitle: Text(_weatherDateResolver.format(weather.timestamp)),
+          ),
         Divider(indent: 8, endIndent: 8),
       ],
     );

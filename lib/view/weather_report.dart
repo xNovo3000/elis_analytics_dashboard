@@ -38,6 +38,7 @@ class _ViewWeatherReportData extends StatelessWidget {
           title: Text(_reportDateTimeResolver.format(report.weather.timestamp)),
           subtitle: const Text('Data e ora'),
         ),
+        Divider(indent: 8, endIndent: 8),
         Padding(
           padding: EdgeInsets.symmetric(
             vertical: 8, horizontal: 16,
