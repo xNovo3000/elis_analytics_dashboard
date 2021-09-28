@@ -7,6 +7,7 @@ import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
+import 'package:elis_analytics_dashboard/view/gdpr_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -54,6 +55,17 @@ class ViewRealtimeSmartphone extends StatelessWidget {
                 ),
               ),
               PopupMenuItem(
+                value: _PopupAction.gpdr,
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Image(image: AssetImage('assets/images/GDPR.png'), width: 24, height: 24),
+                    SizedBox(width: 16),
+                    Text('GDPR compliance'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
                 value: _PopupAction.info,
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -95,6 +107,12 @@ class ViewRealtimeSmartphone extends StatelessWidget {
         );
         // Push weekly route
         Navigator.of(context).pushNamed('/weekly', arguments: {'week': weekRange});
+        break;
+      case _PopupAction.gpdr:
+        showDialog(
+          context: context,
+          builder: (context) => ViewGdprDialog(),
+        );
         break;
       case _PopupAction.info:
         PackageInfo.fromPlatform().then((info) => showAboutDialog(

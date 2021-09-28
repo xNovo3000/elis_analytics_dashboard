@@ -29,6 +29,7 @@ flutter:
     - assets/maps/
     - assets/images/
     - assets/licenses/OpenSans/
+    - assets/licenses/GDPR/
     - assets/fonts/OpenSans/
 
   # An image asset can refer to one or more resolution-specific "variants", see

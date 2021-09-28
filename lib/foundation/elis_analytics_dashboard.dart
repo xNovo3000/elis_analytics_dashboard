@@ -14,10 +14,12 @@ class ELISAnalyticsDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: add more licenses
+    // Add licenses
     LicenseRegistry.addLicense(() async* {
       var license = await rootBundle.loadString('assets/licenses/OpenSans/LICENSE.txt');
       yield LicenseEntryWithLineBreaks(['Open Sans'], license);
+      license = await rootBundle.loadString('assets/licenses/GDPR/LICENSE.txt');
+      yield LicenseEntryWithLineBreaks(['GDPR'], license);
     });
     // Build the application
     return MaterialApp(
