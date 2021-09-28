@@ -1,10 +1,10 @@
 {
     "name": "ELIS Analytics Dashboard",
-    "short_name": "elis_analytics_dashboard",
+    "short_name": "ELIS Analytics Dashboard",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#4CAF50",
-    "theme_color": "#4CAF50",
+    "background_color": "#FAFAFA",
+    "theme_color": "#FAFAFA",
     "description": "ELIS responsive analytics dashboard",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,

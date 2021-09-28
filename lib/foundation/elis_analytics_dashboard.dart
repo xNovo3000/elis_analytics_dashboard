@@ -1,3 +1,4 @@
+import 'package:elis_analytics_dashboard/component/no_transition_builder.dart';
 import 'package:elis_analytics_dashboard/route/daily.dart';
 import 'package:elis_analytics_dashboard/route/login.dart';
 import 'package:elis_analytics_dashboard/route/map_viewer.dart';
@@ -54,12 +55,12 @@ class ELISAnalyticsDashboard extends StatelessWidget {
     ),
     pageTransitionsTheme: PageTransitionsTheme(
       builders: {
-        TargetPlatform.android: ZoomPageTransitionsBuilder(),
-        TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
-        TargetPlatform.windows: ZoomPageTransitionsBuilder(),
-        TargetPlatform.linux: ZoomPageTransitionsBuilder(),
-        TargetPlatform.fuchsia: ZoomPageTransitionsBuilder(),
-        TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
+        TargetPlatform.android: NoTransitionBuilder(),
+        TargetPlatform.iOS: NoTransitionBuilder(),
+        TargetPlatform.windows: NoTransitionBuilder(),
+        TargetPlatform.linux: NoTransitionBuilder(),
+        TargetPlatform.fuchsia: NoTransitionBuilder(),
+        TargetPlatform.macOS: NoTransitionBuilder(),
       },
     ),
   );

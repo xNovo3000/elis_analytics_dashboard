@@ -1,3 +1,4 @@
+import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
 import 'package:elis_analytics_dashboard/component/modal/tile/info.dart';
@@ -24,7 +25,7 @@ class ViewDailySmartphone extends StatelessWidget {
     final data = ModelInheritedDailyData.maybeOf(context);
     // Build UI
     return Scaffold(
-      appBar: AppBar(
+      appBar: ColoredAppBar(
         title: const Text('Visualizzazione giornaliera'),
       ),
       body: data != null

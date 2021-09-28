@@ -1,3 +1,4 @@
+import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
@@ -15,7 +16,7 @@ class ViewWeeklySmartphone extends StatelessWidget {
     final error = ModelInheritedError.maybeOf(context);
     // Build UI
     return Scaffold(
-      appBar: AppBar(
+      appBar: ColoredAppBar(
         title: Text('Visualizzazione settimanale'),
       ),
       body: weeklyData != null
@@ -31,7 +32,7 @@ class ViewWeeklySmartphone extends StatelessWidget {
 class _ViewWeeklySmartphoneData extends StatelessWidget {
 
   static const _oneWeek = Duration(days: 7);
-  static const _epsilonTime = Duration(microseconds: 1);
+  static const _epsilonTime = Duration(seconds: 1);
   static final _minimumDate = DateTime(2021, 6, 28);
   static final _startDateResolver = DateFormat('d', 'it');
   static final _endDateResolver = DateFormat('d MMMM yyyy', 'it');
@@ -52,7 +53,7 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
       key: PageStorageKey('_ViewWeeklySmartphoneDataList'),
       children: [
         ListTile(
-          title: Text('${_startDateResolver.format(weekRange.start)}-${_endDateResolver.format(weekRange.end)}'),
+          title: Text('${_startDateResolver.format(weekRange.start)}-${_endDateResolver.format(weekRange.end.subtract(_epsilonTime))}'),
           // subtitle: const Text('Settimana'),
           trailing: Wrap(
             children: [

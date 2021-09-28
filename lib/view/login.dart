@@ -1,4 +1,5 @@
 import 'package:elis_analytics_dashboard/component/action_button.dart';
+import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class ViewLogin extends StatelessWidget {
@@ -10,7 +11,7 @@ class ViewLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: ColoredAppBar(
         title: Text('Login'),
       ),
       body: Form(

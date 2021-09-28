@@ -1,4 +1,5 @@
 import 'package:elis_analytics_dashboard/component/bar_graph.dart';
+import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
 import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
@@ -24,7 +25,7 @@ class ViewRealtimeSmartphone extends StatelessWidget {
     final error = ModelInheritedError.maybeOf(context);
     // Build the view
     return Scaffold(
-      appBar: AppBar(
+      appBar: ColoredAppBar(
         title: const Text('Tempo reale'),
         actions: [
           if (realtimeData != null) PopupMenuButton<_PopupAction>(
@@ -101,6 +102,7 @@ class ViewRealtimeSmartphone extends StatelessWidget {
           applicationName: 'ELIS Analytics Dashboard',
           applicationVersion: info.version,
           applicationLegalese: '© 2021 ELIS Innovation Team',
+          applicationIcon: Image(image: AssetImage('assets/images/Icon-512.png'), width: 96, height: 96),
         ));
         break;
       default:

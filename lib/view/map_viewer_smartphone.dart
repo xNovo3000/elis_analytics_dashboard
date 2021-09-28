@@ -1,3 +1,4 @@
+import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
@@ -14,7 +15,7 @@ class ViewMapViewerSmartphone extends StatelessWidget {
     final error = ModelInheritedError.maybeOf(context);
     // Build the view
     return Scaffold(
-      appBar: AppBar(
+      appBar: ColoredAppBar(
         title: Text(mapData != null ? mapData.title : 'Visualizza mappa'),
       ),
       body: mapData != null

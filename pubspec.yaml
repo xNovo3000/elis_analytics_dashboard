@@ -27,6 +27,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/maps/
+    - assets/images/
     - assets/licenses/OpenSans/
     - assets/fonts/OpenSans/
 
