@@ -1,10 +1,16 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
+import 'package:elis_analytics_dashboard/component/managed_future_builder.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
+import 'package:elis_analytics_dashboard/component/modal/tile/error.dart';
+import 'package:elis_analytics_dashboard/component/modal/tile/wait.dart';
+import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/weekly_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class ViewWeeklySmartphone extends StatelessWidget {
@@ -38,11 +44,12 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
   static final _endDateResolver = DateFormat('d MMMM yyyy', 'it');
   static final _weatherDateResolver = DateFormat('EEEE d MMMM y', 'it');
 
-  const _ViewWeeklySmartphoneData({
+  _ViewWeeklySmartphoneData({
     required this.weekRange,
-  });
+  }) : super(key: ValueKey(weekRange));
 
   final DateTimeRange weekRange;
+  final kpiHelperState = GlobalKey<_ViewWeeklySmartphoneDataKpiHelperState>();
 
   @override
   Widget build(BuildContext context) {
@@ -102,3 +109,106 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
   bool get _canGoForwardInTime => weekRange.end.add(_oneWeek).isBefore(DateTime.now());
 
 }
+
+/* SPLITTING WIDGETS IS ALWAYS USEFUL */
+class _ViewWeeklySmartphoneDataKpiHelper extends StatefulWidget {
+
+  const _ViewWeeklySmartphoneDataKpiHelper({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _ViewWeeklySmartphoneDataKpiHelperState createState() => _ViewWeeklySmartphoneDataKpiHelperState();
+
+}
+
+class _ViewWeeklySmartphoneDataKpiHelperState extends State<_ViewWeeklySmartphoneDataKpiHelper> {
+
+  @override
+  Widget build(BuildContext context) {
+    return ComponentManagedFutureBuilder<List<String>>(
+      future: _getKpisToShow(),
+      onSuccess: (context, data) => _ViewWeeklySmartphoneDataKpiShower(stringKpis: data),
+      onWait: (context) => ComponentModalTileWait(message: 'Costruisco i KPI'),
+      onError: (context, error) => ComponentModalTileError(error: '$error'),
+    );
+  }
+
+  Future<List<String>> _getKpisToShow() async =>
+    (await SharedPreferences.getInstance()).getStringList('KPIs') ?? [];
+
+  Future<void> addKpi(KPI kpi) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final kpis = await _getKpisToShow();
+    if (!kpis.contains(kpi.technicalName)) {
+      kpis.add(kpi.technicalName);
+      await sharedPreferences.setStringList('KPIs', kpis);
+      setState(() => null);
+    }
+  }
+
+  Future<void> removeKpi(KPI kpi) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final kpis = await _getKpisToShow();
+    if (kpis.contains(kpi.technicalName)) {
+      kpis.remove(kpi.technicalName);
+      await sharedPreferences.setStringList('KPIs', kpis);
+      setState(() => null);
+    }
+  }
+
+}
+
+class _ViewWeeklySmartphoneDataKpiShower extends StatelessWidget {
+
+  const _ViewWeeklySmartphoneDataKpiShower({
+    required this.stringKpis,
+  });
+
+  final List<String> stringKpis;
+
+  @override
+  Widget build(BuildContext context) {
+    // Retrieve data
+    final weeklyData = ModelInheritedWeeklyData.of(context);
+    // Get real KPIs
+    final kpis = <KPI>[];
+    stringKpis.forEach((stringKpi) => kpis.add(KPI.fromTechnicalName(stringKpi)));
+    // Build UI
+    return Column(
+      children: [
+        for (KPI kpi in kpis)
+          Column(
+            children: [
+              ListTile(
+                subtitle: Text('$kpi'),
+              ),
+              SizedBox(
+                width: double.infinity, height: MediaQuery.of(context).size.height / 2.2,
+                child: SfCartesianChart(
+                  margin: EdgeInsets.all(8),
+                  primaryXAxis: CategoryAxis(),
+                  legend: Legend(
+                    isVisible: true,
+                    position: LegendPosition.bottom,
+                    overflowMode: LegendItemOverflowMode.scroll,
+                  ),
+                  series: _getSeriesDataFromKPI(weeklyData, kpi),
+                ),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  List _getSeriesDataFromKPI(ModelInheritedWeeklyData data, KPI kpi) {
+    if (kpi == KPI.roomsOccupancy) {
+      return kpi.series(data.sensors);
+    } else {  // TODO: split indoor and outdoors -> duplicate Vodafone KPIs
+      return kpi.series(data.campusVodafone);
+    }
+  }
+
+}
+
