@@ -141,7 +141,7 @@ class _ViewDailySmartphoneData extends StatelessWidget {
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
           trailing: neighborhoodByRegionMap != null
-            ? _ViewDailySmartphoneShowMap(vodafoneDaily: neighborhoodByRegionMap)
+            ? _ViewDailySmartphoneButtonShowMap(vodafoneDaily: neighborhoodByRegionMap)
             : null,
         ),
         neighborhoodByRegion != null
@@ -249,11 +249,11 @@ class _ViewDailySmartphoneChart extends StatelessWidget {
 
 }
 
-class _ViewDailySmartphoneShowMap extends StatelessWidget {
+class _ViewDailySmartphoneButtonShowMap extends StatelessWidget {
 
   static final _mapNumberFormat = NumberFormat('###,###,##0');
 
-  const _ViewDailySmartphoneShowMap({
+  const _ViewDailySmartphoneButtonShowMap({
     required this.vodafoneDaily,
   });
 
