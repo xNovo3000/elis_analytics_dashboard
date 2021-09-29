@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:elis_analytics_dashboard/component/button/navigate_to_region_map_viewer.dart';
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/component/managed_future_builder.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
@@ -55,6 +58,12 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
   Widget build(BuildContext context) {
     // Retrieve data
     final weeklyData = ModelInheritedWeeklyData.of(context);
+    // Generate collapsed data
+    final vodafoneCampusByMunicipality = weeklyData.campusVodafone.collapseFromKPI(KPI.municipality, 7);
+    final vodafoneCampusByMunicipalityTotal = vodafoneCampusByMunicipality.visitors;
+    final vodafoneNeighborhoodByRegionMap = weeklyData.neighborhoodVodafone.collapseFromKPI(KPI.region);
+    final vodafoneNeighborhoodByRegion = vodafoneNeighborhoodByRegionMap.collapseFromKPI(KPI.region, 7);
+    final vodafoneNeighborhoodByRegionTotal = vodafoneNeighborhoodByRegion.visitors;
     // Build UI
     return ListView(
       key: PageStorageKey('_ViewWeeklySmartphoneDataList'),
@@ -101,8 +110,125 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
             subtitle: Text(_weatherDateResolver.format(weather.timestamp)),
           ),
         Divider(indent: 8, endIndent: 8),
+        ListTile(
+          title: Text(
+            'PROVENIENZE IN BASE ALLA CITTÀ',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+          subtitle: Text('Calcolate nel campus'),
+        ),
+        for (var cluster in vodafoneCampusByMunicipality)
+          Padding(
+            padding: EdgeInsets.only(
+              left: 16, right: 16, top: 16,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                LinearProgressIndicator(
+                  value: cluster.visitors / vodafoneCampusByMunicipalityTotal,
+                  backgroundColor: Colors.grey.withOpacity(0.5),
+                  minHeight: 10,
+                ),
+                SizedBox(height: 2),
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  children: [
+                    Text('${cluster.municipality}: ${cluster.visitors}'),
+                    Text('${(cluster.visitors / vodafoneCampusByMunicipalityTotal * 100).toStringAsFixed(2)}%'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        SizedBox(height: 16),
+        Divider(indent: 8, endIndent: 8),
+        ListTile(
+          title: Text(
+            'PROVENIENZE IN BASE ALLA REGIONE',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+          subtitle: Text('Calcolate nel quartiere'),
+          trailing: ComponentButtonNavigateToRegionMapViewer(
+            topLevelRoute: 'weekly',
+            vodafoneDaily: vodafoneNeighborhoodByRegionMap,
+          ),
+        ),
+        for (var cluster in vodafoneNeighborhoodByRegion)
+          Padding(
+            padding: EdgeInsets.only(
+              left: 16, right: 16, top: 16,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                LinearProgressIndicator(
+                  value: cluster.visitors / vodafoneNeighborhoodByRegionTotal,
+                  backgroundColor: Colors.grey.withOpacity(0.5),
+                  minHeight: 10,
+                ),
+                SizedBox(height: 2),
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  children: [
+                    Text('${cluster.region}: ${cluster.visitors}'),
+                    Text('${(cluster.visitors / vodafoneNeighborhoodByRegionTotal * 100).toStringAsFixed(2)}%'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        SizedBox(height: 16),
+        Divider(indent: 8, endIndent: 8),
+        ListTile(
+          title: Text(
+            'KPI',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+          trailing: Wrap(
+            children: [
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => _onAddKpiPressed(context),
+              ),
+            ],
+          ),
+        ),
+        _ViewWeeklySmartphoneDataKpiHelper(key: kpiHelperState),
+        SizedBox(height: 88),
       ],
     );
+  }
+
+  Future<void> _onAddKpiPressed(BuildContext context) async {
+    // Check already added KPIs and exclude them
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final stringKpis = sharedPreferences.getStringList('KPIs') ?? [];
+    print(stringKpis);
+    final oldKpis = <KPI>[];
+    stringKpis.forEach((stringKpi) => oldKpis.add(KPI.fromTechnicalName(stringKpi)));
+    final kpis = List.of(KPI.values);
+    for (KPI k in oldKpis) {
+      kpis.remove(k);
+    }
+    // Choose KPI to insert
+    await showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text('Seleziona un KPI'),
+        children: [
+          for (KPI kpi in kpis)
+            SimpleDialogOption(
+              child: Text('$kpi'),
+              onPressed: () => kpiHelperState.currentState!.addKpi(kpi),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _onRemoveKpiPressed() async {
+
   }
 
   bool get _canGoBackwardInTime => weekRange.start.subtract(_oneWeek).isAfter(_minimumDate);
@@ -180,11 +306,12 @@ class _ViewWeeklySmartphoneDataKpiShower extends StatelessWidget {
         for (KPI kpi in kpis)
           Column(
             children: [
-              ListTile(
-                subtitle: Text('$kpi'),
+              Padding(
+                padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+                child: Text('$kpi'),
               ),
               SizedBox(
-                width: double.infinity, height: MediaQuery.of(context).size.height / 2.2,
+                width: double.infinity, height: MediaQuery.of(context).size.height / 2.5,
                 child: SfCartesianChart(
                   margin: EdgeInsets.all(8),
                   primaryXAxis: CategoryAxis(),

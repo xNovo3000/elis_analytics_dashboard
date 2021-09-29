@@ -1,3 +1,4 @@
+import 'package:elis_analytics_dashboard/component/button/navigate_to_region_map_viewer.dart';
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
@@ -59,8 +60,8 @@ class _ViewDailySmartphoneData extends StatelessWidget {
     final dailyData = ModelInheritedDailyData.of(context);
     // Generate custom data
     final campusByMunicipality = dailyData.campusVodafone?.collapseFromKPI(KPI.municipality, 6);
-    final neighborhoodByRegion = dailyData.neighborhoodVodafone?.collapseFromKPI(KPI.region, 6);
     final neighborhoodByRegionMap = dailyData.neighborhoodVodafone?.collapseFromKPI(KPI.region);
+    final neighborhoodByRegion = neighborhoodByRegionMap?.collapseFromKPI(KPI.region, 6);
     // Build UI
     return ListView(
       key: PageStorageKey('_ViewDailySmartphoneDataList'),
@@ -141,7 +142,10 @@ class _ViewDailySmartphoneData extends StatelessWidget {
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
           trailing: neighborhoodByRegionMap != null
-            ? _ViewDailySmartphoneButtonShowMap(vodafoneDaily: neighborhoodByRegionMap)
+            ? ComponentButtonNavigateToRegionMapViewer(
+                topLevelRoute: 'daily',
+                vodafoneDaily: neighborhoodByRegionMap,
+              )
             : null,
         ),
         neighborhoodByRegion != null
@@ -249,6 +253,7 @@ class _ViewDailySmartphoneChart extends StatelessWidget {
 
 }
 
+// TODO: unused. Moved to lib/component/button/navigate_to_region_map_viewer.dart
 class _ViewDailySmartphoneButtonShowMap extends StatelessWidget {
 
   static final _mapNumberFormat = NumberFormat('###,###,##0');

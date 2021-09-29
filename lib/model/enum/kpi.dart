@@ -25,7 +25,7 @@ class KPI {
 
   final String displayName;
   final String technicalName;
-  final List Function(List) series;
+  final List<ChartSeries> Function(List) series;
 
   @override String toString() => displayName;
 
@@ -40,7 +40,7 @@ class KPI {
   static const workDistance = KPI._(displayName: 'Distanza da lavoro', technicalName: 'work_distance', series: _workDistanceSeries);
   static const roomsOccupancy = KPI._(displayName: 'Occupazione aule', technicalName: 'rooms_occupancy', series: _roomsOccupancySeries);
 
-  static const values = const <KPI>[
+  static const values = <KPI>[
     gender, nationality, country, region, province,
     municipality, homeDistance, workDistance, roomsOccupancy
   ];
@@ -49,11 +49,7 @@ class KPI {
 
   static final _chartDateResolver = DateFormat('d/M');
 
-  // Used only in certain situations
-  // static List _unimplementedSeries(List data) =>
-  //   throw UnimplementedError("KPI#_ not implemented");
-
-  static List _genderSeries(List data) =>
+  static List<ChartSeries> _genderSeries(List data) =>
     [
       for (Gender gender in Gender.values)
         StackedColumnSeries<VodafoneDaily, String>(
@@ -67,7 +63,7 @@ class KPI {
         ),
     ];
 
-  static List _ageSeries(List data) =>
+  static List<ChartSeries> _ageSeries(List data) =>
     [
       for (Age age in Age.values)
         StackedColumnSeries<VodafoneDaily, String>(
@@ -81,7 +77,7 @@ class KPI {
         ),
     ];
 
-  static List _nationalitySeries(List data) =>
+  static List<ChartSeries> _nationalitySeries(List data) =>
     [
       for (Nationality nationality in Nationality.values)
         StackedColumnSeries<VodafoneDaily, String>(
@@ -95,7 +91,7 @@ class KPI {
         ),
     ];
 
-  static List _countrySeries(List data) {
+  static List<ChartSeries> _countrySeries(List data) {
     // Useful for debug
     data as VodafoneDailyList;
     final countryList = HashSet<String>();
@@ -114,21 +110,21 @@ class KPI {
     ];
   }
 
-  static List _regionSeries(List data) =>
+  static List<ChartSeries> _regionSeries(List data) =>
     [
       for (Region region in Region.values)
         StackedColumnSeries<VodafoneDaily, String>(
           dataSource: data as VodafoneDailyList,
           xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
           yValueMapper: (datum, index) =>
-            datum.collapseFromKPI(KPI.nationality)
+            datum.collapseFromKPI(KPI.region)
               .whereCondition((cluster) => cluster.region == region).visitors,
           legendItemText: '$region',
           animationDuration: 0
         ),
     ];
 
-  static List _provinceSeries(List data) {
+  static List<ChartSeries> _provinceSeries(List data) {
     // Useful for debug
     data as VodafoneDailyList;
     final provinceList = HashSet<String>();
@@ -139,7 +135,7 @@ class KPI {
           dataSource: data,
           xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
           yValueMapper: (datum, index) =>
-          datum.collapseFromKPI(KPI.country)
+          datum.collapseFromKPI(KPI.province)
               .whereCondition((cluster) => cluster.province == province).visitors,
           legendItemText: province,
           animationDuration: 0
@@ -147,7 +143,7 @@ class KPI {
     ];
   }
 
-  static List _municipalitySeries(List data) {
+  static List<ChartSeries> _municipalitySeries(List data) {
     // Useful for debug
     data as VodafoneDailyList;
     final municipalityList = HashSet<String>();
@@ -158,7 +154,7 @@ class KPI {
           dataSource: data,
           xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
           yValueMapper: (datum, index) =>
-          datum.collapseFromKPI(KPI.country)
+            datum.collapseFromKPI(KPI.municipality)
               .whereCondition((cluster) => cluster.municipality == municipality).visitors,
           legendItemText: municipality,
           animationDuration: 0
@@ -166,35 +162,35 @@ class KPI {
     ];
   }
 
-  static List _homeDistanceSeries(List data) =>
+  static List<ChartSeries> _homeDistanceSeries(List data) =>
     [
       for (Distance distance in Distance.values)
         StackedColumnSeries<VodafoneDaily, String>(
           dataSource: data as VodafoneDailyList,
           xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
           yValueMapper: (datum, index) =>
-            datum.collapseFromKPI(KPI.nationality)
+            datum.collapseFromKPI(KPI.homeDistance)
               .whereCondition((cluster) => cluster.homeDistance == distance).visitors,
           legendItemText: '$distance',
           animationDuration: 0
         ),
     ];
 
-  static List _workDistanceSeries(List data) =>
+  static List<ChartSeries> _workDistanceSeries(List data) =>
     [
       for (Distance distance in Distance.values)
         StackedColumnSeries<VodafoneDaily, String>(
           dataSource: data as VodafoneDailyList,
           xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
           yValueMapper: (datum, index) =>
-            datum.collapseFromKPI(KPI.nationality)
+            datum.collapseFromKPI(KPI.workDistance)
               .whereCondition((cluster) => cluster.workDistance == distance).visitors,
           legendItemText: '$distance',
           animationDuration: 0
         ),
     ];
 
-  static List _roomsOccupancySeries(List data) =>
+  static List<ChartSeries> _roomsOccupancySeries(List data) =>
     [
       for (Room room in Room.values)
         StackedColumnSeries<SensorData, String>(
