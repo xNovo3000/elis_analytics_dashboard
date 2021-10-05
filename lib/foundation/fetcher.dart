@@ -95,4 +95,6 @@ class Fetcher extends BaseClient {
     return _client.send(request);
   }
 
+  bool get hasSession => _session != null;
+
 }

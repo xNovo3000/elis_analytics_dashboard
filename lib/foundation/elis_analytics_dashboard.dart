@@ -1,5 +1,6 @@
 import 'package:elis_analytics_dashboard/component/no_transition_builder.dart';
 import 'package:elis_analytics_dashboard/route/daily.dart';
+import 'package:elis_analytics_dashboard/route/home.dart';
 import 'package:elis_analytics_dashboard/route/login.dart';
 import 'package:elis_analytics_dashboard/route/map_viewer.dart';
 import 'package:elis_analytics_dashboard/route/realtime.dart';
@@ -24,7 +25,7 @@ class ELISAnalyticsDashboard extends StatelessWidget {
     // Build the application
     return MaterialApp(
       title: 'ELIS Analytics Dashboard',
-      initialRoute: '/realtime',
+      initialRoute: '/',
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -34,6 +35,7 @@ class ELISAnalyticsDashboard extends StatelessWidget {
         Locale('it')
       ],
       routes: {
+        '/': (context) => RouteHome(),
         '/login': (context) => RouteLogin(),
         '/realtime': (context) => RouteRealtime(),
         '/realtime/weather_report': (context) => RouteWeatherReport(),
@@ -56,6 +58,7 @@ class ELISAnalyticsDashboard extends StatelessWidget {
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: Colors.green,
     ),
+    visualDensity: VisualDensity.comfortable,
     pageTransitionsTheme: PageTransitionsTheme(
       builders: {
         TargetPlatform.android: NoTransitionBuilder(),

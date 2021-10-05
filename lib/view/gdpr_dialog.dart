@@ -9,29 +9,72 @@ class ViewGdprDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: ListView(
+      // child: ListView(
+      //   children: [
+      //     Row(
+      //       children: [
+      //         SizedBox(width: 16),
+      //         Expanded(
+      //           child: Column(
+      //             crossAxisAlignment: CrossAxisAlignment.stretch,
+      //             children: [
+      //               SizedBox(height: 16),
+      //               Text('GDPR compliance', textScaleFactor: 2),
+      //               SizedBox(height: 16),
+      //               ComponentManagedFutureBuilder<String>(
+      //                 future: _getGDPRLicense(),
+      //                 onSuccess: (context, data) => Text(data, maxLines: null),
+      //                 onWait: (context) => ComponentModalTileWait(message: 'Attendi'),
+      //                 onError: (context, error) => ComponentModalTileError(error: '$error'),
+      //               ),
+      //               SizedBox(height: 16),
+      //             ],
+      //           ),
+      //         ),
+      //         SizedBox(width: 16),
+      //       ],
+      //     ),
+      //   ],
+      // ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 16),
-                    Text('GDPR compliance', textScaleFactor: 2),
-                    SizedBox(height: 16),
-                    ComponentManagedFutureBuilder<String>(
-                      future: _getGDPRLicense(),
-                      onSuccess: (context, data) => Text(data, maxLines: null),
-                      onWait: (context) => ComponentModalTileWait(message: 'Attendi'),
-                      onError: (context, error) => ComponentModalTileError(error: '$error'),
-                    ),
-                    SizedBox(height: 16),
-                  ],
+          Expanded(
+            child: Row(
+              children: [
+                SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(height: 16),
+                      Text('GDPR compliance', textScaleFactor: 2),
+                      SizedBox(height: 16),
+                      Expanded(
+                        child: ComponentManagedFutureBuilder<String>(
+                          future: _getGDPRLicense(),
+                          onSuccess: (context, data) => ListView(
+                            children: [
+                              Text(data, maxLines: null),
+                            ],
+                          ),
+                          onWait: (context) => ComponentModalTileWait(message: 'Attendi'),
+                          onError: (context, error) => ComponentModalTileError(error: '$error'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                SizedBox(width: 16),
+              ],
+            ),
+          ),
+          ButtonBar(
+            children: [
+              TextButton(
+                child: Text('CHIUDI'),
+                onPressed: () => Navigator.pop(context),
               ),
-              SizedBox(width: 16),
             ],
           ),
         ],
