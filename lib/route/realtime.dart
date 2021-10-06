@@ -9,7 +9,7 @@ import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/foundation/fetcher.dart';
-import 'package:elis_analytics_dashboard/view/realtime_smartphone.dart';
+import 'package:elis_analytics_dashboard/view/realtime_smartphone_2.dart';
 import 'package:flutter/material.dart';
 
 class RouteRealtime extends StatefulWidget {
@@ -66,7 +66,9 @@ class _RouteRealtimeState extends State<RouteRealtime> {
 
   // Every 1 minute updates the data
   void _onTimerTick(final Timer timer) {
-    if (mounted) setState(() => null);
+    if (mounted) {
+      setState(() => null);
+    }
   }
 
   // TEST: just for testing
