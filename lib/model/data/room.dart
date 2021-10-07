@@ -19,11 +19,13 @@ class RoomData implements Comparable<RoomData> {
 
   double get percentage => occupancy / room.capacity;
 
-  Color? get color {
+  Color get color {
     if (percentage >= 1) {
-      return Colors.red;
+      return Colors.red[300]!;
     } else if (percentage >= 0.75) {
-      return Colors.yellow;
+      return Colors.yellow[300]!;
+    } else {
+      return Colors.green[300]!;
     }
   }
 

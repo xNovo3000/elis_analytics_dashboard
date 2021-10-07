@@ -97,10 +97,12 @@ class WeatherInstant implements Comparable<WeatherInstant> {
     }
   }
 
-  Color? get iconColor {
+  Color get iconColor {
     // return logic
     if (timestamp.hour < 20 && timestamp.hour > 6 && rainfall == 0) { // day
       return Colors.yellow;
+    } else {
+      return Colors.black;
     }
   }
 

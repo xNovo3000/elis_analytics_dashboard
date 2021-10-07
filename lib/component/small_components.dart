@@ -23,7 +23,7 @@ class ComponentNonPassingRoomsOccupancy extends StatelessWidget {
           title: Text('PRESENZE NELLE AULE', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         ),
         for (var roomData in sensorData.roomsData)
-          if (!roomData.room.passing)
+          if (!roomData.room.standing)
             Padding(
               padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
               child: Column(
@@ -69,7 +69,7 @@ class ComponentPassingRoomsOccupancy extends StatelessWidget {
           title: Text('PASSANTI', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         ),
         for (var roomData in sensorData.roomsData)
-          if (roomData.room.passing)
+          if (roomData.room.standing)
             Padding(
               padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
               child: Column(
