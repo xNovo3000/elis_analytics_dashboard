@@ -5,9 +5,11 @@ class ColoredAppBar extends StatelessWidget implements PreferredSizeWidget {
   ColoredAppBar({
     Widget? title,
     List<Widget>? actions,
+    PreferredSizeWidget? bottom,
   }) : widget = AppBar(
     title: title,
     actions: actions,
+    bottom: bottom,
   );
 
   final AppBar widget;

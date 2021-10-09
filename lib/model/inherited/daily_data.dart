@@ -36,12 +36,13 @@ class ModelInheritedDailyData extends InheritedWidget {
     context.dependOnInheritedWidgetOfExactType<ModelInheritedDailyData>();
 
   @override
-  bool updateShouldNotify(ModelInheritedDailyData old) {
-    return weathers != old.weathers ||
-           dailySensor != old.dailySensor ||
-           timedSensor != old.timedSensor ||
-           campusVodafone != old.campusVodafone ||
-           neighborhoodVodafone != old.neighborhoodVodafone;
-  }
+  bool updateShouldNotify(ModelInheritedDailyData old) =>
+    weathers != old.weathers ||
+    dailySensor != old.dailySensor ||
+    timedSensor != old.timedSensor ||
+    campusVodafone != old.campusVodafone ||
+    neighborhoodVodafone != old.neighborhoodVodafone;
+
+  bool get hasVodafone => campusVodafone != null && neighborhoodVodafone != null;
 
 }

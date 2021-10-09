@@ -350,7 +350,7 @@ class _ComponentPredictions extends StatelessWidget {
           trailing: Text('${foreignersPercentage.toStringAsFixed(2)}%'),
         ),
         SizedBox(
-          width: double.infinity, height: MediaQuery.of(context).size.height / 2.5,
+          width: double.infinity, height: MediaQuery.of(context).size.height / 3,
           child: SfCircularChart(
             legend: Legend(
               isVisible: true,

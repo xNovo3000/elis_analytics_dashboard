@@ -53,6 +53,12 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
     return total;
   }
 
+  Duration get dwellTime {
+    var total = Duration();
+    forEach((cluster) => total += cluster.totalDwellTime);
+    return Duration(seconds: (total.inSeconds / visitors).round());
+  }
+
   VodafoneDaily whereCondition(bool Function(VodafoneCluster element) test) => VodafoneDaily(
     List.of(super.where(test)),
     date: date,
