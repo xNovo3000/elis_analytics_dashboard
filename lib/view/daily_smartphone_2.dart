@@ -6,20 +6,23 @@ import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/container/weather_instant_list.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
-import 'package:elis_analytics_dashboard/model/data/weather_instant.dart';
 import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
 import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
+import 'package:elis_analytics_dashboard/model/enum/region.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_maps/maps.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class ViewDailySmartphone extends StatelessWidget {
 
   static final _dateResolver = DateFormat('EEEE d MMMM y', 'it');
+  static const _oneDay = Duration(days: 1);
+  static final _minimumDate = DateTime(2021, 6, 28);
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +39,28 @@ class ViewDailySmartphone extends StatelessWidget {
           preferredSize: Size.fromHeight(48),
           child: ListTile(
             title: Text(_dateResolver.format(day)),
+            trailing: Wrap(
+              children: [
+                if (_canGoBackwardInTime(day)) IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).popAndPushNamed(
+                    '/daily',
+                    arguments: {'day': day.subtract(_oneDay)}
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.calendar_today),
+                  onPressed: () => _onDateSelectPressed(context, day),
+                ),
+                if (_canGoForwardInTime(day)) IconButton(
+                  icon: const Icon(Icons.arrow_forward),
+                  onPressed: () => Navigator.of(context).popAndPushNamed(
+                    '/daily',
+                    arguments: {'day': day.add(_oneDay)}
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -46,6 +71,27 @@ class ViewDailySmartphone extends StatelessWidget {
           : ComponentModalFullscreenWait(),
     );
   }
+
+  Future<void> _onDateSelectPressed(BuildContext context, DateTime day) async {
+    // Generate lastDate
+    final now = DateTime.now();
+    final lastDate = DateTime(now.year, now.month, now.day).subtract(_oneDay);
+    // Show DatePicker
+    DateTime? chosenDate = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2021, 6, 28),
+      initialDate: day,
+      lastDate: lastDate,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+    );
+    // Go to specific date if present
+    if (chosenDate != null) {
+      Navigator.popAndPushNamed(context, '/daily', arguments: {'day': chosenDate});
+    }
+  }
+
+  bool _canGoBackwardInTime(DateTime day) => day.isAfter(_minimumDate);
+  bool _canGoForwardInTime(DateTime day) => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
 
 }
 
@@ -223,6 +269,8 @@ class _ComponentDynamicRoomsOccupation extends StatelessWidget {
 
 class _ComponentVodafoneDataExists extends StatelessWidget {
 
+  static final _mapNumberFormat = NumberFormat('###,###,##0');
+
   const _ComponentVodafoneDataExists({
     required this.campusVodafoneData,
     required this.neighborhoodVodafoneData,
@@ -233,6 +281,7 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(neighborhoodVodafoneData);
     // Cache
     final campusCollapsedByMunicipality = campusVodafoneData.collapseFromKPI(KPI.municipality, 7);
     final neighborhoodCollapsedByRegion = neighborhoodVodafoneData.collapseFromKPI(KPI.region);
@@ -255,6 +304,34 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
             style: TextStyle(color: Theme.of(context).colorScheme.secondary)
           ),
           // TODO: aggiungete vedi altro a /daily/regions
+          trailing: IconButton(
+            icon: Icon(Icons.arrow_forward),
+            onPressed: () => Navigator.of(context).pushNamed(
+              '/daily/region_map',
+              arguments: {
+                'title': 'Mappa delle provenienze',
+                'map_shape_source': MapShapeSource.asset(
+                  'assets/maps/italy.geojson',
+                  shapeDataField: 'reg_name',
+                  dataCount: 20,
+                  primaryValueMapper: (index) => Region.values[index].name,
+                  dataLabelMapper: (index) => _mapNumberFormat.format(
+                    neighborhoodCollapsedByRegion.singleWhere(
+                      (cluster) => cluster.region == Region.values[index],
+                      orElse: () => VodafoneCluster.empty(),
+                    ).visitors
+                  ),
+                  shapeColorValueMapper: (index) => _getRegionColorByPercentage(
+                    visitors: neighborhoodCollapsedByRegion.singleWhere(
+                      (cluster) => cluster.region == Region.values[index],
+                      orElse: () => VodafoneCluster.empty(),
+                    ).visitors,
+                    total: neighborhoodVodafoneVisitors,
+                  ),
+                ),
+              }
+            ),
+          ),
         ),
         _ComponentHorizontalBarVisualizer(
           data: neighborhoodCollapsedByRegion.collapseFromKPI(KPI.region, 5),
@@ -344,6 +421,24 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
       (element) => element.nationality == Nationality.foreigner,
       orElse: () => VodafoneCluster.empty(),
     ).visitors / campusNationality.visitors * 100;
+  }
+
+  Color? _getRegionColorByPercentage({
+    required int visitors,
+    required int total,
+  }) {
+    // Cache percentage
+    final percentage = visitors / total;
+    // Generate color
+    if (percentage > 0.9) {
+      return Colors.red;
+    } else if (percentage > 0.75) {
+      return Colors.yellow;
+    } else if (percentage > 0.5) {
+      return Colors.green;
+    } else if (percentage > 0) {
+      return Colors.blue;
+    }
   }
 
 }
