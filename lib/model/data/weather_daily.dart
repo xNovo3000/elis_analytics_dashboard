@@ -12,6 +12,7 @@ class WeatherDaily implements Comparable<WeatherDaily> {
       ambientTemperatureMin: random.nextInt(5) + 15,
       ambientTemperatureMax: random.nextInt(3) + 22,
       windSpeedMean: random.nextDouble() * 5,
+      humidity: random.nextDouble() * 50 + 50,
       rainfall: random.nextDouble() * 4,
     );
   }
@@ -21,6 +22,7 @@ class WeatherDaily implements Comparable<WeatherDaily> {
     ambientTemperatureMin: map['ambient_temperature_min'],
     ambientTemperatureMax: map['ambient_temperature_max'],
     windSpeedMean: map['wind_speed_mean'],
+    humidity: map['humidity'],
     rainfall: map['rainfall']
   );
 
@@ -29,6 +31,7 @@ class WeatherDaily implements Comparable<WeatherDaily> {
     required this.ambientTemperatureMin,
     required this.ambientTemperatureMax,
     required this.windSpeedMean,
+    required this.humidity,
     required this.rainfall,
   });
 
@@ -36,11 +39,13 @@ class WeatherDaily implements Comparable<WeatherDaily> {
   final double ambientTemperatureMin;
   final double ambientTemperatureMax;
   final double windSpeedMean;
+  final double humidity;
   final double rainfall;
 
   @override String toString() =>
     'WeatherDaily(timestamp: $timestamp, ambientTemperatureMin: $ambientTemperatureMin, '
-    'ambientTemperatureMax: $ambientTemperatureMax, windSpeedMean: $windSpeedMean, rainfall: $rainfall)';
+    'ambientTemperatureMax: $ambientTemperatureMax, windSpeedMean: $windSpeedMean, '
+    'humidity: $humidity, rainfall: $rainfall)';
   @override bool operator ==(Object other) => other is WeatherDaily ? timestamp.isAtSameMomentAs(other.timestamp) : false;
   @override int get hashCode => timestamp.hashCode;
   @override int compareTo(WeatherDaily other) => timestamp.compareTo(other.timestamp);
