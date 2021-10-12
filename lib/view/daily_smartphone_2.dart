@@ -36,7 +36,7 @@ class ViewDailySmartphone extends StatelessWidget {
       appBar: ColoredAppBar(
         title: const Text('Visualizzazione giornaliera'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48),
+          preferredSize: Size.fromHeight(56),
           child: ListTile(
             title: Text(_dateResolver.format(day)),
             trailing: Wrap(
@@ -281,7 +281,6 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(neighborhoodVodafoneData);
     // Cache
     final campusCollapsedByMunicipality = campusVodafoneData.collapseFromKPI(KPI.municipality, 7);
     final neighborhoodCollapsedByRegion = neighborhoodVodafoneData.collapseFromKPI(KPI.region);

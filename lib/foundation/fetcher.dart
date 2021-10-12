@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:elis_analytics_dashboard/model/data/session.dart';
 import 'package:elis_analytics_dashboard/model/enum/thingsboard_device.dart';
 import 'package:elis_analytics_dashboard/model/exception/invalid_token.dart';
-import 'package:elis_analytics_dashboard/model/exception/no_session.dart';
 import 'package:http/http.dart';
 import 'package:mutex/mutex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,7 +21,7 @@ class Fetcher extends BaseClient {
     _cacheBlacklist = Set.of(
       List.generate(
         ThingsboardDevice.values.length,
-        (index) => _baseUrl.resolve('plugins/telemetry/DEVICE/${ThingsboardDevice.values[index].uri}/values/timeseries'),
+        (index) => _baseUrl.resolve('plugins/telemetry/DEVICE/${ThingsboardDevice.values[index].id}/values/timeseries'),
         growable: false
       )
     ),
@@ -83,7 +82,7 @@ class Fetcher extends BaseClient {
         } else {
           await preferences.remove('Email');
           await preferences.remove('Password');
-          throw NoSessionException();
+          throw InvalidTokenException('None');
         }
       }
     });
@@ -96,5 +95,7 @@ class Fetcher extends BaseClient {
   }
 
   bool get hasSession => _session != null;
+
+  void clearCache() => _futureCache.clear();
 
 }

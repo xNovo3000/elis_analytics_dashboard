@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+enum _ResponsiveLayoutMode {
+  smartphone, tablet, error
+}
+
 class ResponsiveLayout extends StatefulWidget {
 
   const ResponsiveLayout({
@@ -16,7 +20,7 @@ class ResponsiveLayout extends StatefulWidget {
 
 class _ResponsiveLayoutState extends State<ResponsiveLayout> with WidgetsBindingObserver {
 
-  bool _isTabletMode = false;
+  var _mode = _ResponsiveLayoutMode.smartphone;
 
   @override
   void initState() {
@@ -43,9 +47,14 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> with WidgetsBinding
 
   @override
   Widget build(BuildContext context) {
-    return _isTabletMode
-      ? (widget.tabletWidget ?? widget.smartphoneWidget)
-      : widget.smartphoneWidget;
+    switch (_mode) {
+      case _ResponsiveLayoutMode.smartphone:
+        return widget.smartphoneWidget;
+      case _ResponsiveLayoutMode.tablet:
+        return widget.tabletWidget ?? widget.smartphoneWidget;
+      case _ResponsiveLayoutMode.error:  // TODO: give error view
+        return widget.smartphoneWidget;
+    }
   }
 
 }
