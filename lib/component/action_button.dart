@@ -22,19 +22,19 @@ class _ComponentActionButtonState extends State<ComponentActionButton> {
   @override
   Widget build(BuildContext context) {
     return _isActing
-        ? ElevatedButton.icon(
-      label: Text(widget.label),
-      icon: const SizedBox(
-        width: 20.0,
-        height: 20.0,
-        child: const CircularProgressIndicator(),
-      ),
-      onPressed: null,
-    )
-        : ElevatedButton(
-      child: Text(widget.label),
-      onPressed: _onActionPressed,
-    );
+      ? ElevatedButton.icon(
+          label: Text(widget.label),
+          icon: const SizedBox(
+            width: 20.0,
+            height: 20.0,
+            child: const CircularProgressIndicator(),
+          ),
+          onPressed: null,
+        )
+      : ElevatedButton(
+          child: Text(widget.label),
+          onPressed: _onActionPressed,
+        );
   }
 
   Future<void> _onActionPressed() async {

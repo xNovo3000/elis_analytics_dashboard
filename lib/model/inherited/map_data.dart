@@ -19,8 +19,7 @@ class ModelInheritedMapData extends InheritedWidget {
     context.dependOnInheritedWidgetOfExactType<ModelInheritedMapData>();
 
   @override
-  bool updateShouldNotify(ModelInheritedMapData old) {
-    return title != old.title || mapShapeSource != old.mapShapeSource;
-  }
+  bool updateShouldNotify(ModelInheritedMapData old) =>
+    title != old.title || mapShapeSource != old.mapShapeSource;
 
 }

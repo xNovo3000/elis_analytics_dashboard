@@ -25,12 +25,10 @@ class ModelInheritedWeeklyData extends InheritedWidget {
     context.dependOnInheritedWidgetOfExactType<ModelInheritedWeeklyData>();
 
   @override
-  bool updateShouldNotify(ModelInheritedWeeklyData old) {
-    return
-      weathers != old.weathers ||
-      sensors != old.sensors ||
-      campusVodafone != old.campusVodafone ||
-      neighborhoodVodafone != old.neighborhoodVodafone;
-  }
+  bool updateShouldNotify(ModelInheritedWeeklyData old) =>
+    weathers != old.weathers ||
+    sensors != old.sensors ||
+    campusVodafone != old.campusVodafone ||
+    neighborhoodVodafone != old.neighborhoodVodafone;
 
 }

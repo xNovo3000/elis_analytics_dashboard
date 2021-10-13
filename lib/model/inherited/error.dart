@@ -16,8 +16,7 @@ class ModelInheritedError extends InheritedWidget {
     context.dependOnInheritedWidgetOfExactType<ModelInheritedError>();
 
   @override
-  bool updateShouldNotify(ModelInheritedError old) {
-    return error != old.error;
-  }
+  bool updateShouldNotify(ModelInheritedError old) =>
+    error != old.error;
 
 }

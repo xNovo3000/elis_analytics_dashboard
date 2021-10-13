@@ -17,9 +17,9 @@ class ELISAnalyticsDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Add licenses
     LicenseRegistry.addLicense(() async* {
-      var license = await rootBundle.loadString('assets/licenses/OpenSans/LICENSE.txt');
+      var license = await rootBundle.loadString('asset/license/OpenSans/LICENSE.txt');
       yield LicenseEntryWithLineBreaks(['Open Sans'], license);
-      license = await rootBundle.loadString('assets/licenses/GDPR/LICENSE.txt');
+      license = await rootBundle.loadString('asset/license/GDPR/LICENSE.txt');
       yield LicenseEntryWithLineBreaks(['GDPR'], license);
     });
     // Build the application

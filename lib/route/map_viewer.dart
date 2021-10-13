@@ -19,10 +19,7 @@ class RouteMapViewer extends StatelessWidget {
       !(args['title'] is String) ||
       !(args['map_shape_source'] is MapShapeSource)
     ) {
-      return ModelInheritedError(
-        error: 'Si è verificato un errore',
-        child: child,
-      );
+      return child;
     }
     // Build success UI
     return ModelInheritedMapData(

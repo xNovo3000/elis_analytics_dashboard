@@ -26,11 +26,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/maps/
-    - assets/images/
-    - assets/licenses/OpenSans/
-    - assets/licenses/GDPR/
-    - assets/fonts/OpenSans/
+    - asset/font/
+    - asset/font/OpenSans/
+    - asset/image/
+    - asset/license/
+    - asset/license/OpenSans/
+    - asset/license/GDPR/
+    - asset/map/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

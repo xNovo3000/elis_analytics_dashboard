@@ -1,12 +1,13 @@
-import 'package:elis_analytics_dashboard/component/button/navigate_to_region_map_viewer.dart';
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
 import 'package:elis_analytics_dashboard/component/modal/tile/info.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
+import 'package:elis_analytics_dashboard/model/container/weather_instant_list.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
+import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 import 'package:elis_analytics_dashboard/model/enum/region.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
@@ -19,8 +20,14 @@ import 'package:weather_icons/weather_icons.dart';
 
 class ViewDailySmartphone extends StatelessWidget {
 
+  static final _dateResolver = DateFormat('EEEE d MMMM y', 'it');
+  static const _oneDay = Duration(days: 1);
+  static final _minimumDate = DateTime(2021, 6, 28);
+
   @override
   Widget build(BuildContext context) {
+    // Get day
+    final day = (ModalRoute.of(context)!.settings.arguments as Map)['day'];
     // Check data
     final error = ModelInheritedError.maybeOf(context);
     final data = ModelInheritedDailyData.maybeOf(context);
@@ -28,139 +35,44 @@ class ViewDailySmartphone extends StatelessWidget {
     return Scaffold(
       appBar: ColoredAppBar(
         title: const Text('Visualizzazione giornaliera'),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(56),
+          child: ListTile(
+            title: Text(_dateResolver.format(day)),
+            trailing: Wrap(
+              children: [
+                if (_canGoBackwardInTime(day)) IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).popAndPushNamed(
+                    '/daily',
+                    arguments: {'day': day.subtract(_oneDay)}
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.calendar_today),
+                  onPressed: () => _onDateSelectPressed(context, day),
+                ),
+                if (_canGoForwardInTime(day)) IconButton(
+                  icon: const Icon(Icons.arrow_forward),
+                  onPressed: () => Navigator.of(context).popAndPushNamed(
+                    '/daily',
+                    arguments: {'day': day.add(_oneDay)}
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: data != null
-        ? _ViewDailySmartphoneData(
-          day: (ModalRoute.of(context)!.settings.arguments as Map)['day']
-        )
+        ? _ViewDailySmartphoneData(day: day)
         : error != null
           ? ComponentModalFullscreenError(error: error.error)
           : ComponentModalFullscreenWait(),
     );
   }
 
-}
-
-class _ViewDailySmartphoneData extends StatelessWidget {
-
-  static const _oneDay = Duration(days: 1);
-  static final _dateResolver = DateFormat('EEEE d MMMM y', 'it');
-  static final _hourResolver = DateFormat('HH');
-  static final _minimumDate = DateTime(2021, 6, 28);
-
-  const _ViewDailySmartphoneData({
-    required this.day,
-  });
-
-  final DateTime day;
-
-  @override
-  Widget build(BuildContext context) {
-    // Extract data
-    final dailyData = ModelInheritedDailyData.of(context);
-    // Generate custom data
-    final campusByMunicipality = dailyData.campusVodafone?.collapseFromKPI(KPI.municipality, 6);
-    final neighborhoodByRegionMap = dailyData.neighborhoodVodafone?.collapseFromKPI(KPI.region);
-    final neighborhoodByRegion = neighborhoodByRegionMap?.collapseFromKPI(KPI.region, 6);
-    // Build UI
-    return ListView(
-      key: PageStorageKey('_ViewDailySmartphoneDataList'),
-      children: [
-        ListTile(
-          title: Text(_dateResolver.format(day)),
-          subtitle: const Text('Data'),
-          trailing: Wrap(
-            children: [
-              if (_canGoBackwardInTime) IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.of(context).popAndPushNamed(
-                  '/daily',
-                  arguments: {'day': day.subtract(_oneDay)}
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.calendar_today),
-                onPressed: () => _onDateSelectPressed(context),
-              ),
-              if (_canGoForwardInTime) IconButton(
-                icon: const Icon(Icons.arrow_forward),
-                onPressed: () => Navigator.of(context).popAndPushNamed(
-                  '/daily',
-                  arguments: {'day': day.add(_oneDay)}
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(indent: 8, endIndent: 8),
-        ListTile(
-          title: Text(
-            'RAPPORTO METEO',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-        ),
-        for (var weather in dailyData.weathers)
-          ListTile(
-            leading: BoxedIcon(weather.icon),
-            title: Text('${weather.ambientTemperature.floor()}°C'),
-            subtitle: Text('Umidità: ${weather.humidity.floor()}% · Vento: ${weather.windSpeed.floor()} km/h ${weather.windDirection}'),
-            trailing: Text('${_hourResolver.format(weather.beginTimestamp)}-${_hourResolver.format(weather.endTimestamp)}'),
-            onTap: () => Navigator.of(context).pushNamed('/daily/weather_report', arguments: {'weather_report': weather}),
-          ),
-        Divider(indent: 8, endIndent: 8),
-        ListTile(
-          title: Text(
-            'OCCUPAZIONE GIORNALIERA',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-        ),
-        SizedBox(
-          width: double.infinity, height: MediaQuery.of(context).size.height / 2,
-          child: _ViewDailySmartphoneChart(
-            timed: dailyData.timedSensor,
-            daily: dailyData.dailySensor,
-          ),
-        ),
-        Divider(indent: 8, endIndent: 8),
-        ListTile(
-          title: Text(
-            'PROVENIENZE PER CITTA NEL CAMPUS',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-        ),
-        campusByMunicipality != null
-          ? _ViewDailySmartphoneByKPI(
-              data: campusByMunicipality,
-              kpi: KPI.municipality,
-            )
-          : ComponentModalTileInfo(message: 'I dati non sono ancora disponibili'),
-        SizedBox(height: 16),
-        Divider(indent: 8, endIndent: 8),
-        ListTile(
-          title: Text(
-            'PROVENIENZE PER REGIONE NEL QUARTIERE',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-          trailing: neighborhoodByRegionMap != null
-            ? ComponentButtonNavigateToRegionMapViewer(
-                topLevelRoute: 'daily',
-                vodafoneDaily: neighborhoodByRegionMap,
-              )
-            : null,
-        ),
-        neighborhoodByRegion != null
-          ? _ViewDailySmartphoneByKPI(
-              data: neighborhoodByRegion,
-              kpi: KPI.region,
-            )
-          : ComponentModalTileInfo(message: 'I dati non sono ancora disponibili'),
-        SizedBox(height: 16),
-        SizedBox(height: 88),  // 88dp padding at the end
-      ],
-    );
-  }
-
-  Future<void> _onDateSelectPressed(BuildContext context) async {
+  Future<void> _onDateSelectPressed(BuildContext context, DateTime day) async {
     // Generate lastDate
     final now = DateTime.now();
     final lastDate = DateTime(now.year, now.month, now.day).subtract(_oneDay);
@@ -178,125 +90,336 @@ class _ViewDailySmartphoneData extends StatelessWidget {
     }
   }
 
-  bool get _canGoBackwardInTime => day.isAfter(_minimumDate);
-  bool get _canGoForwardInTime => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
+  bool _canGoBackwardInTime(DateTime day) => day.isAfter(_minimumDate);
+  bool _canGoForwardInTime(DateTime day) => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
 
 }
 
-class _ViewDailySmartphoneChart extends StatelessWidget {
+class _ViewDailySmartphoneData extends StatelessWidget {
 
-  static const _palette = <Color>[
-    Color.fromRGBO(75, 135, 185, 1),
-    Color.fromRGBO(192, 108, 132, 1),
-    Color.fromRGBO(246, 114, 128, 1),
-    Color.fromRGBO(248, 177, 149, 1),
-    Color.fromRGBO(116, 180, 155, 1),
-    Color.fromRGBO(0, 168, 181, 1),
-    Color.fromRGBO(73, 76, 162, 1),
-    Color.fromRGBO(255, 205, 96, 1),
-    Color.fromRGBO(255, 240, 219, 1),
-    Color.fromRGBO(238, 238, 238, 1)
-  ];
-  static final _chartTimeOfDayResolver = DateFormat('HH:mm');
-
-  const _ViewDailySmartphoneChart({
-    required this.timed,
-    this.daily,
+  const _ViewDailySmartphoneData({
+    required this.day
   });
 
-  final List<SensorData> timed;
-  final SensorData? daily;
+  final DateTime day;
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      margin: EdgeInsets.all(8),
-      primaryXAxis: CategoryAxis(),
-      legend: Legend(
-        isVisible: true,
-        position: LegendPosition.bottom,
-        overflowMode: LegendItemOverflowMode.scroll,
-        legendItemBuilder: _legendItemBuilder,
-      ),
-      series: [
-        for (Room room in Room.values)
-          StackedColumnSeries<SensorData, String>(
-            dataSource: timed,
-            xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
-            yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
-            legendItemText: '$room',
-            animationDuration: 0,
+    // Check data
+    final data = ModelInheritedDailyData.of(context);
+    // Build UI
+    return CustomScrollView(
+      key: PageStorageKey('_ViewDailySmartphoneDataCustomScrollView'),
+      slivers: [
+        SliverToBoxAdapter(
+          child: _ComponentWeatherReport(
+            weathers: data.weathers,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Divider(indent: 8, endIndent: 8),
+        ),
+        SliverToBoxAdapter(
+          child: _ComponentStaticRoomsOccupation(
+            sensors: data.timedSensor,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: _ComponentDynamicRoomsOccupation(
+            sensors: data.timedSensor,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: data.hasVodafone ? _ComponentVodafoneDataExists(
+            campusVodafoneData: data.campusVodafone!,
+            neighborhoodVodafoneData: data.neighborhoodVodafone!,
+          ) : ComponentModalTileInfo(
+            message: 'Alcuni dati non sono al momento disponibili',
+          ),
+        ),
+      ],
+    );
+  }
+
+}
+
+class _ComponentWeatherReport extends StatelessWidget {
+
+  static final _hourResolver = DateFormat('HH:mm');
+
+  const _ComponentWeatherReport({
+    required this.weathers,
+  });
+
+  final WeatherInstantList weathers;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text(
+            'RAPPORTO METEO',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+        ),
+        for (var weather in weathers)
+          ListTile(
+            leading: BoxedIcon(weather.icon),
+            title: Text('${weather.ambientTemperature.floor()}°C'),
+            subtitle: Text('Umidità: ${weather.humidity.floor()}% · Vento: ${weather.windSpeed.floor()} km/h ${weather.windDirection}'),
+            trailing: Text('${_hourResolver.format(weather.beginTimestamp)}-${_hourResolver.format(weather.endTimestamp)}'),
+            onTap: () => Navigator.of(context).pushNamed('/daily/weather_report', arguments: {'weather_report': weather}),
           ),
       ],
     );
   }
 
-  Widget _legendItemBuilder(String legendText, dynamic series, dynamic point, int seriesIndex) {
-    series as StackedColumnSeries<SensorData, String>;
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: <Widget>[
-        Container(
-          width: 14, height: 14,
-          color: _palette[seriesIndex % _palette.length],
+}
+
+class _ComponentStaticRoomsOccupation extends StatelessWidget {
+
+  static final _chartTimeOfDayResolver = DateFormat('HH:mm');
+
+  const _ComponentStaticRoomsOccupation({
+    required this.sensors
+  });
+
+  final List<SensorData> sensors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text(
+            'OCCUPAZIONE AULE',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
         ),
-        SizedBox(width: 4.0),
-        Text(
-          '${series.legendItemText!}: '
-          '${daily?.roomsData.singleWhere((roomData) => roomData.room == Room.values[seriesIndex]).occupancy ?? 'N/A'}',
-          textScaleFactor: 1
-        ),
-        SizedBox(width: 16.0),
+        SfCartesianChart(
+          margin: EdgeInsets.all(8),
+          primaryXAxis: CategoryAxis(),
+          legend: Legend(
+            isVisible: true,
+            position: LegendPosition.bottom,
+            overflowMode: LegendItemOverflowMode.scroll,
+          ),
+          series: [
+            for (Room room in Room.values.where((room) => room.standing))
+              StackedColumnSeries<SensorData, String>(
+                dataSource: sensors,
+                xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
+                yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
+                legendItemText: '$room',
+                animationDuration: 0,
+              ),
+          ],
+        )
       ],
     );
   }
 
 }
 
-// TODO: unused. Moved to lib/component/button/navigate_to_region_map_viewer.dart
-class _ViewDailySmartphoneButtonShowMap extends StatelessWidget {
+class _ComponentDynamicRoomsOccupation extends StatelessWidget {
+
+  static final _chartTimeOfDayResolver = DateFormat('HH:mm');
+
+  const _ComponentDynamicRoomsOccupation({
+    required this.sensors
+  });
+
+  final List<SensorData> sensors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text(
+            'OCCUPAZIONE ZONE DI TRANSITO',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+        ),
+        SfCartesianChart(
+          margin: EdgeInsets.all(8),
+          primaryXAxis: CategoryAxis(),
+          legend: Legend(
+            isVisible: true,
+            position: LegendPosition.bottom,
+            overflowMode: LegendItemOverflowMode.scroll,
+          ),
+          series: [
+            for (Room room in Room.values.where((room) => !room.standing))
+              StackedColumnSeries<SensorData, String>(
+                dataSource: sensors,
+                xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
+                yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
+                legendItemText: '$room',
+                animationDuration: 0,
+              ),
+          ],
+        )
+      ],
+    );
+  }
+
+}
+
+class _ComponentVodafoneDataExists extends StatelessWidget {
 
   static final _mapNumberFormat = NumberFormat('###,###,##0');
 
-  const _ViewDailySmartphoneButtonShowMap({
-    required this.vodafoneDaily,
+  const _ComponentVodafoneDataExists({
+    required this.campusVodafoneData,
+    required this.neighborhoodVodafoneData,
   });
 
-  final VodafoneDaily vodafoneDaily;
+  final VodafoneDaily campusVodafoneData;
+  final VodafoneDaily neighborhoodVodafoneData;
 
   @override
   Widget build(BuildContext context) {
-    // Cache results
-    final total = vodafoneDaily.visitors;
-    // Build the button
-    return OutlinedButton(
-      child: Text('VEDI MAPPA'),
-      onPressed: () => Navigator.of(context).pushNamed(
-        '/daily/region_map',
-        arguments: {
-          'title': 'Mappa delle provenienze',
-          'map_shape_source': MapShapeSource.asset(
-            'assets/maps/italy.geojson',
-            shapeDataField: 'reg_name',
-            dataCount: 20,
-            primaryValueMapper: (index) => Region.values[index].name,
-            dataLabelMapper: (index) => _mapNumberFormat.format(
-              vodafoneDaily.singleWhere(
-                (cluster) => cluster.region == Region.values[index],
-                orElse: () => VodafoneCluster.empty(),
-              ).visitors
-            ),
-            shapeColorValueMapper: (index) => _getRegionColorByPercentage(
-              visitors: vodafoneDaily.singleWhere(
-                (cluster) => cluster.region == Region.values[index],
-                orElse: () => VodafoneCluster.empty(),
-              ).visitors,
-              total: total,
+    // Cache
+    final campusCollapsedByMunicipality = campusVodafoneData.collapseFromKPI(KPI.municipality, 7);
+    final neighborhoodCollapsedByRegion = neighborhoodVodafoneData.collapseFromKPI(KPI.region);
+    final campusVodafoneVisitors = campusVodafoneData.visitors;
+    final neighborhoodVodafoneVisitors = neighborhoodVodafoneData.visitors;
+    // Generate collapsed data
+    final campusCollapsedByAge = campusVodafoneData.collapseFromKPI(KPI.age);
+    final campusCollapsedByNationality = campusVodafoneData.collapseFromKPI(KPI.nationality);
+    final campusCollapsedByGender = campusVodafoneData.collapseFromKPI(KPI.gender);
+    // Cache
+    final captureRatio = campusVodafoneVisitors / neighborhoodVodafoneVisitors * 100;
+    final ageAverage = _generateAgeAverage(campusCollapsedByAge);
+    final foreignersPercentage = _generateForeignersPercentage(campusCollapsedByNationality);
+    // Build UI
+    return Column(
+      children: [
+        ListTile(
+          title: Text(
+            'REGIONI DI PROVENIENZA NEL QUARTIERE',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+          // TODO: aggiungete vedi altro a /daily/regions
+          trailing: IconButton(
+            icon: Icon(Icons.arrow_forward),
+            onPressed: () => Navigator.of(context).pushNamed(
+              '/daily/region_map',
+              arguments: {
+                'title': 'Mappa delle provenienze',
+                'map_shape_source': MapShapeSource.asset(
+                  'assets/maps/italy.geojson',
+                  shapeDataField: 'reg_name',
+                  dataCount: 20,
+                  primaryValueMapper: (index) => Region.values[index].name,
+                  dataLabelMapper: (index) => _mapNumberFormat.format(
+                    neighborhoodCollapsedByRegion.singleWhere(
+                      (cluster) => cluster.region == Region.values[index],
+                      orElse: () => VodafoneCluster.empty(),
+                    ).visitors
+                  ),
+                  shapeColorValueMapper: (index) => _getRegionColorByPercentage(
+                    visitors: neighborhoodCollapsedByRegion.singleWhere(
+                      (cluster) => cluster.region == Region.values[index],
+                      orElse: () => VodafoneCluster.empty(),
+                    ).visitors,
+                    total: neighborhoodVodafoneVisitors,
+                  ),
+                ),
+              }
             ),
           ),
-        }
-      ),
+        ),
+        _ComponentHorizontalBarVisualizer(
+          data: neighborhoodCollapsedByRegion.collapseFromKPI(KPI.region, 5),
+          kpi: KPI.region,
+        ),
+        ListTile(
+          title: Text(
+            'CITTÀ DI PROVENIENZA NEL CAMPUS',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
+          ),
+        ),
+        SizedBox(
+          width: double.infinity, height: MediaQuery.of(context).size.height / 3,
+          child: SfCircularChart(
+            legend: Legend(
+              isVisible: true,
+              position: LegendPosition.right,
+            ),
+            series: [
+              PieSeries<VodafoneCluster, String>(
+                dataSource: campusCollapsedByMunicipality,
+                xValueMapper: (datum, index) => '${datum.municipality}',
+                yValueMapper: (datum, index) => datum.visitors,
+                animationDuration: 0,
+              ),
+            ],
+          ),
+        ),
+        ListTile(
+          leading: Icon(Icons.people),
+          title: Text('Visitatori totali'),
+          trailing: Text('$campusVodafoneVisitors'),
+        ),
+        ListTile(
+          leading: Icon(Icons.people),
+          title: Text('Tempo medio di permanenza'),
+          trailing: Text('${campusVodafoneData.dwellTime.inMinutes} minuti'),
+        ),
+        ListTile(
+          leading: Icon(Icons.label),
+          title: Text('Età media'),
+          trailing: Text('${ageAverage.round()} anni'),
+        ),
+        ListTile(
+          leading: Icon(Icons.home),
+          title: Text('Tasso di cattura'),
+          trailing: Text('${captureRatio.toStringAsFixed(2)}%'),
+        ),
+        ListTile(
+          leading: Icon(Icons.person),
+          title: Text('Percentuale di stranieri'),
+          trailing: Text('${foreignersPercentage.toStringAsFixed(2)}%'),
+        ),
+        SizedBox(
+          width: double.infinity, height: MediaQuery.of(context).size.height / 3,
+          child: SfCircularChart(
+            legend: Legend(
+              isVisible: true,
+              position: LegendPosition.right,
+            ),
+            series: [
+              PieSeries<VodafoneCluster, String>(
+                dataSource: campusCollapsedByGender,
+                xValueMapper: (datum, index) => '${datum.gender}',
+                yValueMapper: (datum, index) => datum.visitors,
+                pointColorMapper: (datum, index) => datum.gender.color,
+                animationDuration: 0,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
+  }
+
+  int _generateAgeAverage(VodafoneDaily collapsedCampus) {
+    double age = 0;
+    for (var cluster in collapsedCampus) {
+      age += cluster.visitors * cluster.age.median;
+    }
+    age /= collapsedCampus.visitors;
+    return age.round();
+  }
+
+  double _generateForeignersPercentage(VodafoneDaily campusNationality) {
+    return campusNationality.singleWhere(
+      (element) => element.nationality == Nationality.foreigner,
+      orElse: () => VodafoneCluster.empty(),
+    ).visitors / campusNationality.visitors * 100;
   }
 
   Color? _getRegionColorByPercentage({
@@ -319,9 +442,9 @@ class _ViewDailySmartphoneButtonShowMap extends StatelessWidget {
 
 }
 
-class _ViewDailySmartphoneByKPI extends StatelessWidget {
+class _ComponentHorizontalBarVisualizer extends StatelessWidget {
 
-  const _ViewDailySmartphoneByKPI({
+  const _ComponentHorizontalBarVisualizer({
     required this.data,
     required this.kpi,
   });

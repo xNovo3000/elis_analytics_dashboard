@@ -9,33 +9,6 @@ class ViewGdprDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      // child: ListView(
-      //   children: [
-      //     Row(
-      //       children: [
-      //         SizedBox(width: 16),
-      //         Expanded(
-      //           child: Column(
-      //             crossAxisAlignment: CrossAxisAlignment.stretch,
-      //             children: [
-      //               SizedBox(height: 16),
-      //               Text('GDPR compliance', textScaleFactor: 2),
-      //               SizedBox(height: 16),
-      //               ComponentManagedFutureBuilder<String>(
-      //                 future: _getGDPRLicense(),
-      //                 onSuccess: (context, data) => Text(data, maxLines: null),
-      //                 onWait: (context) => ComponentModalTileWait(message: 'Attendi'),
-      //                 onError: (context, error) => ComponentModalTileError(error: '$error'),
-      //               ),
-      //               SizedBox(height: 16),
-      //             ],
-      //           ),
-      //         ),
-      //         SizedBox(width: 16),
-      //       ],
-      //     ),
-      //   ],
-      // ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -83,6 +56,6 @@ class ViewGdprDialog extends StatelessWidget {
   }
 
   Future<String> _getGDPRLicense() async =>
-    await rootBundle.loadString('assets/licenses/GDPR/DIALOG.txt');
+    await rootBundle.loadString('asset/license/GDPR/DIALOG.txt');
 
 }

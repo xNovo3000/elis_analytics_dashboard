@@ -9,6 +9,7 @@ class RouteWeatherReport extends StatelessWidget {
     // Pre-build the widget
     final child = ViewWeatherReport();
     // Check if there is a WeatherInstant
+    // TODO: broken logic, fix
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args != null && args is Map<String, dynamic> && args.containsKey('weather_report')) {
       return ModelInheritedWeatherReport(

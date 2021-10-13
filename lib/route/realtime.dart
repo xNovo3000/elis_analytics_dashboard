@@ -9,7 +9,7 @@ import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/foundation/fetcher.dart';
-import 'package:elis_analytics_dashboard/view/realtime_smartphone_2.dart';
+import 'package:elis_analytics_dashboard/view/realtime_smartphone.dart';
 import 'package:flutter/material.dart';
 
 class RouteRealtime extends StatefulWidget {
@@ -29,7 +29,7 @@ class _RouteRealtimeState extends State<RouteRealtime> {
   void initState() {
     super.initState();
     // Auto-update system
-    timer = Timer.periodic(const Duration(seconds: 4), _onTimerTick);
+    timer = Timer.periodic(const Duration(minutes: 1), _onTimerTick);
   }
 
   @override

@@ -24,8 +24,7 @@ class ModelInheritedWeatherReport extends InheritedWidget {
     context.dependOnInheritedWidgetOfExactType<ModelInheritedWeatherReport>();
 
   @override
-  bool updateShouldNotify(ModelInheritedWeatherReport old) {
-    return weather != old.weather;
-  }
+  bool updateShouldNotify(ModelInheritedWeatherReport old) =>
+    weather != old.weather;
 
 }

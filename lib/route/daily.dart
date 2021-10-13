@@ -6,8 +6,7 @@ import 'package:elis_analytics_dashboard/model/data/sensor.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
-import 'package:elis_analytics_dashboard/view/daily_smartphone_2.dart';
-import 'package:elis_analytics_dashboard/view/realtime_smartphone.dart';
+import 'package:elis_analytics_dashboard/view/daily_smartphone.dart';
 import 'package:flutter/material.dart';
 
 class RouteDaily extends StatelessWidget {

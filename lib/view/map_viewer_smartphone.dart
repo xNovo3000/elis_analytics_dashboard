@@ -1,7 +1,5 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
-import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
-import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/map_data.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
@@ -12,7 +10,6 @@ class ViewMapViewerSmartphone extends StatelessWidget {
   Widget build(BuildContext context) {
     // Check data
     final mapData = ModelInheritedMapData.maybeOf(context);
-    final error = ModelInheritedError.maybeOf(context);
     // Build the view
     return Scaffold(
       appBar: ColoredAppBar(
@@ -20,9 +17,7 @@ class ViewMapViewerSmartphone extends StatelessWidget {
       ),
       body: mapData != null
         ? _ViewMapViewerSmartphoneData()
-        : error != null
-          ? ComponentModalFullscreenError(error: error.error)
-          : ComponentModalFullscreenWait(),
+        : ComponentModalFullscreenError(error: 'Si è verificato un errore'),
     );
   }
 

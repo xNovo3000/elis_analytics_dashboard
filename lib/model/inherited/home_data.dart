@@ -17,8 +17,7 @@ class ModelInheritedHomeData extends InheritedWidget {
     context.dependOnInheritedWidgetOfExactType<ModelInheritedHomeData>();
 
   @override
-  bool updateShouldNotify(ModelInheritedHomeData old) {
-    return lastWeekRange != old.lastWeekRange;
-  }
+  bool updateShouldNotify(ModelInheritedHomeData old) =>
+    lastWeekRange != old.lastWeekRange;
 
 }
