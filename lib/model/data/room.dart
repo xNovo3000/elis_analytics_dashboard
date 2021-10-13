@@ -1,4 +1,3 @@
-import 'package:elis_analytics_dashboard/component/bar_graph.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:flutter/material.dart';
 

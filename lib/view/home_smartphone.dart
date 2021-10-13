@@ -28,7 +28,7 @@ class ViewHomeSmartphone extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Image(image: AssetImage('assets/images/LOGO_GMOVE.png')),
+                    child: Image(image: AssetImage('asset/image/LOGO_GMOVE.png')),
                     margin: EdgeInsets.zero,
                   ),
                 ),
@@ -40,7 +40,7 @@ class ViewHomeSmartphone extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Image(image: AssetImage('assets/images/LOGO_NETCOM.png')),
+                    child: Image(image: AssetImage('asset/image/LOGO_NETCOM.png')),
                     margin: EdgeInsets.zero,
                   ),
                 ),
@@ -52,7 +52,7 @@ class ViewHomeSmartphone extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Image(image: AssetImage('assets/images/LOGO_VODAFONE.png')),
+                    child: Image(image: AssetImage('asset/image/LOGO_VODAFONE.png')),
                     margin: EdgeInsets.zero,
                   ),
                 ),
@@ -144,7 +144,7 @@ class ViewHomeSmartphone extends StatelessWidget {
       applicationName: 'ELIS Analytics Dashboard',
       applicationVersion: info.version,
       applicationLegalese: '© 2021 ELIS Innovation Team',
-      applicationIcon: Image(image: AssetImage('assets/images/Icon-512.png'), width: 96, height: 96),
+      applicationIcon: Image(image: AssetImage('asset/image/Icon-512.png'), width: 96, height: 96),
     ));
   }
 
