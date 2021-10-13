@@ -98,7 +98,7 @@ class ViewHomeSmartphone extends StatelessWidget {
           ButtonBar(
             children: [
               OutlinedButton.icon(
-                icon: Image(image: AssetImage('assets/images/GDPR.png'), width: 24, height: 24),
+                icon: Image(image: AssetImage('asset/image/GDPR.png'), width: 24, height: 24),
                 label: Text('GDPR'),
                 onPressed: () => _onGDPRButtonClick(context),
               ),

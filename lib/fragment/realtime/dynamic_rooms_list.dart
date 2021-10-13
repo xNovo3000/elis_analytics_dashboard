@@ -1,9 +1,9 @@
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
 import 'package:flutter/material.dart';
 
-class FragmentDynamicRoomsList extends StatelessWidget {
+class FragmentRealtimeDynamicRoomsList extends StatelessWidget {
 
-  const FragmentDynamicRoomsList({
+  const FragmentRealtimeDynamicRoomsList({
     required this.sensorData,
     this.scrollDirection = Axis.vertical,
   });
@@ -25,8 +25,8 @@ class FragmentDynamicRoomsList extends StatelessWidget {
       scrollDirection: scrollDirection,
       itemCount: roomsData.length,
       itemBuilder: (context, index) => SizedBox(
-        width: scrollDirection == Axis.vertical ? 200 : double.infinity,
-        height: scrollDirection == Axis.horizontal ? 160 : double.infinity,
+        width: scrollDirection == Axis.horizontal ? 200 : double.infinity,
+        height: scrollDirection == Axis.vertical ? 160 : double.infinity,
         child: Card( // Height is 62 + image
           elevation: 2,
           shape: RoundedRectangleBorder(

@@ -12,6 +12,7 @@ class FragmentRealtimeSensorDwellTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      leading: Icon(Icons.schedule),
       title: Text('${sensorData.dwellTime.inMinutes} minuti'),
       subtitle: Text('Tempo medio di permanenza'),
     );

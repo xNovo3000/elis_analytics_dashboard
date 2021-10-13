@@ -19,7 +19,12 @@ class FragmentRealtimeWeatherReport extends StatelessWidget {
         'Vento: ${weatherInstant.windSpeed.round()} km/h ${weatherInstant.windDirection} · '
         'Umidità: ${weatherInstant.humidity.round()}%'
       ),
-      // isThreeLine: true,
+      onTap: () => Navigator.of(context).pushNamed(
+        '/realtime/weather_report',
+        arguments: {
+          'weather_report': weatherInstant
+        }
+      ),
     );
   }
 
