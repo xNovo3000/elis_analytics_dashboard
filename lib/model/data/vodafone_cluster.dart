@@ -6,6 +6,11 @@ import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 import 'package:elis_analytics_dashboard/model/enum/region.dart';
 
+enum VodafoneClusterAttribute {
+  gender, age, nationality, country, region,
+  province, municipality, homeDistance, workDistance
+}
+
 class VodafoneCluster implements Comparable<VodafoneCluster> {
 
   factory VodafoneCluster.test() {
@@ -128,7 +133,7 @@ class VodafoneCluster implements Comparable<VodafoneCluster> {
     'workDistance: $workDistance, '
     'visits: $visits, '
     'visitors: $visitors, '
-    'totalDwellTime: $totalDwellTime, '
+    'totalDwellTime: $totalDwellTime'
     ')';
 
   @override

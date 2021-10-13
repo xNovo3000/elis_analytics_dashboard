@@ -1,8 +1,14 @@
 import 'dart:collection';
 
+import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
+import 'package:elis_analytics_dashboard/model/enum/age.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
+import 'package:elis_analytics_dashboard/model/enum/distance.dart';
+import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
+import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
+import 'package:elis_analytics_dashboard/model/enum/region.dart';
 
 class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<VodafoneDaily> {
 
@@ -65,6 +71,77 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
     area: area
   );
 
+  VodafoneDaily collapse(final VodafoneClusterAttribute attribute, [int maxClusters = 0xFFFFFFFF]) {
+    final result = <VodafoneCluster>[];
+    for (VodafoneCluster cluster in this) {
+      try {
+        var cx;
+        switch (attribute) {
+          case VodafoneClusterAttribute.gender:
+            cx = result.singleWhere((resultCluster) => cluster.gender == resultCluster.gender);
+            break;
+          case VodafoneClusterAttribute.age:
+            cx = result.singleWhere((resultCluster) => cluster.age == resultCluster.age);
+            break;
+          case VodafoneClusterAttribute.nationality:
+            cx = result.singleWhere((resultCluster) => cluster.nationality == resultCluster.nationality);
+            break;
+          case VodafoneClusterAttribute.country:
+            cx = result.singleWhere((resultCluster) => cluster.country == resultCluster.country);
+            break;
+          case VodafoneClusterAttribute.region:
+            cx = result.singleWhere((resultCluster) => cluster.region == resultCluster.region);
+            break;
+          case VodafoneClusterAttribute.province:
+            cx = result.singleWhere((resultCluster) => cluster.province == resultCluster.province);
+            break;
+          case VodafoneClusterAttribute.municipality:
+            cx = result.singleWhere((resultCluster) => cluster.municipality == resultCluster.municipality);
+            break;
+          case VodafoneClusterAttribute.homeDistance:
+            cx = result.singleWhere((resultCluster) => cluster.homeDistance == resultCluster.homeDistance);
+            break;
+          case VodafoneClusterAttribute.workDistance:
+            cx = result.singleWhere((resultCluster) => cluster.workDistance == resultCluster.workDistance);
+            break;
+        }
+        var cy = cx + cluster;
+        result.remove(cx);
+        result.add(cy);
+      } on StateError catch (_) {
+        result.add(VodafoneCluster.empty(
+          gender: attribute == VodafoneClusterAttribute.gender ? cluster.gender : Gender.na,
+          age: attribute == VodafoneClusterAttribute.age ? cluster.age : Age.na,
+          nationality: attribute == VodafoneClusterAttribute.nationality ? cluster.nationality : Nationality.na,
+          country: attribute == VodafoneClusterAttribute.country ? cluster.country : '',
+          region: attribute == VodafoneClusterAttribute.region ? cluster.region : Region.na,
+          province: attribute == VodafoneClusterAttribute.province ? cluster.province : '',
+          municipality: attribute == VodafoneClusterAttribute.municipality ? cluster.municipality : '',
+          homeDistance: attribute == VodafoneClusterAttribute.homeDistance ? cluster.homeDistance : Distance.na,
+          workDistance: attribute == VodafoneClusterAttribute.workDistance ? cluster.workDistance : Distance.na,
+          visitors: cluster.visitors,
+          visits: cluster.visits,
+          totalDwellTime: cluster.totalDwellTime,
+        ));
+      }
+    }
+    // Sort data first
+    result.sort();
+    // Collapse clusters if needed
+    if (result.length > maxClusters) {
+      final toRemove = <VodafoneCluster>[];
+      VodafoneCluster other = VodafoneCluster.other();
+      for (int i = maxClusters; i < result.length; i++) {
+        other += result[i];
+        toRemove.add(result[i]);
+      }
+      result.add(other);
+      toRemove.forEach((rm) => result.remove(rm));
+    }
+    return VodafoneDaily(result, date: date, area: area);
+  }
+
+  @deprecated
   VodafoneDaily collapseFromKPI(final KPI kpi, [int maxClusters = 0xFFFFFFFF]) {
     final result = <VodafoneCluster>[];
     for (VodafoneCluster cluster in this) {

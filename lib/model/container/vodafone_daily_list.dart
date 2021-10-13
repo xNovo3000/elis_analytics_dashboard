@@ -37,7 +37,17 @@ class VodafoneDailyList extends ListBase<VodafoneDaily> {
     forEach((element) => total += element.visitors);
     return total;
   }
-  
+
+  VodafoneDaily collapse(final VodafoneClusterAttribute attribute, [int maxClusters = 0xFFFFFFFF]) {
+    final result = <VodafoneCluster>[];
+    for (VodafoneDaily daily in this) {
+      result.addAll(daily);
+    }
+    final daily = VodafoneDaily(result, date: DateTime(1970), area: area);
+    return daily.collapse(attribute, maxClusters);
+  }
+
+  @deprecated
   VodafoneDaily collapseFromKPI(final KPI kpi, [int maxClusters = 0xFFFFFFFF]) {
     final result = <VodafoneCluster>[];
     for (VodafoneDaily daily in this) {
