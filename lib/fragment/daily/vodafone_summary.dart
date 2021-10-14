@@ -21,8 +21,8 @@ class FragmentDailyVodafoneSummary extends StatelessWidget {
     final campusVodafoneVisitors = campusVodafone.visitors;
     final neighborhoodVodafoneVisitors = neighborhoodVodafone.visitors;
     // Calculate data
-    final ageAverage = _getAgeAverage(campusVodafone.collapse(VodafoneClusterAttribute.age));
-    final captureRatio = campusVodafoneVisitors / neighborhoodVodafoneVisitors;
+    final ageAverage = _getAgeAverage(campusVodafone.collapse(VodafoneClusterAttribute.age), campusVodafoneVisitors);
+    final captureRatio = campusVodafoneVisitors / neighborhoodVodafoneVisitors * 100;
     final foreignersPercentage = _generateForeignersPercentage(campusVodafone.collapse(VodafoneClusterAttribute.nationality), campusVodafoneVisitors);
     // Generate children for grid layout
     final rows = [
@@ -85,10 +85,10 @@ class FragmentDailyVodafoneSummary extends StatelessWidget {
     );
   }
 
-  double _getAgeAverage(final VodafoneDaily vodafoneDaily) {
+  double _getAgeAverage(final VodafoneDaily vodafoneDaily, int visitors) {
     double age = 0;
     vodafoneDaily.forEach((cluster) => age += cluster.visitors * cluster.age.median);
-    return age;
+    return age / visitors;
   }
 
   double _generateForeignersPercentage(VodafoneDaily vodafoneDaily, int visitors) {

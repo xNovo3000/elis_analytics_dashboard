@@ -1,23 +1,21 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
-import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
-import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
-import 'package:elis_analytics_dashboard/component/modal/tile/info.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/gender_chart.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/municipality_chart.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/region_chart_smartphone.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/rooms_occupation.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/vodafone_summary.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/weather_report_smartphone.dart';
+import 'package:elis_analytics_dashboard/fragment/info.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
-import 'package:elis_analytics_dashboard/model/container/weather_instant_list.dart';
-import 'package:elis_analytics_dashboard/model/data/sensor.dart';
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
-import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
-import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 import 'package:elis_analytics_dashboard/model/enum/region.dart';
-import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
+import 'package:elis_analytics_dashboard/view/error.dart';
+import 'package:elis_analytics_dashboard/view/wait.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
-import 'package:weather_icons/weather_icons.dart';
 
 class ViewDailySmartphone extends StatelessWidget {
 
@@ -27,15 +25,21 @@ class ViewDailySmartphone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if has error
+    final error = ModelInheritedError.maybeOf(context);
+    if (error != null) {
+      return _ViewDailySmartphoneError(
+        error: error.error,
+      );
+    }
     // Get day
     final day = (ModalRoute.of(context)!.settings.arguments as Map)['day'];
-    // Check data
-    final error = ModelInheritedError.maybeOf(context);
+    // Check if has data
     final data = ModelInheritedDailyData.maybeOf(context);
     // Build UI
     return Scaffold(
       appBar: ColoredAppBar(
-        title: const Text('Visualizzazione giornaliera'),
+        title: Text('Visualizzazione giornaliera'),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(56),
           child: ListTile(
@@ -66,10 +70,8 @@ class ViewDailySmartphone extends StatelessWidget {
         ),
       ),
       body: data != null
-        ? _ViewDailySmartphoneData(day: day)
-        : error != null
-          ? ComponentModalFullscreenError(error: error.error)
-          : ComponentModalFullscreenWait(),
+        ? _ViewDailySmartphoneData()
+        : ViewWait(),
     );
   }
 
@@ -96,13 +98,29 @@ class ViewDailySmartphone extends StatelessWidget {
 
 }
 
-class _ViewDailySmartphoneData extends StatelessWidget {
+class _ViewDailySmartphoneError extends StatelessWidget {
 
-  const _ViewDailySmartphoneData({
-    required this.day
+  const _ViewDailySmartphoneError({
+    required this.error,
   });
 
-  final DateTime day;
+  final String error;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: ColoredAppBar(
+        title: Text('Visualizzazione giornaliera'),
+      ),
+      body: ViewError(
+        error: error,
+      ),
+    );
+  }
+
+}
+
+class _ViewDailySmartphoneData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -113,155 +131,57 @@ class _ViewDailySmartphoneData extends StatelessWidget {
       key: PageStorageKey('_ViewDailySmartphoneDataCustomScrollView'),
       slivers: [
         SliverToBoxAdapter(
-          child: _ComponentWeatherReport(
-            weathers: data.weathers,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text('RAPPORTO METEO', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+              ),
+              FragmentDailyWeatherReportSmartphone(
+                weathers: data.weathers,
+              ),
+            ],
           ),
         ),
         SliverToBoxAdapter(
-          child: Divider(indent: 8, endIndent: 8),
+          child: Divider(indent: 8, endIndent: 8, height: 1, thickness: 1),
         ),
         SliverToBoxAdapter(
-          child: _ComponentStaticRoomsOccupation(
-            sensors: data.timedSensor,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text('OCCUPAZIONE AULE', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+              ),
+              FragmentDailyRoomsOccupation(
+                sensors: data.timedSensor,
+                condition: (room) => room.standing,
+              ),
+            ],
           ),
         ),
         SliverToBoxAdapter(
-          child: _ComponentDynamicRoomsOccupation(
-            sensors: data.timedSensor,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text('OCCUPAZIONE ZONE DI TRANSITO', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+              ),
+              FragmentDailyRoomsOccupation(
+                sensors: data.timedSensor,
+                condition: (room) => !room.standing,
+              ),
+            ],
           ),
+        ),
+        SliverToBoxAdapter(
+          child: Divider(indent: 8, endIndent: 8, height: 1, thickness: 1),
         ),
         SliverToBoxAdapter(
           child: data.hasVodafone ? _ComponentVodafoneDataExists(
-            campusVodafoneData: data.campusVodafone!,
-            neighborhoodVodafoneData: data.neighborhoodVodafone!,
-          ) : ComponentModalTileInfo(
-            message: 'Alcuni dati non sono al momento disponibili',
+            campusVodafone: data.campusVodafone!,
+            neighborhoodVodafone: data.neighborhoodVodafone!,
+          ) : FragmentInfo(
+            message: 'Alcuni dati devono ancora essere elaborati',
           ),
         ),
-      ],
-    );
-  }
-
-}
-
-class _ComponentWeatherReport extends StatelessWidget {
-
-  static final _hourResolver = DateFormat('HH:mm');
-
-  const _ComponentWeatherReport({
-    required this.weathers,
-  });
-
-  final WeatherInstantList weathers;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          title: Text(
-            'RAPPORTO METEO',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-        ),
-        for (var weather in weathers)
-          ListTile(
-            leading: BoxedIcon(weather.icon),
-            title: Text('${weather.ambientTemperature.floor()}°C'),
-            subtitle: Text('Umidità: ${weather.humidity.floor()}% · Vento: ${weather.windSpeed.floor()} km/h ${weather.windDirection}'),
-            trailing: Text('${_hourResolver.format(weather.beginTimestamp)}-${_hourResolver.format(weather.endTimestamp)}'),
-            onTap: () => Navigator.of(context).pushNamed('/daily/weather_report', arguments: {'weather_report': weather}),
-          ),
-      ],
-    );
-  }
-
-}
-
-class _ComponentStaticRoomsOccupation extends StatelessWidget {
-
-  static final _chartTimeOfDayResolver = DateFormat('HH:mm');
-
-  const _ComponentStaticRoomsOccupation({
-    required this.sensors
-  });
-
-  final List<SensorData> sensors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          title: Text(
-            'OCCUPAZIONE AULE',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-        ),
-        SfCartesianChart(
-          margin: EdgeInsets.all(8),
-          primaryXAxis: CategoryAxis(),
-          legend: Legend(
-            isVisible: true,
-            position: LegendPosition.bottom,
-            overflowMode: LegendItemOverflowMode.scroll,
-          ),
-          series: [
-            for (Room room in Room.values.where((room) => room.standing))
-              StackedColumnSeries<SensorData, String>(
-                dataSource: sensors,
-                xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
-                yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
-                legendItemText: '$room',
-                animationDuration: 0,
-              ),
-          ],
-        )
-      ],
-    );
-  }
-
-}
-
-class _ComponentDynamicRoomsOccupation extends StatelessWidget {
-
-  static final _chartTimeOfDayResolver = DateFormat('HH:mm');
-
-  const _ComponentDynamicRoomsOccupation({
-    required this.sensors
-  });
-
-  final List<SensorData> sensors;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          title: Text(
-            'OCCUPAZIONE ZONE DI TRANSITO',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-        ),
-        SfCartesianChart(
-          margin: EdgeInsets.all(8),
-          primaryXAxis: CategoryAxis(),
-          legend: Legend(
-            isVisible: true,
-            position: LegendPosition.bottom,
-            overflowMode: LegendItemOverflowMode.scroll,
-          ),
-          series: [
-            for (Room room in Room.values.where((room) => !room.standing))
-              StackedColumnSeries<SensorData, String>(
-                dataSource: sensors,
-                xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
-                yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
-                legendItemText: '$room',
-                animationDuration: 0,
-              ),
-          ],
-        )
       ],
     );
   }
@@ -273,37 +193,23 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
   static final _mapNumberFormat = NumberFormat('###,###,##0');
 
   const _ComponentVodafoneDataExists({
-    required this.campusVodafoneData,
-    required this.neighborhoodVodafoneData,
+    required this.campusVodafone,
+    required this.neighborhoodVodafone,
   });
 
-  final VodafoneDaily campusVodafoneData;
-  final VodafoneDaily neighborhoodVodafoneData;
+  final VodafoneDaily campusVodafone;
+  final VodafoneDaily neighborhoodVodafone;
 
   @override
   Widget build(BuildContext context) {
     // Cache
-    final campusCollapsedByMunicipality = campusVodafoneData.collapseFromKPI(KPI.municipality, 7);
-    final neighborhoodCollapsedByRegion = neighborhoodVodafoneData.collapseFromKPI(KPI.region);
-    final campusVodafoneVisitors = campusVodafoneData.visitors;
-    final neighborhoodVodafoneVisitors = neighborhoodVodafoneData.visitors;
-    // Generate collapsed data
-    final campusCollapsedByAge = campusVodafoneData.collapseFromKPI(KPI.age);
-    final campusCollapsedByNationality = campusVodafoneData.collapseFromKPI(KPI.nationality);
-    final campusCollapsedByGender = campusVodafoneData.collapseFromKPI(KPI.gender);
-    // Cache
-    final captureRatio = campusVodafoneVisitors / neighborhoodVodafoneVisitors * 100;
-    final ageAverage = _generateAgeAverage(campusCollapsedByAge);
-    final foreignersPercentage = _generateForeignersPercentage(campusCollapsedByNationality);
+    final neighborhoodVodafoneByRegion = neighborhoodVodafone.collapse(VodafoneClusterAttribute.region);
+    final campusVodafoneByMunicipality = campusVodafone.collapse(VodafoneClusterAttribute.municipality);
     // Build UI
     return Column(
       children: [
         ListTile(
-          title: Text(
-            'REGIONI DI PROVENIENZA NEL QUARTIERE',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
-          // TODO: aggiungete vedi altro a /daily/regions
+          title: Text('REGIONI DI PROVENIENZA NEL QUARTIERE', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
           trailing: IconButton(
             icon: Icon(Icons.arrow_forward),
             onPressed: () => Navigator.of(context).pushNamed(
@@ -311,116 +217,52 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
               arguments: {
                 'title': 'Mappa delle provenienze',
                 'map_shape_source': MapShapeSource.asset(
-                  'assets/maps/italy.geojson',
+                  'asset/map/italy.geojson',
                   shapeDataField: 'reg_name',
                   dataCount: 20,
                   primaryValueMapper: (index) => Region.values[index].name,
                   dataLabelMapper: (index) => _mapNumberFormat.format(
-                    neighborhoodCollapsedByRegion.singleWhere(
+                    neighborhoodVodafoneByRegion.singleWhere(
                       (cluster) => cluster.region == Region.values[index],
                       orElse: () => VodafoneCluster.empty(),
                     ).visitors
                   ),
                   shapeColorValueMapper: (index) => _getRegionColorByPercentage(
-                    visitors: neighborhoodCollapsedByRegion.singleWhere(
+                    visitors: neighborhoodVodafoneByRegion.singleWhere(
                       (cluster) => cluster.region == Region.values[index],
                       orElse: () => VodafoneCluster.empty(),
                     ).visitors,
-                    total: neighborhoodVodafoneVisitors,
+                    total: neighborhoodVodafoneByRegion.visitors,
                   ),
                 ),
               }
             ),
           ),
         ),
-        _ComponentHorizontalBarVisualizer(
-          data: neighborhoodCollapsedByRegion.collapseFromKPI(KPI.region, 5),
-          kpi: KPI.region,
+        FragmentDailyRegionChartSmartphone(
+          neighborhoodVodafoneByRegion: neighborhoodVodafoneByRegion.collapse(VodafoneClusterAttribute.region, 5),
         ),
         ListTile(
-          title: Text(
-            'CITTÀ DI PROVENIENZA NEL CAMPUS',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary)
-          ),
+          title: Text('CITTÀ DI PROVENIENZA NEL CAMPUS', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         ),
-        SizedBox(
-          width: double.infinity, height: MediaQuery.of(context).size.height / 3,
-          child: SfCircularChart(
-            legend: Legend(
-              isVisible: true,
-              position: LegendPosition.right,
-            ),
-            series: [
-              PieSeries<VodafoneCluster, String>(
-                dataSource: campusCollapsedByMunicipality,
-                xValueMapper: (datum, index) => '${datum.municipality}',
-                yValueMapper: (datum, index) => datum.visitors,
-                animationDuration: 0,
-              ),
-            ],
-          ),
+        FragmentDailyMunicipalityChart(
+            campusVodafoneByMunicipality: campusVodafoneByMunicipality.collapse(VodafoneClusterAttribute.municipality, 7),
         ),
         ListTile(
-          leading: Icon(Icons.people),
-          title: Text('Visitatori totali'),
-          trailing: Text('$campusVodafoneVisitors'),
+          title: Text('RIASSUNTO GIORNALIERO', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+        ),
+        FragmentDailyVodafoneSummary(
+          campusVodafone: campusVodafone,
+          neighborhoodVodafone: neighborhoodVodafone
         ),
         ListTile(
-          leading: Icon(Icons.people),
-          title: Text('Tempo medio di permanenza'),
-          trailing: Text('${campusVodafoneData.dwellTime.inMinutes} minuti'),
+          title: Text('SUDDIVISIONE PER GENERE', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         ),
-        ListTile(
-          leading: Icon(Icons.label),
-          title: Text('Età media'),
-          trailing: Text('${ageAverage.round()} anni'),
-        ),
-        ListTile(
-          leading: Icon(Icons.home),
-          title: Text('Tasso di cattura'),
-          trailing: Text('${captureRatio.toStringAsFixed(2)}%'),
-        ),
-        ListTile(
-          leading: Icon(Icons.person),
-          title: Text('Percentuale di stranieri'),
-          trailing: Text('${foreignersPercentage.toStringAsFixed(2)}%'),
-        ),
-        SizedBox(
-          width: double.infinity, height: MediaQuery.of(context).size.height / 3,
-          child: SfCircularChart(
-            legend: Legend(
-              isVisible: true,
-              position: LegendPosition.right,
-            ),
-            series: [
-              PieSeries<VodafoneCluster, String>(
-                dataSource: campusCollapsedByGender,
-                xValueMapper: (datum, index) => '${datum.gender}',
-                yValueMapper: (datum, index) => datum.visitors,
-                pointColorMapper: (datum, index) => datum.gender.color,
-                animationDuration: 0,
-              ),
-            ],
-          ),
+        FragmentDailyGenderChart(
+          campusVodafoneByGender: campusVodafone.collapse(VodafoneClusterAttribute.gender),
         ),
       ],
     );
-  }
-
-  int _generateAgeAverage(VodafoneDaily collapsedCampus) {
-    double age = 0;
-    for (var cluster in collapsedCampus) {
-      age += cluster.visitors * cluster.age.median;
-    }
-    age /= collapsedCampus.visitors;
-    return age.round();
-  }
-
-  double _generateForeignersPercentage(VodafoneDaily campusNationality) {
-    return campusNationality.singleWhere(
-      (element) => element.nationality == Nationality.foreigner,
-      orElse: () => VodafoneCluster.empty(),
-    ).visitors / campusNationality.visitors * 100;
   }
 
   Color? _getRegionColorByPercentage({
@@ -438,67 +280,6 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
       return Colors.green;
     } else if (percentage > 0) {
       return Colors.blue;
-    }
-  }
-
-}
-
-class _ComponentHorizontalBarVisualizer extends StatelessWidget {
-
-  const _ComponentHorizontalBarVisualizer({
-    required this.data,
-    required this.kpi,
-  });
-
-  final VodafoneDaily data;
-  final KPI kpi;
-
-  @override
-  Widget build(BuildContext context) {
-    // Cache total
-    final total = data.visitors;
-    // Build UI
-    return Column(
-      children: [
-        for (var cluster in data)
-          Padding(
-            padding: EdgeInsets.only(
-              left: 16, right: 16, top: 16,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                LinearProgressIndicator(
-                  value: cluster.visitors / total,
-                  backgroundColor: Colors.grey.withOpacity(0.5),
-                  minHeight: 10,
-                ),
-                SizedBox(height: 2),
-                Wrap(
-                  alignment: WrapAlignment.spaceBetween,
-                  children: [
-                    Text('${_getClusterRequiredName(cluster)}: ${cluster.visitors}'),
-                    Text('${(cluster.visitors / total * 100).toStringAsFixed(2)}%'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-
-  String _getClusterRequiredName(final VodafoneCluster cluster) {
-    switch (kpi) {
-      case KPI.region:
-        return '${cluster.region}';
-      case KPI.municipality:
-        return cluster.municipality;
-      default:
-        throw UnimplementedError(
-          '_ViewDailySmartphoneByMunicipality#_clusterRequiredName('
-          'kpi: $kpi, cluster $cluster)'
-        );
     }
   }
 

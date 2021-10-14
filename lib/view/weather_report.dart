@@ -22,6 +22,7 @@ class ViewWeatherReport extends StatelessWidget {
 class _ViewWeatherReportData extends StatelessWidget {
 
   static final DateFormat _reportDateTimeResolver = DateFormat('EEEE d/M/y - HH:mm', 'it');
+  static final DateFormat _reportLastDateResolver = DateFormat('HH:mm', 'it');
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,12 @@ class _ViewWeatherReportData extends StatelessWidget {
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48),
           child: ListTile(
-            title: Text(_reportDateTimeResolver.format(report.weather.timestamp)),
+            title: report.weather.duration.inHours == 0 ? Text(
+              _reportDateTimeResolver.format(report.weather.timestamp)
+            ) : Text(
+              '${_reportDateTimeResolver.format(report.weather.timestamp.subtract(Duration(hours: (report.weather.duration.inHours / 2).floor())))}'
+              ' alle ${_reportLastDateResolver.format(report.weather.timestamp.add(Duration(hours: (report.weather.duration.inHours / 2).floor())))}'
+            ),
           ),
         ),
       ),
