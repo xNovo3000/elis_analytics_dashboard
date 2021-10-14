@@ -6,20 +6,9 @@ import 'package:elis_analytics_dashboard/fragment/realtime/expectations.dart';
 import 'package:elis_analytics_dashboard/fragment/realtime/sensor_dwell_time.dart';
 import 'package:elis_analytics_dashboard/fragment/realtime/static_rooms_list.dart';
 import 'package:elis_analytics_dashboard/fragment/realtime/weather_report.dart';
-import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
-import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
-import 'package:elis_analytics_dashboard/model/data/sensor.dart';
-import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
-import 'package:elis_analytics_dashboard/model/data/weather_instant.dart';
-import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
-import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
-import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:weather_icons/weather_icons.dart';
 
 class ViewRealtimeSmartphone extends StatelessWidget {
 

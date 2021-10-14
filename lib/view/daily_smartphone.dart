@@ -2,6 +2,7 @@ import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
 import 'package:elis_analytics_dashboard/component/modal/tile/info.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/vodafone_summary.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/container/weather_instant_list.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
