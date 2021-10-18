@@ -1,4 +1,5 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/appbar_bottom_date.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/gender_chart.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/municipality_chart.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/region_chart_smartphone.dart';
@@ -19,10 +20,6 @@ import 'package:syncfusion_flutter_maps/maps.dart';
 
 class ViewDailySmartphone extends StatelessWidget {
 
-  static final _dateResolver = DateFormat('EEEE d MMMM y', 'it');
-  static const _oneDay = Duration(days: 1);
-  static final _minimumDate = DateTime(2021, 6, 28);
-
   @override
   Widget build(BuildContext context) {
     // Check if has error
@@ -40,33 +37,8 @@ class ViewDailySmartphone extends StatelessWidget {
     return Scaffold(
       appBar: ColoredAppBar(
         title: Text('Visualizzazione giornaliera'),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(56),
-          child: ListTile(
-            title: Text(_dateResolver.format(day)),
-            trailing: Wrap(
-              children: [
-                if (_canGoBackwardInTime(day)) IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).popAndPushNamed(
-                    '/daily',
-                    arguments: {'day': day.subtract(_oneDay)}
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.calendar_today),
-                  onPressed: () => _onDateSelectPressed(context, day),
-                ),
-                if (_canGoForwardInTime(day)) IconButton(
-                  icon: const Icon(Icons.arrow_forward),
-                  onPressed: () => Navigator.of(context).popAndPushNamed(
-                    '/daily',
-                    arguments: {'day': day.add(_oneDay)}
-                  ),
-                ),
-              ],
-            ),
-          ),
+        bottom: FragmentDailyAppbarBottomDate(
+          day: day,
         ),
       ),
       body: data != null
@@ -74,27 +46,6 @@ class ViewDailySmartphone extends StatelessWidget {
         : ViewWait(),
     );
   }
-
-  Future<void> _onDateSelectPressed(BuildContext context, DateTime day) async {
-    // Generate lastDate
-    final now = DateTime.now();
-    final lastDate = DateTime(now.year, now.month, now.day).subtract(_oneDay);
-    // Show DatePicker
-    DateTime? chosenDate = await showDatePicker(
-      context: context,
-      firstDate: DateTime(2021, 6, 28),
-      initialDate: day,
-      lastDate: lastDate,
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-    );
-    // Go to specific date if present
-    if (chosenDate != null) {
-      Navigator.popAndPushNamed(context, '/daily', arguments: {'day': chosenDate});
-    }
-  }
-
-  bool _canGoBackwardInTime(DateTime day) => day.isAfter(_minimumDate);
-  bool _canGoForwardInTime(DateTime day) => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
 
 }
 

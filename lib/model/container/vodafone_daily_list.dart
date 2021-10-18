@@ -47,16 +47,6 @@ class VodafoneDailyList extends ListBase<VodafoneDaily> {
     return daily.collapse(attribute, maxClusters);
   }
 
-  @deprecated
-  VodafoneDaily collapseFromKPI(final KPI kpi, [int maxClusters = 0xFFFFFFFF]) {
-    final result = <VodafoneCluster>[];
-    for (VodafoneDaily daily in this) {
-      result.addAll(daily);
-    }
-    final daily = VodafoneDaily(result, date: DateTime(1970), area: area);
-    return daily.collapseFromKPI(kpi, maxClusters);
-  }
-
   VodafoneDailyList whereCondition(bool Function(VodafoneCluster element) test) {
     return VodafoneDailyList(
       List.generate(

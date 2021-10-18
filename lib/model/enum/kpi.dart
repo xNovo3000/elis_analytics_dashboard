@@ -1,22 +1,3 @@
-import 'dart:collection';
-
-import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
-import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
-import 'package:elis_analytics_dashboard/model/data/sensor.dart';
-import 'package:elis_analytics_dashboard/model/enum/age.dart';
-import 'package:elis_analytics_dashboard/model/enum/distance.dart';
-import 'package:elis_analytics_dashboard/model/enum/gender.dart';
-import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
-import 'package:elis_analytics_dashboard/model/enum/region.dart';
-import 'package:elis_analytics_dashboard/model/enum/room.dart';
-import 'package:elis_analytics_dashboard/model/exception/incompatible_series.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-
-enum KpiAssignation {
-  weather, sensor, crowdCell, cell, na
-}
-
 class KPI {
 
   factory KPI.fromTechnicalName(final String technicalName) =>
@@ -26,38 +7,44 @@ class KPI {
     required this.displayName,
     required this.technicalName,
     required this.complex,
-    required this.assignation,
-    required this.series,
   });
 
   final String displayName;
   final String technicalName;
   final bool complex;
-  final KpiAssignation assignation;
-  final List<ChartSeries> Function(List data, {bool simple, bool to100Percent}) series;
 
   @override String toString() => displayName;
 
-  static const gender = KPI._(displayName: 'Genere', technicalName: 'gender', complex: true, assignation: KpiAssignation.crowdCell, series: _genderSeries);
-  static const age = KPI._(displayName: 'Età', technicalName: 'age', complex: true, assignation: KpiAssignation.crowdCell, series: _ageSeries);
-  static const nationality = KPI._(displayName: 'Nazionalità', technicalName: 'nationality', complex: true, assignation: KpiAssignation.crowdCell, series: _nationalitySeries);
-  static const country = KPI._(displayName: 'Nazione', technicalName: 'country', complex: true, assignation: KpiAssignation.crowdCell, series: _countrySeries);
-  static const region = KPI._(displayName: 'Regione', technicalName: 'region', complex: true, assignation: KpiAssignation.crowdCell, series: _regionSeries);
-  static const province = KPI._(displayName: 'Provincia', technicalName: 'province', complex: true, assignation: KpiAssignation.crowdCell, series: _provinceSeries);
-  static const municipality = KPI._(displayName: 'Città', technicalName: 'municipality', complex: true, assignation: KpiAssignation.crowdCell, series: _municipalitySeries);
-  static const homeDistance = KPI._(displayName: 'Distanza da casa', technicalName: 'home_distance', complex: true, assignation: KpiAssignation.crowdCell, series: _homeDistanceSeries);
-  static const workDistance = KPI._(displayName: 'Distanza da lavoro', technicalName: 'work_distance', complex: true, assignation: KpiAssignation.crowdCell, series: _workDistanceSeries);
-  static const roomsOccupancy = KPI._(displayName: 'Occupazione aule', technicalName: 'rooms_occupancy', complex: true, assignation: KpiAssignation.sensor, series: _roomsOccupancySeries);
+  /* Vodafone KPI */
+  static const campusGender = KPI._(displayName: 'Genere nel campus', technicalName: 'campus_gender', complex: true);
+  static const neighborhoodGender = KPI._(displayName: 'Genere nel quartiere', technicalName: 'neighborhood_gender', complex: true);
+  static const campusAge = KPI._(displayName: 'Età', technicalName: 'campus_age', complex: true);
+  static const neighborhoodAge = KPI._(displayName: 'Età', technicalName: 'neighborhood_age', complex: true);
+  static const campusAgeAverage = KPI._(displayName: 'Età', technicalName: 'campus_age_average', complex: false);
+  static const neighborhoodAgeAverage = KPI._(displayName: 'Età', technicalName: 'neighborhood_age_average', complex: false);
+  static const campusNationality = KPI._(displayName: 'Nazionalità nel campus', technicalName: 'campus_nationality', complex: true);
+  static const neighborhoodNationality = KPI._(displayName: 'Nazionalità nel quartiere', technicalName: 'neighborhood_nationality', complex: true);
+  static const campusForeigners = KPI._(displayName: 'Stranieri nel campus', technicalName: 'campus_foreigners', complex: false);
+  static const neighborhoodForeigners = KPI._(displayName: 'Stranieri nel quartiere', technicalName: 'neighborhood_foreigners', complex: false);
 
-  static const na = KPI._(displayName: 'N/A', technicalName: '', complex: false, assignation: KpiAssignation.na, series: _naSeries);
+  static const country = KPI._(displayName: 'Nazione', technicalName: 'country', complex: true);
+  static const region = KPI._(displayName: 'Regione', technicalName: 'region', complex: true);
+  static const province = KPI._(displayName: 'Provincia', technicalName: 'province', complex: true);
+  static const municipality = KPI._(displayName: 'Città', technicalName: 'municipality', complex: true);
+  static const homeDistance = KPI._(displayName: 'Distanza da casa', technicalName: 'home_distance', complex: true);
+  static const workDistance = KPI._(displayName: 'Distanza da lavoro', technicalName: 'work_distance', complex: true);
+  static const roomsOccupancy = KPI._(displayName: 'Occupazione aule', technicalName: 'rooms_occupancy', complex: true);
+
+  static const na = KPI._(displayName: 'N/A', technicalName: '', complex: false);
 
   static const values = <KPI>[
-    gender, nationality, country, region, province,
+    /* gender, nationality, */ country, region, province,
     municipality, homeDistance, workDistance, roomsOccupancy
   ];
 
   /* Series functions definitions */
 
+  /*
   static final _chartDateResolver = DateFormat('d/M');
 
   static List<ChartSeries> _genderSeries(List data, {bool simple = false, bool to100Percent = false}) =>
@@ -307,6 +294,7 @@ class KPI {
     ];
 
   static List<ChartSeries> _naSeries(List data, {bool simple = false, bool to100Percent = false}) => [];
+  */
 
   /* TODO: Blacklist system */
 

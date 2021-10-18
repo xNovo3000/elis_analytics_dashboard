@@ -1,6 +1,6 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
-import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/map_data.dart';
+import 'package:elis_analytics_dashboard/view/error.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
@@ -17,7 +17,7 @@ class ViewMapViewerSmartphone extends StatelessWidget {
       ),
       body: mapData != null
         ? _ViewMapViewerSmartphoneData()
-        : ComponentModalFullscreenError(error: 'Si è verificato un errore'),
+        : ViewError(error: 'Si è verificato un errore'),
     );
   }
 

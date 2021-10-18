@@ -1,6 +1,6 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/model/inherited/weather_report.dart';
-import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
+import 'package:elis_analytics_dashboard/view/error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -33,7 +33,7 @@ class _ViewWeatherReportData extends StatelessWidget {
       appBar: ColoredAppBar(
         title: const Text('Rapporto meteo'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48),
+          preferredSize: Size.fromHeight(56),
           child: ListTile(
             title: report.weather.duration.inHours == 0 ? Text(
               _reportDateTimeResolver.format(report.weather.timestamp)
@@ -104,7 +104,7 @@ class _ViewWeatherReportError extends StatelessWidget {
       appBar: ColoredAppBar(
         title: const Text('Rapporto meteo'),
       ),
-      body: ComponentModalFullscreenError(error: 'Si è verificato un errore sconosciuto'),
+      body: ViewError(error: 'Si è verificato un errore sconosciuto'),
     );
   }
 

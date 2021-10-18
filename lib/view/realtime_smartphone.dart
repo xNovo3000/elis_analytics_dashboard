@@ -1,6 +1,4 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
-import 'package:elis_analytics_dashboard/component/modal/fullscreen/error.dart';
-import 'package:elis_analytics_dashboard/component/modal/fullscreen/wait.dart';
 import 'package:elis_analytics_dashboard/fragment/realtime/dynamic_rooms_list.dart';
 import 'package:elis_analytics_dashboard/fragment/realtime/expectations.dart';
 import 'package:elis_analytics_dashboard/fragment/realtime/sensor_dwell_time.dart';
@@ -8,6 +6,8 @@ import 'package:elis_analytics_dashboard/fragment/realtime/static_rooms_list.dar
 import 'package:elis_analytics_dashboard/fragment/realtime/weather_report.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
+import 'package:elis_analytics_dashboard/view/error.dart';
+import 'package:elis_analytics_dashboard/view/wait.dart';
 import 'package:flutter/material.dart';
 
 class ViewRealtimeSmartphone extends StatelessWidget {
@@ -25,8 +25,8 @@ class ViewRealtimeSmartphone extends StatelessWidget {
       body: data != null
         ? _ViewRealtimeSmartphoneData()
         : error != null
-          ? ComponentModalFullscreenError(error: error.error)
-          : ComponentModalFullscreenWait(),
+          ? ViewError(error: error.error)
+          : ViewWait(),
     );
   }
 
