@@ -1,3 +1,5 @@
+import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
+
 class KPI {
 
   factory KPI.fromTechnicalName(final String technicalName) =>
@@ -6,43 +8,63 @@ class KPI {
   const KPI._({
     required this.displayName,
     required this.technicalName,
-    required this.complex,
+    required this.isComplex,
+    required this.is100Percent,
   });
 
   final String displayName;
   final String technicalName;
-  final bool complex;
+  final bool isComplex;
+  final bool is100Percent;
 
   @override String toString() => displayName;
 
   /* Vodafone KPI */
-  static const campusGender = KPI._(displayName: 'Genere nel campus', technicalName: 'campus_gender', complex: true);
-  static const neighborhoodGender = KPI._(displayName: 'Genere nel quartiere', technicalName: 'neighborhood_gender', complex: true);
-  static const campusAge = KPI._(displayName: 'Età', technicalName: 'campus_age', complex: true);
-  static const neighborhoodAge = KPI._(displayName: 'Età', technicalName: 'neighborhood_age', complex: true);
-  static const campusAgeAverage = KPI._(displayName: 'Età', technicalName: 'campus_age_average', complex: false);
-  static const neighborhoodAgeAverage = KPI._(displayName: 'Età', technicalName: 'neighborhood_age_average', complex: false);
-  static const campusNationality = KPI._(displayName: 'Nazionalità nel campus', technicalName: 'campus_nationality', complex: true);
-  static const neighborhoodNationality = KPI._(displayName: 'Nazionalità nel quartiere', technicalName: 'neighborhood_nationality', complex: true);
-  static const campusForeigners = KPI._(displayName: 'Stranieri nel campus', technicalName: 'campus_foreigners', complex: false);
-  static const neighborhoodForeigners = KPI._(displayName: 'Stranieri nel quartiere', technicalName: 'neighborhood_foreigners', complex: false);
+  static const campusGender = KPI._(displayName: 'Genere nel campus', technicalName: 'campus_gender', isComplex: true, is100Percent: false);
+  static const neighborhoodGender = KPI._(displayName: 'Genere nel quartiere', technicalName: 'neighborhood_gender', isComplex: true, is100Percent: false);
+  static const campusAge = KPI._(displayName: 'Età nel campus', technicalName: 'campus_age', isComplex: true, is100Percent: false);
+  static const neighborhoodAge = KPI._(displayName: 'Età nel quartiere', technicalName: 'neighborhood_age', isComplex: true, is100Percent: false);
+  static const campusAgeAverage = KPI._(displayName: 'Età media nel campus', technicalName: 'campus_age_average', isComplex: false, is100Percent: false);
+  static const neighborhoodAgeAverage = KPI._(displayName: 'Età media nel quartiere', technicalName: 'neighborhood_age_average', isComplex: false, is100Percent: false);
+  static const campusNationality = KPI._(displayName: 'Nazionalità nel campus', technicalName: 'campus_nationality', isComplex: true, is100Percent: false);
+  static const neighborhoodNationality = KPI._(displayName: 'Nazionalità nel quartiere', technicalName: 'neighborhood_nationality', isComplex: true, is100Percent: false);
+  static const campusForeigners = KPI._(displayName: 'Stranieri nel campus', technicalName: 'campus_foreigners', isComplex: false, is100Percent: false);
+  static const neighborhoodForeigners = KPI._(displayName: 'Stranieri nel quartiere', technicalName: 'neighborhood_foreigners', isComplex: false, is100Percent: false);
+  static const campusCountries = KPI._(displayName: 'Nazioni nel campus', technicalName: 'campus_countries', isComplex: true, is100Percent: false);
+  static const neighborhoodCountries = KPI._(displayName: 'Nazioni nel quartiere', technicalName: 'neighborhood_countries', isComplex: true, is100Percent: false);
+  static const campusRegion = KPI._(displayName: 'Regioni nel campus', technicalName: 'campus_regions', isComplex: true, is100Percent: false);
+  static const neighborhoodRegion = KPI._(displayName: 'Regione nel quartiere', technicalName: 'neighborhood_regions', isComplex: true, is100Percent: false);
+  static const campusProvince = KPI._(displayName: 'Province nel campus', technicalName: 'campus_province', isComplex: true, is100Percent: false);
+  static const neighborhoodProvince = KPI._(displayName: 'Province nel quartiere', technicalName: 'neighborhood_province', isComplex: true, is100Percent: false);
+  static const campusMunicipality = KPI._(displayName: 'Città nel campus', technicalName: 'campus_municipality', isComplex: true, is100Percent: false);
+  static const neighborhoodMunicipality = KPI._(displayName: 'Città nel quartiere', technicalName: 'neighborhood_municipality', isComplex: true, is100Percent: false);
+  static const campusHomeDistance = KPI._(displayName: 'Distanza da casa nel campus', technicalName: 'campus_home_distance', isComplex: true, is100Percent: false);
+  static const neighborhoodHomeDistance = KPI._(displayName: 'Distanza da casa nel quartiere', technicalName: 'neighborhood_home_distance', isComplex: true, is100Percent: false);
+  static const campusHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel campus', technicalName: 'campus_home_distance_average', isComplex: false, is100Percent: false);
+  static const neighborhoodHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel quartiere', technicalName: 'neighborhood_home_distance_average', isComplex: false, is100Percent: false);
+  static const campusWorkDistance = KPI._(displayName: 'Distanza da lavoro nel campus', technicalName: 'campus_work_distance', isComplex: true, is100Percent: false);
+  static const neighborhoodWorkDistance = KPI._(displayName: 'Distanza da lavoro nel quartiere', technicalName: 'neighborhood_work_distance', isComplex: true, is100Percent: false);
+  static const campusWorkDistanceAverage = KPI._(displayName: 'Distanza da lavoro media nel campus', technicalName: 'campus_work_distance_average', isComplex: false, is100Percent: false);
+  static const neighborhoodWorkDistanceAverage = KPI._(displayName: 'Distanza da lavoro media nel quartiere', technicalName: 'neighborhood_work_distance_average', isComplex: false, is100Percent: false);
 
-  static const country = KPI._(displayName: 'Nazione', technicalName: 'country', complex: true);
-  static const region = KPI._(displayName: 'Regione', technicalName: 'region', complex: true);
-  static const province = KPI._(displayName: 'Provincia', technicalName: 'province', complex: true);
-  static const municipality = KPI._(displayName: 'Città', technicalName: 'municipality', complex: true);
-  static const homeDistance = KPI._(displayName: 'Distanza da casa', technicalName: 'home_distance', complex: true);
-  static const workDistance = KPI._(displayName: 'Distanza da lavoro', technicalName: 'work_distance', complex: true);
-  static const roomsOccupancy = KPI._(displayName: 'Occupazione aule', technicalName: 'rooms_occupancy', complex: true);
+  /* G-move KPI */
+  static const roomsOccupancy = KPI._(displayName: 'Occupazione aule', technicalName: 'rooms_occupancy', isComplex: true, is100Percent: false);
 
-  static const na = KPI._(displayName: 'N/A', technicalName: '', complex: false);
+  /* None */
+  static const na = KPI._(displayName: 'N/A', technicalName: '', isComplex: false, is100Percent: false);
 
   static const values = <KPI>[
-    /* gender, nationality, */ country, region, province,
-    municipality, homeDistance, workDistance, roomsOccupancy
+    /* Vodafone KPI */
+    campusGender, neighborhoodGender, campusAge, neighborhoodAge, campusAgeAverage, neighborhoodAgeAverage,
+    campusNationality, neighborhoodNationality, campusForeigners, neighborhoodForeigners,
+    campusCountries, neighborhoodCountries, campusRegion, neighborhoodRegion,
+    campusProvince, neighborhoodProvince, campusMunicipality, neighborhoodMunicipality,
+    campusHomeDistance, neighborhoodHomeDistance, campusHomeDistanceAverage, neighborhoodHomeDistanceAverage,
+    campusWorkDistance, neighborhoodWorkDistance, campusWorkDistanceAverage, neighborhoodWorkDistanceAverage,
+    /* G-move KPI */
+    roomsOccupancy,
   ];
 
-  /* Series functions definitions */
 
   /*
   static final _chartDateResolver = DateFormat('d/M');
