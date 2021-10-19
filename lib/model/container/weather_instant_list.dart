@@ -19,7 +19,7 @@ class WeatherInstantList extends ListBase<WeatherInstant> {
   ) => WeatherInstantList(
     List.generate(
       list.length,
-      (index) => WeatherInstant.fromMapAndDuration(list[index], duration * list.length),
+      (index) => WeatherInstant.fromMapAndDuration(list[index], duration * (1 / list.length)),
       growable: false
     ),
   );
