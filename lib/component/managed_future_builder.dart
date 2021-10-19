@@ -1,3 +1,4 @@
+import 'package:elis_analytics_dashboard/model/exception/invalid_token.dart';
 import 'package:flutter/material.dart';
 
 class ComponentManagedFutureBuilder<T> extends StatelessWidget {
@@ -20,6 +21,12 @@ class ComponentManagedFutureBuilder<T> extends StatelessWidget {
       future: future,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
+          // If InvalidTokenException, then go to login page
+          if (snapshot.error != null && snapshot.error is InvalidTokenException) {
+            // Future necessary because runs after build method has finished building
+            Future.delayed(const Duration(seconds: 0), () => Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false));
+          }
+          // Send error to the normal error builder
           return onError(context, snapshot.error);
         } else if (snapshot.hasData) {
           return onSuccess(context, snapshot.data!);

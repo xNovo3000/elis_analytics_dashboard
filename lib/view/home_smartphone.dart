@@ -3,6 +3,7 @@ import 'package:elis_analytics_dashboard/model/inherited/home_data.dart';
 import 'package:elis_analytics_dashboard/view/gdpr_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewHomeSmartphone extends StatelessWidget {
 
@@ -98,6 +99,11 @@ class ViewHomeSmartphone extends StatelessWidget {
           ButtonBar(
             children: [
               OutlinedButton.icon(
+                icon: Icon(Icons.logout),
+                label: Text('Logout'),
+                onPressed: () => _onLogoutButtonClick(context),
+              ),
+              OutlinedButton.icon(
                 icon: Image(image: AssetImage('asset/image/GDPR.png'), width: 24, height: 24),
                 label: Text('GDPR'),
                 onPressed: () => _onGDPRButtonClick(context),
@@ -136,6 +142,15 @@ class ViewHomeSmartphone extends StatelessWidget {
       context: context,
       builder: (context) => ViewGdprDialog(),
     );
+  }
+
+  Future<void> _onLogoutButtonClick(BuildContext context) async {
+    // Remove "Email" and "Password"
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.remove('Email');
+    await preferences.remove('Password');
+    // Go to login page
+    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
   }
 
   void _onInfoButtonClick(BuildContext context) {

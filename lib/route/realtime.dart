@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:elis_analytics_dashboard/component/managed_future_builder.dart';
 import 'package:elis_analytics_dashboard/component/responsive_layout.dart';
+import 'package:elis_analytics_dashboard/foundation/utils.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor.dart';
 import 'package:elis_analytics_dashboard/model/data/weather_instant.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
+import 'package:elis_analytics_dashboard/model/enum/thingsboard_device.dart';
+import 'package:elis_analytics_dashboard/model/exception/invalid_token.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/foundation/fetcher.dart';
@@ -72,17 +76,27 @@ class _RouteRealtimeState extends State<RouteRealtime> {
   }
 
   // TEST: just for testing
-  Future<Map<String, dynamic>> _getRealtimeData() =>
-    Future.delayed(const Duration(seconds: 2), () => {
-      'weather': WeatherInstant.test(),
-      'realtime_sensor_data': SensorData.test(),
-      'yesterday_sensor_data': SensorData.test(),
-      'campus_vodafone_data': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.campus),
-      'neighborhood_vodafone_data': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.neighborhood),
-    });
+  Future<Map<String, dynamic>> _getRealtimeData() async => {
+    'weather': await _getWeatherInstant(),
+    'realtime_sensor_data': SensorData.test(),
+    'yesterday_sensor_data': SensorData.test(),
+    'campus_vodafone_data': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.campus),
+    'neighborhood_vodafone_data': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.neighborhood),
+  };
 
-  // TODO: add all (async) sub-functions
-  // Future<WeatherInstant> _getWeatherData() async
-  // Etc...
+  Future<WeatherInstant> _getWeatherInstant() async {
+    // Generate
+    final uri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries');
+    // Send request
+    final response = await widget.fetcher.get(uri);
+    switch (response.statusCode) {
+      case 200:
+        return WeatherInstant.fromMapAndDuration(Utils.dispatchThingsboardResponse(json.decode(response.body)).single);
+      case 401:
+        throw InvalidTokenException('');
+      default:
+        throw response.statusCode;
+    }
+  }
 
 }

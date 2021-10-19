@@ -7,7 +7,7 @@ class ThingsboardDevice {
 
   final String id;
 
-  @override String toString() => 'ThingsboardDevice(id: $id)';
+  @override String toString() => '$id';
 
   // instances
   static const ThingsboardDevice weatherStation = ThingsboardDevice._(id: 'ee55cb40-cf52-11eb-b683-ab203c34dc02');
