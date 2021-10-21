@@ -13,14 +13,17 @@ class ThingsboardDevice {
   static const ThingsboardDevice weatherStation = ThingsboardDevice._(id: 'ee55cb40-cf52-11eb-b683-ab203c34dc02');
   static const ThingsboardDevice vodafoneIndoor = ThingsboardDevice._(id: '752c2730-2a9e-11ec-abc5-0989dc5dd698');
   static const ThingsboardDevice vodafoneOutdoor = ThingsboardDevice._(id: '6f1fb0f0-2a9e-11ec-abc5-0989dc5dd698');
-  static const ThingsboardDevice sensorsRealtime = ThingsboardDevice._(id: '349be090-d4fc-11eb-8a8d-ddcdb4d4646a');
+  static const ThingsboardDevice sensorsRealtime = ThingsboardDevice._(id: 'a7e6a070-31af-11ec-8df4-b9d2de45366a');
+  static const ThingsboardDevice sensors10min = ThingsboardDevice._(id: 'b582aa80-31af-11ec-8df4-b9d2de45366a');
+  @deprecated
   static const ThingsboardDevice sensorsDaily = ThingsboardDevice._(id: 'aabd2220-dcc2-11eb-804a-6b845e08a1a9');
+  @deprecated
   static const ThingsboardDevice sensorsWeekly = ThingsboardDevice._(id: '89c61940-dd77-11eb-804a-6b845e08a1a9');
 
   // recursive enumeration
   static const List<ThingsboardDevice> values = const <ThingsboardDevice>[
     weatherStation, vodafoneIndoor, vodafoneOutdoor,
-    sensorsRealtime, sensorsDaily, sensorsWeekly
+    sensorsRealtime, sensors10min, sensorsDaily, sensorsWeekly
   ];
 
 }

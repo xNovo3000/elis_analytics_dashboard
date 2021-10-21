@@ -1,4 +1,4 @@
-import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_visits.dart';
 import 'package:flutter/material.dart';
 
 class FragmentRealtimeSensorDwellTime extends StatelessWidget {
@@ -7,7 +7,7 @@ class FragmentRealtimeSensorDwellTime extends StatelessWidget {
     required this.sensorData,
   });
 
-  final SensorData sensorData;
+  final SensorVisits sensorData;
 
   @override
   Widget build(BuildContext context) {

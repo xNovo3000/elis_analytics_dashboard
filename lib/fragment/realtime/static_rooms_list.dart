@@ -1,4 +1,4 @@
-import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
 import 'package:elis_analytics_dashboard/model/enum/room.dart';
 import 'package:flutter/material.dart';
 
@@ -9,14 +9,15 @@ class FragmentRealtimeStaticRoomsList extends StatelessWidget {
     this.direction = Axis.vertical,
   });
 
-  final SensorData sensorData;
+  final SensorAttendance sensorData;
   final Axis direction;
 
   @override
   Widget build(BuildContext context) {
+    // TODO: not important: make this Widget expandable
     // Get rooms data
-    final roomLagrangeData = sensorData.roomsData.singleWhere((roomData) => roomData.room == Room.lagrange);
-    final roomPascalData = sensorData.roomsData.singleWhere((roomData) => roomData.room == Room.pascal);
+    final roomLagrangeData = sensorData.roomsData.singleWhere((roomData) => roomData.room == Room.attendanceLagrange);
+    final roomPascalData = sensorData.roomsData.singleWhere((roomData) => roomData.room == Room.attendanceTesla);
     // Build children
     final children = [
       Expanded(
@@ -40,10 +41,10 @@ class FragmentRealtimeStaticRoomsList extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.all(4),
-                child: Text(
-                  '${roomLagrangeData.occupancy >= roomLagrangeData.room.capacity ? 'ALT' : 'OK'}: '
+                child: roomLagrangeData.occupancy != null ? Text(
+                  '${roomLagrangeData.occupancy! >= roomLagrangeData.room.capacity ? 'ALT' : 'OK'}: '
                   '${roomLagrangeData.occupancy}/${roomLagrangeData.room.capacity}'
-                ),
+                ) : Text('N/A'),
                 decoration: BoxDecoration(
                   color: roomLagrangeData.color,
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
@@ -70,14 +71,15 @@ class FragmentRealtimeStaticRoomsList extends StatelessWidget {
               ),
               // TODO: add image here
               SizedBox(
-                width: double.infinity, height: 96,
+                width: direction == Axis.horizontal ? double.infinity : 96,
+                height: direction == Axis.vertical ? double.infinity : 96,
               ),
               Container(
                 padding: EdgeInsets.all(4),
-                child: Text(
-                  '${roomPascalData.occupancy >= roomPascalData.room.capacity ? 'ALT' : 'OK'}: '
+                child: roomPascalData.occupancy != null ? Text(
+                  '${roomPascalData.occupancy! >= roomPascalData.room.capacity ? 'ALT' : 'OK'}: '
                   '${roomPascalData.occupancy}/${roomPascalData.room.capacity}'
-                ),
+                ) : Text('N/A'),
                 decoration: BoxDecoration(
                   color: roomPascalData.color,
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
@@ -93,4 +95,5 @@ class FragmentRealtimeStaticRoomsList extends StatelessWidget {
       ? Row(children: children)
       : Column(children: children);
   }
+
 }

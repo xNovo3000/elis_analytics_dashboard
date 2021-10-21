@@ -57,7 +57,7 @@ class _ViewRealtimeSmartphoneData extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: FragmentRealtimeStaticRoomsList(
-                  sensorData: data.realtimeSensorData,
+                  sensorData: data.realtimeSensorAttendance,
                   direction: Axis.horizontal,
                 ),
               ),
@@ -79,7 +79,7 @@ class _ViewRealtimeSmartphoneData extends StatelessWidget {
               SizedBox(
                 width: double.infinity, height: 200,
                 child: FragmentRealtimeDynamicRoomsList(
-                  sensorData: data.realtimeSensorData,
+                  sensorData: data.realtimeSensorVisits,
                   scrollDirection: Axis.horizontal,
                 ),
               ),
@@ -88,7 +88,7 @@ class _ViewRealtimeSmartphoneData extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           child: FragmentRealtimeSensorDwellTime(
-            sensorData: data.realtimeSensorData,
+            sensorData: data.realtimeSensorVisits,
           ),
         ),
         SliverToBoxAdapter(

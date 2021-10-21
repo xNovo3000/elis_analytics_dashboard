@@ -1,3 +1,4 @@
+import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/home_data.dart';
 import 'package:elis_analytics_dashboard/view/gdpr_dialog.dart';
@@ -14,7 +15,7 @@ class ViewHomeSmartphone extends StatelessWidget {
     final error = ModelInheritedError.maybeOf(context);
     // Build UI
     return Scaffold(
-      appBar: AppBar(
+      appBar: ColoredAppBar(
         title: Text('ELIS Analytics Dashboard'),
       ),
       body: ListView(

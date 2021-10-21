@@ -1,6 +1,7 @@
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/container/weather_instant_list.dart';
-import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_visits.dart';
 import 'package:flutter/material.dart';
 
 class ModelInheritedDailyData extends InheritedWidget {
@@ -10,22 +11,22 @@ class ModelInheritedDailyData extends InheritedWidget {
   }) => ModelInheritedDailyData(
     child: child,
     weathers: WeatherInstantList.test(length: 4),
-    dailySensor: SensorData.test(),
-    timedSensor: List.generate(48, (index) => SensorData.test(index), growable: false),
+    attendance: List.generate(48, (index) => SensorAttendance.test(index), growable: false),
+    visits: List.generate(48, (index) => SensorVisits.test(index), growable: false),
   );
 
   const ModelInheritedDailyData({
     required Widget child,
     required this.weathers,
-    this.dailySensor,
-    required this.timedSensor,
+    required this.attendance,
+    required this.visits,
     this.campusVodafone,
     this.neighborhoodVodafone,
   }) : super(child: child);
 
   final WeatherInstantList weathers;
-  final SensorData? dailySensor;
-  final List<SensorData> timedSensor;
+  final List<SensorAttendance> attendance;
+  final List<SensorVisits> visits;
   final VodafoneDaily? campusVodafone;
   final VodafoneDaily? neighborhoodVodafone;
 
@@ -38,8 +39,8 @@ class ModelInheritedDailyData extends InheritedWidget {
   @override
   bool updateShouldNotify(ModelInheritedDailyData old) =>
     weathers != old.weathers ||
-    dailySensor != old.dailySensor ||
-    timedSensor != old.timedSensor ||
+    attendance != old.attendance ||
+    visits != old.visits ||
     campusVodafone != old.campusVodafone ||
     neighborhoodVodafone != old.neighborhoodVodafone;
 

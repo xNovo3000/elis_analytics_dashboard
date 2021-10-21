@@ -1,9 +1,10 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/appbar_bottom_date.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/dynamic_rooms_occupation.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/gender_chart.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/municipality_chart.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/region_chart_smartphone.dart';
-import 'package:elis_analytics_dashboard/fragment/daily/rooms_occupation.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/static_rooms_occupation.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/vodafone_summary.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/weather_report_smartphone.dart';
 import 'package:elis_analytics_dashboard/fragment/info.dart';
@@ -102,9 +103,8 @@ class _ViewDailySmartphoneData extends StatelessWidget {
               ListTile(
                 title: Text('OCCUPAZIONE AULE', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
               ),
-              FragmentDailyRoomsOccupation(
-                sensors: data.timedSensor,
-                condition: (room) => room.standing,
+              FragmentDailyDynamicRoomsOccupation(
+                sensors: data.attendance,
               ),
             ],
           ),
@@ -115,9 +115,8 @@ class _ViewDailySmartphoneData extends StatelessWidget {
               ListTile(
                 title: Text('OCCUPAZIONE ZONE DI TRANSITO', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
               ),
-              FragmentDailyRoomsOccupation(
-                sensors: data.timedSensor,
-                condition: (room) => !room.standing,
+              FragmentDailyStaticRoomsOccupation(
+                sensors: data.visits,
               ),
             ],
           ),

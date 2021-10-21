@@ -14,9 +14,9 @@ class RoomData implements Comparable<RoomData> {
   });
 
   final Room room;
-  final int occupancy;
+  final int? occupancy;
 
-  double get percentage => occupancy / room.capacity;
+  double get percentage => (occupancy ?? -1) / room.capacity;
 
   Color get color {
     if (percentage >= 1) {
@@ -31,6 +31,6 @@ class RoomData implements Comparable<RoomData> {
   @override String toString() => 'RoomData(room: $room, occupancy: $occupancy)';
   @override bool operator ==(Object other) => other is RoomData ? room == other.room : false;
   @override int get hashCode => room.hashCode;
-  @override int compareTo(RoomData other) => other.occupancy.compareTo(occupancy);
+  @override int compareTo(RoomData other) => other.occupancy?.compareTo(occupancy ?? -1) ?? -1;
 
 }

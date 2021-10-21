@@ -6,7 +6,8 @@ import 'package:elis_analytics_dashboard/component/responsive_layout.dart';
 import 'package:elis_analytics_dashboard/foundation/utils.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
-import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_visits.dart';
 import 'package:elis_analytics_dashboard/model/data/weather_instant.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/enum/thingsboard_device.dart';
@@ -30,8 +31,8 @@ class _RouteRealtimeState extends State<RouteRealtime> {
 
   // Static Uri cache
   static final _weatherUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries');
-  static final _realtimeSensorsUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtime}/values/timeseries');
-  static final _dailySensorsUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsDaily}/values/timeseries');
+  static final _realtimeSensorAttendanceUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtime}/values/timeseries');
+  static final _realtimeSensorVisitsUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensors10min}/values/timeseries');
   static Uri _getVodafoneUriFromDay(ThingsboardDevice device, DateTime begin, DateTime end) =>
     Uri.parse('plugins/telemetry/DEVICE/$device/values/timeseries')
       .replace(queryParameters: {
@@ -67,8 +68,8 @@ class _RouteRealtimeState extends State<RouteRealtime> {
       future: _getRealtimeData(),
       onSuccess: (context, data) => ModelInheritedRealtimeData(
         weather: data['weather'],
-        realtimeSensorData: data['realtime_sensor_data'],
-        yesterdaySensorData: data['yesterday_sensor_data'],
+        realtimeSensorAttendance: data['realtime_sensor_attendance'],
+        realtimeSensorVisits: data['realtime_sensor_visits'],
         campusVodafoneData: data['campus_vodafone_data'],
         neighborhoodVodafoneData: data['neighborhood_vodafone_data'],
         child: child,
@@ -91,8 +92,8 @@ class _RouteRealtimeState extends State<RouteRealtime> {
   // TEST: just for testing
   Future<Map<String, dynamic>> _getRealtimeData() async => {
     'weather': await _getWeatherInstant(),
-    'realtime_sensor_data': await _getRealtimeSensor(),
-    'yesterday_sensor_data': SensorData.test(),  // TODO: now it's useless. Remove
+    'realtime_sensor_attendance': await _getRealtimeSensorAttendance(),
+    'realtime_sensor_visits': await _getRealtimeSensorVisits(),
     'campus_vodafone_data': await _getVodafoneList(ThingsboardDevice.vodafoneIndoor, Area.campus),
     'neighborhood_vodafone_data': await _getVodafoneList(ThingsboardDevice.vodafoneOutdoor, Area.neighborhood),
   };
@@ -109,11 +110,11 @@ class _RouteRealtimeState extends State<RouteRealtime> {
     }
   }
 
-  Future<SensorData> _getRealtimeSensor() async {
-    final response = await widget.fetcher.get(_realtimeSensorsUri);
+  Future<SensorAttendance> _getRealtimeSensorAttendance() async {
+    final response = await widget.fetcher.get(_realtimeSensorAttendanceUri);
     switch (response.statusCode) {
       case 200:
-        return SensorData.fromMap(Utils.dispatchThingsboardResponse(json.decode(response.body)).single);
+        return SensorAttendance.fromMap(Utils.dispatchThingsboardResponse(json.decode(response.body)).single);
       case 401:
         throw InvalidTokenException('');
       default:
@@ -121,11 +122,11 @@ class _RouteRealtimeState extends State<RouteRealtime> {
     }
   }
 
-  Future<SensorData> _getDailySensor() async {
-    final response = await widget.fetcher.get(_dailySensorsUri);
+  Future<SensorVisits> _getRealtimeSensorVisits() async {
+    final response = await widget.fetcher.get(_realtimeSensorVisitsUri);
     switch (response.statusCode) {
       case 200:
-        return SensorData.fromMap(Utils.dispatchThingsboardResponse(json.decode(response.body)).single);
+        return SensorVisits.fromMap(Utils.dispatchThingsboardResponse(json.decode(response.body)).single);
       case 401:
         throw InvalidTokenException('');
       default:

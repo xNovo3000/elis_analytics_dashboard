@@ -1,7 +1,8 @@
 import 'package:elis_analytics_dashboard/component/managed_future_builder.dart';
 import 'package:elis_analytics_dashboard/component/responsive_layout.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
-import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_visits.dart';
 import 'package:elis_analytics_dashboard/model/data/weather_daily.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
@@ -31,7 +32,8 @@ class RouteWeekly extends StatelessWidget {
       onSuccess: (context, data) => ModelInheritedWeeklyData(
         child: child,
         weathers: data['weathers'],
-        sensors: data['sensors'],
+        attendance: data['attendance'],
+        visits: data['visits'],
         campusVodafone: data['campus_vodafone'],
         neighborhoodVodafone: data['neighborhood_vodafone'],
       ),
@@ -47,7 +49,8 @@ class RouteWeekly extends StatelessWidget {
   Future<Map<String, dynamic>> _getWeeklyData(final DateTimeRange range) async =>
     Future.delayed(Duration(seconds: 1), () => {
       'weathers': List.generate(7, (index) => WeatherDaily.test(index), growable: false),
-      'sensors': List.generate(7, (index) => SensorData.test(index), growable: false),
+      'attendance': List.generate(7, (index) => SensorAttendance.test(index), growable: false),
+      'visits': List.generate(7, (index) => SensorVisits.test(index), growable: false),
       'campus_vodafone': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.campus),
       'neighborhood_vodafone': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.neighborhood)
     });

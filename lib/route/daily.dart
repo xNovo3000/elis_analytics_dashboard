@@ -6,7 +6,8 @@ import 'package:elis_analytics_dashboard/foundation/fetcher.dart';
 import 'package:elis_analytics_dashboard/foundation/utils.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/container/weather_instant_list.dart';
-import 'package:elis_analytics_dashboard/model/data/sensor.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_visits.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/enum/thingsboard_device.dart';
 import 'package:elis_analytics_dashboard/model/exception/invalid_token.dart';
@@ -60,8 +61,8 @@ class RouteDaily extends StatelessWidget {
       onSuccess: (context, data) => ModelInheritedDailyData(
         child: child,
         weathers: data['weathers'],
-        dailySensor: data['daily_sensor'],
-        timedSensor: data['timed_sensor'],
+        attendance: data['attendance'],
+        visits: data['visits'],
         campusVodafone: data['campus_vodafone'],
         neighborhoodVodafone: data['neighborhood_vodafone'],
       ),
@@ -76,8 +77,8 @@ class RouteDaily extends StatelessWidget {
   // TODO: generate REAL data
   Future<Map<String, dynamic>> _getDailyData(DateTime day) async => {
     'weathers': await _getWeatherData(day),
-    'daily_sensor': SensorData.test(),
-    'timed_sensor': List.generate(48, (index) => SensorData.test(index), growable: false),
+    'attendance': List.generate(48, (index) => SensorAttendance.test(index), growable: false),
+    'visits': List.generate(48, (index) => SensorVisits.test(index), growable: false),
     'campus_vodafone': VodafoneDaily.test(date: DateTime.now(), area: Area.campus),
     'neighborhood_vodafone': VodafoneDaily.test(date: DateTime.now(), area: Area.neighborhood),
   };
