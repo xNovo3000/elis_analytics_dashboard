@@ -4,6 +4,7 @@ import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/enum/age.dart';
 import 'package:elis_analytics_dashboard/model/enum/gender.dart';
 import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
+import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 import 'package:elis_analytics_dashboard/model/inherited/weekly_data.dart';
 import 'package:elis_analytics_dashboard/view/error.dart';
 import 'package:flutter/material.dart';
@@ -47,15 +48,15 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         position: LegendPosition.bottom,
       ),
       series: <ChartSeries>[]
-        ..addAll(_getSeries(first, data))
-        ..addAll(_getSeries(second, data)),
+        ..addAll(_getSeries(first, false, data))
+        ..addAll(_getSeries(second, true, data)),
     );
   }
 
   // TODO: finire sto schifo
-  static List<ChartSeries> _getSeries(KPI kpi, ModelInheritedWeeklyData data) {
+  static List<ChartSeries> _getSeries(KPI kpi, bool isSecond, ModelInheritedWeeklyData data) {
     switch (kpi) {
-      case KPI.campusGender:
+      case KPI.campusGender: case KPI.neighborhoodGender:
         return [
           for (Gender gender in Gender.values)
             StackedColumnSeries<VodafoneDaily, String>(
@@ -67,19 +68,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               animationDuration: 0
             )
         ];
-      case KPI.neighborhoodGender:
-        return [
-          for (Gender gender in Gender.values)
-            StackedColumnSeries<VodafoneDaily, String>(
-              dataSource: data.neighborhoodVodafone,
-              xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.gender)
-                .whereCondition((cluster) => cluster.gender == gender).visitors,
-              legendItemText: '$gender',
-              animationDuration: 0
-            )
-        ];
-      case KPI.campusAge:
+      case KPI.campusAge: case KPI.neighborhoodAge:
         return [
           for (Age age in Age.values)
             StackedColumnSeries<VodafoneDaily, String>(
@@ -91,32 +80,37 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               animationDuration: 0
             )
         ];
-      case KPI.neighborhoodAge:
+      case KPI.campusAgeAverage: case KPI.neighborhoodAgeAverage:
         return [
-          for (Age age in Age.values)
+          if (!isSecond) StackedColumnSeries<VodafoneDaily, String>(
+            dataSource: data.campusVodafone,
+            xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
+            yValueMapper: (datum, index) => datum.ageAverage,
+            legendItemText: '${kpi.displayName}',
+            animationDuration: 0
+          ),
+          if (isSecond) LineSeries<VodafoneDaily, String>(
+            dataSource: data.campusVodafone,
+            xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
+            yValueMapper: (datum, index) => datum.ageAverage,
+            legendItemText: '${kpi.displayName}',
+            animationDuration: 0
+          ),
+        ];
+      case KPI.campusNationality: case KPI.neighborhoodNationality:
+        return [
+          for (Nationality nationality in Nationality.values)
             StackedColumnSeries<VodafoneDaily, String>(
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.age)
-                .whereCondition((cluster) => cluster.age == age).visitors,
-              legendItemText: '$age',
-              animationDuration: 0
-            )
-        ];
-      case KPI.campusAgeAverage:
-        return [
-          for (Age age in Age.values)
-            StackedColumnSeries<VodafoneDaily, String>(
-              dataSource: data.campusVodafone,
-              xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.age)
-                .whereCondition((cluster) => cluster.age == age).visitors,
-              legendItemText: '$age',
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality)
+                .whereCondition((cluster) => cluster.nationality == nationality).visitors,
+              legendItemText: '$nationality',
               animationDuration: 0
             )
         ];
       default:
-        return [];
+        throw UnimplementedError('FragmentWeeklyKpiComparatorVisualizer@_getSeries_$kpi');
     }
   }
 

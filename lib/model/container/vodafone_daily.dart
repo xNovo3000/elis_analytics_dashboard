@@ -65,6 +65,30 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
     return Duration(seconds: (total.inSeconds / visitors).round());
   }
 
+  double get ageAverage {
+    var total = 0.0;
+    forEach((cluster) => total += cluster.age.median);
+    return total / visitors;
+  }
+
+  double get foreignersRatio {
+    var total = 0.0;
+    forEach((cluster) => cluster.nationality == Nationality.foreigner ? total += cluster.visitors : null);
+    return total / visitors;
+  }
+
+  double get homeDistanceAverage {
+    var total = 0.0;
+    forEach((cluster) => total += cluster.homeDistance.average);
+    return total / visitors;
+  }
+
+  double get workDistanceAverage {
+    var total = 0.0;
+    forEach((cluster) => total += cluster.workDistance.average);
+    return total / visitors;
+  }
+
   VodafoneDaily whereCondition(bool Function(VodafoneCluster element) test) => VodafoneDaily(
     List.of(super.where(test)),
     date: date,
