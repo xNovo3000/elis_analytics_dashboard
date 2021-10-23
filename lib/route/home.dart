@@ -72,7 +72,7 @@ class _RouteHomeState extends State<RouteHome> {
 
   Future<DateTimeRange> _getLastWeekRange(BuildContext context) async {
     // Generate
-    final uri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.vodafoneIndoor}/values/timeseries');
+    final uri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.vodafoneCampus}/values/timeseries');
     // Send request
     final response = await widget.fetcher.get(uri);
     switch (response.statusCode) {

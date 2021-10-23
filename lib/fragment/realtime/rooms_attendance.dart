@@ -1,10 +1,10 @@
 import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
-import 'package:elis_analytics_dashboard/model/enum/room.dart';
+import 'package:elis_analytics_dashboard/model/enum/room_attendance.dart';
 import 'package:flutter/material.dart';
 
-class FragmentRealtimeStaticRoomsList extends StatelessWidget {
+class FragmentRealtimeRoomsAttendance extends StatelessWidget {
 
-  const FragmentRealtimeStaticRoomsList({
+  const FragmentRealtimeRoomsAttendance({
     required this.sensorData,
     this.direction = Axis.vertical,
   });
@@ -16,8 +16,8 @@ class FragmentRealtimeStaticRoomsList extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: not important: make this Widget expandable
     // Get rooms data
-    final roomLagrangeData = sensorData.roomsData.singleWhere((roomData) => roomData.room == Room.attendanceLagrange);
-    final roomPascalData = sensorData.roomsData.singleWhere((roomData) => roomData.room == Room.attendanceTesla);
+    final roomLagrangeData = sensorData.roomsData.singleWhere((roomData) => roomData.room == RoomAttendance.lagrange);
+    final roomPascalData = sensorData.roomsData.singleWhere((roomData) => roomData.room == RoomAttendance.tesla);
     // Build children
     final children = [
       Expanded(

@@ -1,8 +1,8 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
-import 'package:elis_analytics_dashboard/fragment/realtime/dynamic_rooms_list.dart';
 import 'package:elis_analytics_dashboard/fragment/realtime/expectations.dart';
+import 'package:elis_analytics_dashboard/fragment/realtime/rooms_attendance.dart';
+import 'package:elis_analytics_dashboard/fragment/realtime/rooms_visits.dart';
 import 'package:elis_analytics_dashboard/fragment/realtime/sensor_dwell_time.dart';
-import 'package:elis_analytics_dashboard/fragment/realtime/static_rooms_list.dart';
 import 'package:elis_analytics_dashboard/fragment/realtime/weather_report.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/realtime_data.dart';
@@ -56,7 +56,7 @@ class _ViewRealtimeSmartphoneData extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: FragmentRealtimeStaticRoomsList(
+                child: FragmentRealtimeRoomsAttendance(
                   sensorData: data.realtimeSensorAttendance,
                   direction: Axis.horizontal,
                 ),
@@ -78,7 +78,7 @@ class _ViewRealtimeSmartphoneData extends StatelessWidget {
               ),
               SizedBox(
                 width: double.infinity, height: 200,
-                child: FragmentRealtimeDynamicRoomsList(
+                child: FragmentRealtimeRoomsVisits(
                   sensorData: data.realtimeSensorVisits,
                   scrollDirection: Axis.horizontal,
                 ),

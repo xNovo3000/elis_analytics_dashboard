@@ -1,18 +1,18 @@
-import 'package:elis_analytics_dashboard/model/data/sensor_visits.dart';
-import 'package:elis_analytics_dashboard/model/enum/room.dart';
+import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
+import 'package:elis_analytics_dashboard/model/enum/room_attendance.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class FragmentDailyStaticRoomsOccupation extends StatelessWidget {
+class FragmentDailyRoomsOccupationAttendance extends StatelessWidget {
 
   static final _chartTimeOfDayResolver = DateFormat('HH:mm');
 
-  const FragmentDailyStaticRoomsOccupation({
+  const FragmentDailyRoomsOccupationAttendance({
     required this.sensors,
   });
 
-  final List<SensorVisits> sensors;
+  final List<SensorAttendance> sensors;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class FragmentDailyStaticRoomsOccupation extends StatelessWidget {
         overflowMode: LegendItemOverflowMode.scroll,
       ),
       series: [
-        for (Room room in Room.values)
-          StackedColumnSeries<SensorVisits, String>(
+        for (RoomAttendance room in RoomAttendance.values)
+          StackedColumnSeries<SensorAttendance, String>(
             dataSource: sensors,
             xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
             yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,

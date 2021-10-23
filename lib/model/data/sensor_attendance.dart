@@ -1,17 +1,18 @@
 import 'dart:math';
 
-import 'package:elis_analytics_dashboard/model/data/room.dart';
-import 'package:elis_analytics_dashboard/model/enum/room.dart';
+import 'package:elis_analytics_dashboard/foundation/utils.dart';
+import 'package:elis_analytics_dashboard/model/data/room_attendance.dart';
+import 'package:elis_analytics_dashboard/model/enum/room_attendance.dart';
 
 class SensorAttendance implements Comparable<SensorAttendance> {
 
   factory SensorAttendance.fromMap(final Map<String, dynamic> map) => SensorAttendance(
     timestamp: DateTime.fromMillisecondsSinceEpoch(map['ts'], isUtc: true).toLocal(),
     roomsData: List.generate(
-      Room.attendanceValues.length,
-      (index) => RoomData(
-        room: Room.attendanceValues[index],
-        occupancy: _getOccupancy(map[Room.attendanceValues[index].technicalName]),
+      RoomAttendance.values.length,
+      (index) => RoomAttendanceData(
+        room: RoomAttendance.values[index],
+        occupancy: Utils.getOccupancy(map[RoomAttendance.values[index].technicalName]),
       ),
       growable: false
     ),
@@ -23,9 +24,9 @@ class SensorAttendance implements Comparable<SensorAttendance> {
     return SensorAttendance(
       timestamp: DateTime.now().add(Duration(minutes: index * 30)),
       roomsData: List.generate(
-        Room.attendanceValues.length,
-        (index) => RoomData(
-          room: Room.attendanceValues[index],
+        RoomAttendance.values.length,
+        (index) => RoomAttendanceData(
+          room: RoomAttendance.values[index],
           occupancy: random.nextInt(20),
         ),
         growable: false
@@ -39,7 +40,7 @@ class SensorAttendance implements Comparable<SensorAttendance> {
   });
 
   final DateTime timestamp;
-  final List<RoomData> roomsData;
+  final List<RoomAttendanceData> roomsData;
 
   int get total {
     int result = 0;
@@ -51,16 +52,5 @@ class SensorAttendance implements Comparable<SensorAttendance> {
   @override bool operator ==(Object other) => other is SensorAttendance ? timestamp.isAtSameMomentAs(other.timestamp) : false;
   @override int get hashCode => timestamp.hashCode;
   @override int compareTo(SensorAttendance other) => timestamp.compareTo(other.timestamp);
-
-  // Get occupancy checking if integer or String
-  static int? _getOccupancy(dynamic data) {
-    if (data is double) {
-      return data.round();
-    } else if (data is int) {
-      return data;
-    } else {
-      return null;
-    }
-  }
 
 }

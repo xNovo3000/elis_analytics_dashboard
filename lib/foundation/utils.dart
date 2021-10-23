@@ -1,9 +1,12 @@
-class Utils {
+import 'package:elis_analytics_dashboard/model/enum/thingsboard_device.dart';
+
+abstract class Utils {
 
   /* Non-instantiable, only static members */
   const Utils._();
 
   // TODO: fix some bugs
+  /* Dispatch from Map response to List of Maps response */
   static List<Map<String, dynamic>> dispatchThingsboardResponse(final Map<String, dynamic> map) {
     // check if map is empty
     if (map.isEmpty) {
@@ -26,5 +29,50 @@ class Utils {
     // return the dispatched data
     return dispatched;
   }
+
+  /* Get occupancy number from G-move data */
+  static int? getOccupancy(dynamic data) {
+    if (data is double) {
+      return data.round();
+    } else if (data is int) {
+      return data;
+    } else {
+      return null;
+    }
+  }
+
+  /* Realtime URIs */
+  static final realtimeWeatherUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries');
+  static final realtimeSensorAttendanceUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtimeAttendance}/values/timeseries');
+  static final realtimeSensorVisitsUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtimeVisits}/values/timeseries');
+
+  static Uri getRealtimeVodafoneUriFromDay(ThingsboardDevice device, DateTime begin, DateTime end) =>
+    Uri.parse('plugins/telemetry/DEVICE/$device/values/timeseries')
+      .replace(queryParameters: {
+        'startTs': '${begin.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${end.toUtc().millisecondsSinceEpoch}',
+        'keys': 'age,country,gender,homeDistance,workDistance,nationality,region,province,municipality,totalDwellTime,visitors,visits'
+      });
+
+  /* Daily URIs */
+  static Uri getDailyCompleteWeatherUri(DateTime day) =>
+    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
+    .replace(queryParameters: {
+      'startTs': '${day.toUtc().millisecondsSinceEpoch}',
+      'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
+      'keys': 'humidity,ambient_temperature,pressure,wind_speed_mean,wind_direction_average,wind_gust,ground_temperature',
+      'interval': '21600000',
+      'agg': 'AVG'
+    });
+
+  static Uri getDailyRainfallWeatherUri(DateTime day) =>
+    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
+    .replace(queryParameters: {
+      'startTs': '${day.toUtc().millisecondsSinceEpoch}',
+      'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
+      'keys': 'rainfall',
+      'interval': '21600000',
+      'agg': 'SUM'
+    });
 
 }

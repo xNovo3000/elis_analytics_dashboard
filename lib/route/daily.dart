@@ -9,7 +9,6 @@ import 'package:elis_analytics_dashboard/model/container/weather_instant_list.da
 import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor_visits.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
-import 'package:elis_analytics_dashboard/model/enum/thingsboard_device.dart';
 import 'package:elis_analytics_dashboard/model/exception/invalid_token.dart';
 import 'package:elis_analytics_dashboard/model/inherited/daily_data.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
@@ -17,26 +16,6 @@ import 'package:elis_analytics_dashboard/view/daily_smartphone.dart';
 import 'package:flutter/material.dart';
 
 class RouteDaily extends StatelessWidget {
-
-  // Static Uri cache
-  static Uri _getCompleteWeatherUri(DateTime day) =>
-    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
-      .replace(queryParameters: {
-        'startTs': '${day.toUtc().millisecondsSinceEpoch}',
-        'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
-        'keys': 'humidity,ambient_temperature,pressure,wind_speed_mean,wind_direction_average,wind_gust,ground_temperature',
-        'interval': '21600000',
-        'agg': 'AVG'
-      });
-  static Uri _getRainfallWeatherUri(DateTime day) =>
-    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
-      .replace(queryParameters: {
-        'startTs': '${day.toUtc().millisecondsSinceEpoch}',
-        'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
-        'keys': 'rainfall',
-        'interval': '21600000',
-        'agg': 'SUM'
-      });
 
   final fetcher = Fetcher();
 
@@ -86,7 +65,7 @@ class RouteDaily extends StatelessWidget {
   // TODO: create other futures to get data
   Future<WeatherInstantList> _getWeatherData(DateTime day) async {
     // Make requests and check them
-    final completeResponse = await fetcher.get(_getCompleteWeatherUri(day));
+    final completeResponse = await fetcher.get(Utils.getDailyCompleteWeatherUri(day));
     switch (completeResponse.statusCode) {
       case 200:
         break;
@@ -95,7 +74,7 @@ class RouteDaily extends StatelessWidget {
       default:
         throw completeResponse.statusCode;
     }
-    final rainfallResponse = await fetcher.get(_getRainfallWeatherUri(day));
+    final rainfallResponse = await fetcher.get(Utils.getDailyRainfallWeatherUri(day));
     switch (rainfallResponse.statusCode) {
       case 200:
         break;

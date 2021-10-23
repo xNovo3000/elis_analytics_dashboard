@@ -29,18 +29,6 @@ class RouteRealtime extends StatefulWidget {
 
 class _RouteRealtimeState extends State<RouteRealtime> {
 
-  // Static Uri cache
-  static final _weatherUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries');
-  static final _realtimeSensorAttendanceUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtime}/values/timeseries');
-  static final _realtimeSensorVisitsUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensors10min}/values/timeseries');
-  static Uri _getVodafoneUriFromDay(ThingsboardDevice device, DateTime begin, DateTime end) =>
-    Uri.parse('plugins/telemetry/DEVICE/$device/values/timeseries')
-      .replace(queryParameters: {
-        'startTs': '${begin.toUtc().millisecondsSinceEpoch}',
-        'endTs': '${end.toUtc().millisecondsSinceEpoch}',
-        'keys': 'age,country,gender,homeDistance,workDistance,nationality,region,province,municipality,totalDwellTime,visitors,visits'
-      });
-
   late Timer timer;
 
   @override
@@ -94,12 +82,12 @@ class _RouteRealtimeState extends State<RouteRealtime> {
     'weather': await _getWeatherInstant(),
     'realtime_sensor_attendance': await _getRealtimeSensorAttendance(),
     'realtime_sensor_visits': await _getRealtimeSensorVisits(),
-    'campus_vodafone_data': await _getVodafoneList(ThingsboardDevice.vodafoneIndoor, Area.campus),
-    'neighborhood_vodafone_data': await _getVodafoneList(ThingsboardDevice.vodafoneOutdoor, Area.neighborhood),
+    'campus_vodafone_data': await _getVodafoneList(ThingsboardDevice.vodafoneCampus, Area.campus),
+    'neighborhood_vodafone_data': await _getVodafoneList(ThingsboardDevice.vodafoneNeighborhood, Area.neighborhood),
   };
 
   Future<WeatherInstant> _getWeatherInstant() async {
-    final response = await widget.fetcher.get(_weatherUri);
+    final response = await widget.fetcher.get(Utils.realtimeWeatherUri);
     switch (response.statusCode) {
       case 200:
         return WeatherInstant.fromMapAndDuration(Utils.dispatchThingsboardResponse(json.decode(response.body)).single);
@@ -111,7 +99,7 @@ class _RouteRealtimeState extends State<RouteRealtime> {
   }
 
   Future<SensorAttendance> _getRealtimeSensorAttendance() async {
-    final response = await widget.fetcher.get(_realtimeSensorAttendanceUri);
+    final response = await widget.fetcher.get(Utils.realtimeSensorAttendanceUri);
     switch (response.statusCode) {
       case 200:
         return SensorAttendance.fromMap(Utils.dispatchThingsboardResponse(json.decode(response.body)).single);
@@ -123,7 +111,7 @@ class _RouteRealtimeState extends State<RouteRealtime> {
   }
 
   Future<SensorVisits> _getRealtimeSensorVisits() async {
-    final response = await widget.fetcher.get(_realtimeSensorVisitsUri);
+    final response = await widget.fetcher.get(Utils.realtimeSensorVisitsUri);
     switch (response.statusCode) {
       case 200:
         return SensorVisits.fromMap(Utils.dispatchThingsboardResponse(json.decode(response.body)).single);
@@ -148,7 +136,7 @@ class _RouteRealtimeState extends State<RouteRealtime> {
   Future<VodafoneDaily> _getVodafoneDaily(ThingsboardDevice device, DateTime day, Area area) async {
     final begin = DateTime(day.year, day.month, day.day).toUtc();
     final end = begin.add(Duration(days: 1));
-    final response = await widget.fetcher.get(_getVodafoneUriFromDay(device, begin, end));
+    final response = await widget.fetcher.get(Utils.getRealtimeVodafoneUriFromDay(device, begin, end));
     switch (response.statusCode) {
       case 200:
         return VodafoneDaily.fromList(

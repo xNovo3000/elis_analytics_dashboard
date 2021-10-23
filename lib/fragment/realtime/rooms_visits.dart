@@ -1,9 +1,9 @@
 import 'package:elis_analytics_dashboard/model/data/sensor_visits.dart';
 import 'package:flutter/material.dart';
 
-class FragmentRealtimeDynamicRoomsList extends StatelessWidget {
+class FragmentRealtimeRoomsVisits extends StatelessWidget {
 
-  const FragmentRealtimeDynamicRoomsList({
+  const FragmentRealtimeRoomsVisits({
     required this.sensorData,
     this.scrollDirection = Axis.vertical,
   });
@@ -37,21 +37,15 @@ class FragmentRealtimeDynamicRoomsList extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.all(4),
-                child: Text('${roomsData[index].room}'),
+                child: Text('${roomsData[index].room}: ${roomsData[index].occupancy}'),
               ),
               // TODO: add image here
               Expanded(
-                child: Container(
-                  color: Colors.blue[100],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(4),
-                child: Text(
-                  '${roomsData[index].occupancy}/${roomsData[index].room.capacity}'
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    color: Colors.blue[100],
+                  ),
                 ),
               ),
             ],
