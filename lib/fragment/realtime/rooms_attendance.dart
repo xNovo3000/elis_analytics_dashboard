@@ -34,11 +34,6 @@ class FragmentRealtimeRoomsAttendance extends StatelessWidget {
                 padding: EdgeInsets.all(4),
                 child: Text('${roomLagrangeData.room}'),
               ),
-              // TODO: add image here
-              // SizedBox(
-              //   width: direction == Axis.horizontal ? double.infinity : 96,
-              //   height: direction == Axis.vertical ? double.infinity : 96,
-              // ),
               Image(
                 image: AssetImage('asset/image/${roomLagrangeData.room.technicalName}.jpeg'),
                 errorBuilder: (context, _, __) => Container(
@@ -77,11 +72,6 @@ class FragmentRealtimeRoomsAttendance extends StatelessWidget {
                 padding: EdgeInsets.all(4),
                 child: Text('${roomPascalData.room}'),
               ),
-              // TODO: add image here
-              // SizedBox(
-              //   width: direction == Axis.horizontal ? double.infinity : 96,
-              //   height: direction == Axis.vertical ? double.infinity : 96,
-              // ),
               Image(
                 image: AssetImage('asset/image/${roomPascalData.room.technicalName}.jpeg'),
                 errorBuilder: (context, _, __) => Container(

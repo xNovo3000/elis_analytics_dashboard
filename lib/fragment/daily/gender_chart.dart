@@ -21,9 +21,11 @@ class FragmentDailyGenderChart extends StatelessWidget {
       series: [
         PieSeries<VodafoneCluster, String>(
           dataSource: campusVodafoneByGender,
-          xValueMapper: (datum, index) => '${datum.gender}',
+          xValueMapper: (datum, index) => datum.gender.plural,
           yValueMapper: (datum, index) => datum.visitors,
           pointColorMapper: (datum, index) => datum.gender.color,
+          dataLabelSettings: DataLabelSettings(isVisible: true),
+          dataLabelMapper: (datum, index) => '${(datum.visitors / campusVodafoneByGender.visitors * 100).toStringAsFixed(0)}%',
           animationDuration: 0,
         ),
       ],

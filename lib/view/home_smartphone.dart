@@ -160,7 +160,7 @@ class ViewHomeSmartphone extends StatelessWidget {
       applicationName: 'ELIS Analytics Dashboard',
       applicationVersion: info.version,
       applicationLegalese: '© 2021 ELIS Innovation Team',
-      applicationIcon: Image(image: AssetImage('asset/image/Icon-512.png'), width: 96, height: 96),
+      applicationIcon: Image(image: AssetImage('asset/image/Icon-512.png'), width: 48, height: 48),
     ));
   }
 

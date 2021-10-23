@@ -1,3 +1,4 @@
+import 'package:elis_analytics_dashboard/fragment/daily/gender_chart.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
@@ -29,25 +30,13 @@ class FragmentRealtimeExpectations extends StatelessWidget {
     // Generate collapsed data
     final campusCollapsedByAge = campusVodafoneData.collapse(VodafoneClusterAttribute.age);
     final campusCollapsedByNationality = campusVodafoneData.collapse(VodafoneClusterAttribute.nationality);
-    final campusCollapsedByGender = campusVodafoneData.collapse(VodafoneClusterAttribute.gender);
+    final campusCollapsedByGender = campusVodafoneData.collapse(VodafoneClusterAttribute.gender, collapseNa: true);
     // Generate final data
     final ageAverage = _generateAgeAverage(campusCollapsedByAge, campusVisitors);
     final foreignersPercentage = _generateForeignersPercentage(campusCollapsedByNationality, campusVisitors);
     // Build Pie widget
-    final pieWidget = SfCircularChart(
-      legend: Legend(
-        isVisible: true,
-        position: LegendPosition.right,
-      ),
-      series: [
-        PieSeries<VodafoneCluster, String>(
-          dataSource: campusCollapsedByGender,
-          xValueMapper: (datum, index) => '${datum.gender}',
-          yValueMapper: (datum, index) => datum.visitors,
-          pointColorMapper: (datum, index) => datum.gender.color,
-          animationDuration: 0,
-        ),
-      ],
+    final pieWidget = FragmentDailyGenderChart(
+      campusVodafoneByGender: campusCollapsedByGender
     );
     // Build UI
     return Column(

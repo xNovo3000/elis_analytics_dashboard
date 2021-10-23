@@ -38,13 +38,16 @@ class VodafoneDailyList extends ListBase<VodafoneDaily> {
     return total;
   }
 
-  VodafoneDaily collapse(final VodafoneClusterAttribute attribute, [int maxClusters = 0xFFFFFFFF]) {
+  VodafoneDaily collapse(final VodafoneClusterAttribute attribute, {
+    int maxClusters = 0xFFFFFFFF,
+    bool collapseNa = false,
+  }) {
     final result = <VodafoneCluster>[];
     for (VodafoneDaily daily in this) {
       result.addAll(daily);
     }
     final daily = VodafoneDaily(result, date: DateTime(1970), area: area);
-    return daily.collapse(attribute, maxClusters);
+    return daily.collapse(attribute, maxClusters: maxClusters, collapseNa: collapseNa);
   }
 
   VodafoneDailyList whereCondition(bool Function(VodafoneCluster element) test) {

@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 
 class RouteDaily extends StatelessWidget {
 
+  static const _underConstruction = true;
+
   final fetcher = Fetcher();
 
   @override
@@ -26,6 +28,13 @@ class RouteDaily extends StatelessWidget {
     final child = ResponsiveLayout(
       smartphoneWidget: ViewDailySmartphone(),
     );
+    // TODO: unfinished
+    if (_underConstruction) {
+      return ModelInheritedError(
+        child: child,
+        error: 'Questa visualizzazione è ancora in fase di costruzione',
+      );
+    }
     // Get specific day from route arguments dispatch
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args == null || !(args is Map<String, dynamic>) || !args.containsKey('day') || !(args['day'] is DateTime)) {

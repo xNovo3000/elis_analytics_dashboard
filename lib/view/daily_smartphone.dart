@@ -190,13 +190,13 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
           ),
         ),
         FragmentDailyRegionChartSmartphone(
-          neighborhoodVodafoneByRegion: neighborhoodVodafoneByRegion.collapse(VodafoneClusterAttribute.region, 5),
+          neighborhoodVodafoneByRegion: neighborhoodVodafoneByRegion.collapse(VodafoneClusterAttribute.region, maxClusters: 5),
         ),
         ListTile(
           title: Text('CITTÀ DI PROVENIENZA NEL CAMPUS', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         ),
         FragmentDailyMunicipalityChart(
-            campusVodafoneByMunicipality: campusVodafoneByMunicipality.collapse(VodafoneClusterAttribute.municipality, 7),
+            campusVodafoneByMunicipality: campusVodafoneByMunicipality.collapse(VodafoneClusterAttribute.municipality, maxClusters: 7),
         ),
         ListTile(
           title: Text('RIASSUNTO GIORNALIERO', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
@@ -209,7 +209,7 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
           title: Text('SUDDIVISIONE PER GENERE', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         ),
         FragmentDailyGenderChart(
-          campusVodafoneByGender: campusVodafone.collapse(VodafoneClusterAttribute.gender),
+          campusVodafoneByGender: campusVodafone.collapse(VodafoneClusterAttribute.gender, collapseNa: true),
         ),
       ],
     );

@@ -10,29 +10,17 @@ class ColoredAppBar extends StatelessWidget implements PreferredSizeWidget {
     title: title,
     actions: actions,
     bottom: bottom,
+    foregroundColor: Colors.black,
+    backgroundColor: Color(0xFFFAFAFA),
   );
 
   final AppBar widget;
 
   Widget build(BuildContext context) {
-    return Theme(
-      data: _appBarTheme,
-      child: widget,
-    );
+    return widget;
   }
 
   @override
   Size get preferredSize => widget.preferredSize;
-
-  static const _whiteBackgroundColor = Color(0xFFFAFAFA);
-
-  static final _appBarTheme = ThemeData(
-    fontFamily: 'OpenSans',
-    colorScheme: ColorScheme.light(
-      primary: _whiteBackgroundColor,
-      primaryVariant: _whiteBackgroundColor,
-      onPrimary: Colors.black,
-    ),
-  );
 
 }

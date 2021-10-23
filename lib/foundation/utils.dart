@@ -5,7 +5,6 @@ abstract class Utils {
   /* Non-instantiable, only static members */
   const Utils._();
 
-  // TODO: fix some bugs
   /* Dispatch from Map response to List of Maps response */
   static List<Map<String, dynamic>> dispatchThingsboardResponse(final Map<String, dynamic> map) {
     // check if map is empty

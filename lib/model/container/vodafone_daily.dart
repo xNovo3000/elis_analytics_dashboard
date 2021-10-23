@@ -95,7 +95,10 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
     area: area
   );
 
-  VodafoneDaily collapse(final VodafoneClusterAttribute attribute, [int maxClusters = 0xFFFFFFFF]) {
+  VodafoneDaily collapse(final VodafoneClusterAttribute attribute, {
+    int maxClusters = 0xFFFFFFFF,
+    bool collapseNa = false,
+  }) {
     final result = <VodafoneCluster>[];
     for (VodafoneCluster cluster in this) {
       try {
@@ -151,6 +154,36 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
     }
     // Sort data first
     result.sort();
+    // Collapse NA if needed
+    if (collapseNa) {
+      final found = result.where(
+        (cluster) =>
+          cluster.gender == Gender.na &&
+          cluster.age == Age.na &&
+          cluster.nationality == Nationality.na &&
+          cluster.country == '' &&
+          cluster.region == Region.na &&
+          cluster.province == '' &&
+          cluster.municipality == '' &&
+          cluster.homeDistance == Distance.na &&
+          cluster.workDistance == Distance.na
+      );
+      if (found.length == 1) {
+        final na = found.single;
+        result.remove(na);
+        final splitNa = VodafoneCluster.empty(
+          visitors: (na.visitors / result.length).ceil(),
+          visits: (na.visits / result.length).ceil(),
+          totalDwellTime: Duration(microseconds: (na.totalDwellTime.inMicroseconds / result.length).ceil())
+        );
+        // Copy the result
+        final resultCopy = List.of(result);
+        for (var cluster in resultCopy) {
+          result.remove(cluster);
+          result.add(cluster + splitNa);
+        }
+      }
+    }
     // Collapse clusters if needed
     if (result.length > maxClusters) {
       final toRemove = <VodafoneCluster>[];

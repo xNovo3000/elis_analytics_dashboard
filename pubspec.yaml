@@ -1,7 +1,7 @@
 name: elis_analytics_dashboard
 description: ELIS responsive analytics dashboard
 publish_to: 'none'  # DO NOT REMOVE
-version: 1.1.0-alpha.9
+version: 1.1.0-alpha.10
 
 environment:
   sdk: ^2.14.2

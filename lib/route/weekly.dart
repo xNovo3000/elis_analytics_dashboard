@@ -12,12 +12,21 @@ import 'package:flutter/material.dart';
 
 class RouteWeekly extends StatelessWidget {
 
+  static const _underConstruction = true;
+
   @override
   Widget build(BuildContext context) {
     // Build the child widget
     final child = ResponsiveLayout(
       smartphoneWidget: ViewWeeklySmartphone(),
     );
+    // TODO: unfinished
+    if (_underConstruction) {
+      return ModelInheritedError(
+        child: child,
+        error: 'Questa visualizzazione è ancora in fase di costruzione',
+      );
+    }
     // Get specific week from route arguments dispatch
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args == null || !(args is Map<String, dynamic>) || !(args['week'] is DateTimeRange)) {
