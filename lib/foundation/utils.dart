@@ -41,18 +41,19 @@ abstract class Utils {
     }
   }
 
+  /* Common URIs */
+  static Uri getVodafoneUriFromDay(ThingsboardDevice device, DateTime begin, DateTime end) =>
+    Uri.parse('plugins/telemetry/DEVICE/$device/values/timeseries')
+    .replace(queryParameters: {
+      'startTs': '${begin.toUtc().millisecondsSinceEpoch}',
+      'endTs': '${end.toUtc().millisecondsSinceEpoch}',
+      'keys': 'age,country,gender,homeDistance,workDistance,nationality,region,province,municipality,totalDwellTime,visitors,visits'
+    });
+
   /* Realtime URIs */
   static final realtimeWeatherUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries');
   static final realtimeSensorAttendanceUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtimeAttendance}/values/timeseries');
   static final realtimeSensorVisitsUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtimeVisits}/values/timeseries');
-
-  static Uri getRealtimeVodafoneUriFromDay(ThingsboardDevice device, DateTime begin, DateTime end) =>
-    Uri.parse('plugins/telemetry/DEVICE/$device/values/timeseries')
-      .replace(queryParameters: {
-        'startTs': '${begin.toUtc().millisecondsSinceEpoch}',
-        'endTs': '${end.toUtc().millisecondsSinceEpoch}',
-        'keys': 'age,country,gender,homeDistance,workDistance,nationality,region,province,municipality,totalDwellTime,visitors,visits'
-      });
 
   /* Daily URIs */
   static Uri getDailyCompleteWeatherUri(DateTime day) =>
@@ -73,6 +74,27 @@ abstract class Utils {
       'keys': 'rainfall',
       'interval': '21600000',
       'agg': 'SUM'
+    });
+
+  // TODO: modificare perché i dati sono differenti
+  static Uri getDailySensorsAttendanceUri(DateTime day) =>
+    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtimeAttendance}/values/timeseries')
+    .replace(queryParameters: {
+      'startTs': '${day.toUtc().millisecondsSinceEpoch}',
+      'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
+      'keys': 'presenze_lagrange,presenze_tesla',
+      'interval': '1800000',
+      'agg': 'AVG'
+    });
+
+  static Uri getDailySensorsVisitsUri(DateTime day) =>
+    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtimeVisits}/values/timeseries')
+    .replace(queryParameters: {
+      'startTs': '${day.toUtc().millisecondsSinceEpoch}',
+      'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
+      'keys': 'tasso_di_ritorno,tempo_medio_permanenza,visitatori_corridoio,visitatori_hall,visitatori_openspace,visitatori_pascal,visitatori_Pinnhub',
+      'interval': '1800000',
+      'agg': 'AVG'
     });
 
 }

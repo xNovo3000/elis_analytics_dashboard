@@ -57,12 +57,11 @@ class RouteDaily extends StatelessWidget {
   Future<Map<String, dynamic>> _getDailyData(DateTime day) async => {
     'weathers': await _getWeatherData(day),
     'attendance': List.generate(48, (index) => SensorAttendance.test(index), growable: false),
-    'visits': List.generate(48, (index) => SensorVisits.test(index), growable: false),
-    'campus_vodafone': VodafoneDaily.test(date: DateTime.now(), area: Area.campus),
-    'neighborhood_vodafone': VodafoneDaily.test(date: DateTime.now(), area: Area.neighborhood),
+    'visits': await _getSensorVisitsData(day),
+    'campus_vodafone': await _getVodafoneData(day, Area.campus),
+    'neighborhood_vodafone': await _getVodafoneData(day, Area.neighborhood),
   };
 
-  // TODO: create other futures to get data
   Future<WeatherInstantList> _getWeatherData(DateTime day) async {
     // Make requests and check them
     final completeResponse = await fetcher.get(Utils.getDailyCompleteWeatherUri(day));
@@ -81,12 +80,54 @@ class RouteDaily extends StatelessWidget {
       case 401:
         throw InvalidTokenException('');
       default:
-        throw completeResponse.statusCode;
+        throw rainfallResponse.statusCode;
     }
     // Generate complete result
     final result = json.decode(completeResponse.body)..addAll(json.decode(rainfallResponse.body));
     // Return data
     return WeatherInstantList.fromListAndTotalDuration(Utils.dispatchThingsboardResponse(result), Duration(days: 1));
+  }
+
+  // TODO: sti sensori mandano solo se ci sono aggiornamenti,
+  // bisogna fare un lavoro differente a livello di dati
+  Future<List<SensorAttendance>?> _getSensorAttendanceData(DateTime day) async {
+
+  }
+
+  Future<List<SensorVisits>?> _getSensorVisitsData(DateTime day) async {
+    final response = await fetcher.get(Utils.getDailySensorsVisitsUri(day));
+    switch (response.statusCode) {
+      case 200:
+        final dispatchedResponse = Utils.dispatchThingsboardResponse(json.decode(response.body));
+        return List.generate(
+          dispatchedResponse.length,
+          (index) => SensorVisits.fromMap(dispatchedResponse[index]),
+          growable: false
+        );
+      case 401:
+        throw InvalidTokenException('');
+      default:
+        throw response.statusCode;
+    }
+  }
+
+  Future<VodafoneDaily?> _getVodafoneData(DateTime day, Area area) async {
+    final response = await fetcher.get(Utils.getVodafoneUriFromDay(area.device, day, day.add(Duration(days: 1))));
+    switch (response.statusCode) {
+      case 200:
+        final result = Utils.dispatchThingsboardResponse(json.decode(response.body));
+        return result.length > 0
+          ? VodafoneDaily.fromList(
+              list: result,
+              area: area,
+              date: day,
+            )
+          : null;
+      case 401:
+        throw InvalidTokenException('');
+      default:
+        throw response.statusCode;
+    }
   }
 
 }

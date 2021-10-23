@@ -16,7 +16,7 @@ class ViewMapViewerSmartphone extends StatelessWidget {
         title: Text(mapData != null ? mapData.title : 'Visualizza mappa'),
       ),
       body: mapData != null
-        ? _ViewMapViewerSmartphoneData()
+        ? _ViewMapViewerSmartphoneData(mapShapeSource: mapData.mapShapeSource)
         : ViewError(error: 'Si è verificato un errore'),
     );
   }
@@ -25,15 +25,19 @@ class ViewMapViewerSmartphone extends StatelessWidget {
 
 class _ViewMapViewerSmartphoneData extends StatelessWidget {
 
+  const _ViewMapViewerSmartphoneData({
+    required this.mapShapeSource,
+  });
+
+  final MapShapeSource mapShapeSource;
+
   @override
   Widget build(BuildContext context) {
-    // Get the data
-    final mapData = ModelInheritedMapData.of(context);
-    // Build UI
+    // Build Viewer
     return SfMaps(
       layers: [
         MapShapeLayer(
-          source: mapData.mapShapeSource,
+          source: mapShapeSource,
           showDataLabels: true,
           zoomPanBehavior: MapZoomPanBehavior(),
         ),

@@ -136,7 +136,7 @@ class _RouteRealtimeState extends State<RouteRealtime> {
   Future<VodafoneDaily> _getVodafoneDaily(ThingsboardDevice device, DateTime day, Area area) async {
     final begin = DateTime(day.year, day.month, day.day).toUtc();
     final end = begin.add(Duration(days: 1));
-    final response = await widget.fetcher.get(Utils.getRealtimeVodafoneUriFromDay(device, begin, end));
+    final response = await widget.fetcher.get(Utils.getVodafoneUriFromDay(device, begin, end));
     switch (response.statusCode) {
       case 200:
         return VodafoneDaily.fromList(

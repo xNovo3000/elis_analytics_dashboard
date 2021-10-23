@@ -43,8 +43,13 @@ class FragmentRealtimeRoomsVisits extends StatelessWidget {
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    color: Colors.blue[100],
+                  child: Image(
+                    image: AssetImage('asset/image/${roomsData[index].room.technicalName}.jpeg'),
+                    errorBuilder: (context, _, __) => Container(
+                      color: Colors.white,
+                    ),
+                    filterQuality: FilterQuality.medium,
+                    fit: scrollDirection == Axis.horizontal ? BoxFit.fitWidth : BoxFit.fitHeight,
                   ),
                 ),
               ),

@@ -22,6 +22,9 @@ class ThingsboardDevice {
   @deprecated
   static const ThingsboardDevice sensorsWeekly = ThingsboardDevice._(id: '89c61940-dd77-11eb-804a-6b845e08a1a9');
 
+  // N/A
+  static const ThingsboardDevice na = ThingsboardDevice._(id: '');
+
   // Values
   static const List<ThingsboardDevice> values = const <ThingsboardDevice>[
     weatherStation, vodafoneCampus, vodafoneNeighborhood,
