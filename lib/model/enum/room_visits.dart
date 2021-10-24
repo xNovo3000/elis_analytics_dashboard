@@ -31,7 +31,7 @@ class RoomVisits {
 
   // Values
   static const values = const <RoomVisits>[
-    hall, openSpace, pascal, corridoio, pinnhub
+    hall,/* openSpace, */ pascal, corridoio, pinnhub
   ];
 
 }

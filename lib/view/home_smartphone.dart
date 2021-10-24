@@ -16,47 +16,35 @@ class ViewHomeSmartphone extends StatelessWidget {
     // Build UI
     return Scaffold(
       appBar: ColoredAppBar(
-        title: Text('ELIS Analytics Dashboard'),
+        title: Text('ELIS Smart City Lab'),
       ),
       body: ListView(
         key: PageStorageKey('_ViewHomeSmartphoneList'),
         children: [
+          Image(
+            image: AssetImage('asset/image/HOME_SCREEN_LOGO.jpg'),
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+          ),
+          SizedBox(height: 8),
           Row(
             children: [
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 12, top: 12, bottom: 12, right: 4),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Image(image: AssetImage('asset/image/LOGO_GMOVE.png')),
-                    margin: EdgeInsets.zero,
-                  ),
+                child: Image(
+                  image: AssetImage('asset/image/LOGO_GMOVE.jpg'),
+                  filterQuality: FilterQuality.medium,
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 8, top: 12, bottom: 12, right: 8),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Image(image: AssetImage('asset/image/LOGO_NETCOM.png')),
-                    margin: EdgeInsets.zero,
-                  ),
+                child: Image(
+                  image: AssetImage('asset/image/LOGO_NETCOM.png'),
+                  filterQuality: FilterQuality.medium,
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(right: 12, top: 12, bottom: 12, left: 4),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Image(image: AssetImage('asset/image/LOGO_VODAFONE.png')),
-                    margin: EdgeInsets.zero,
-                  ),
+                child: Image(
+                  image: AssetImage('asset/image/LOGO_VODAFONE.png'),
+                  filterQuality: FilterQuality.medium,
                 ),
               ),
             ],
@@ -116,6 +104,7 @@ class ViewHomeSmartphone extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(height: 88),
         ],
       ),
     );
