@@ -9,6 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Fetcher extends BaseClient {
 
+  // Features
+  static const bool isLoggingEnabled = false;
+
   /* Base Thingsboard url */
   static final Uri _baseUrl = Uri.parse('https://iothings.netcomgroup.eu/api/');
 
@@ -53,8 +56,18 @@ class Fetcher extends BaseClient {
     await _sessionMutex.protect(() async {
       // Check if there is not a token or the token has expired
       if (_session == null || _session!.expired) {
-        // Try to get username and password from SharedPreferences
+        // Get SharedPreferences instance
         SharedPreferences preferences = await SharedPreferences.getInstance();
+        // INJECT: "Email" and "Password" if user cannot login/logout
+        if (!isLoggingEnabled) {
+          if (!preferences.containsKey('Email')) {
+            await preferences.setString('Email', 'elisgroup@elis.org');
+          }
+          if (!preferences.containsKey('Password')) {
+            await preferences.setString('Password', 'elisgroup');
+          }
+        }
+        // Check
         if (preferences.containsKey('Email') && preferences.containsKey('Password')) {
           // Try to get a new token
           try {

@@ -1,4 +1,5 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
+import 'package:elis_analytics_dashboard/foundation/fetcher.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/home_data.dart';
 import 'package:elis_analytics_dashboard/view/gdpr_dialog.dart';
@@ -31,7 +32,7 @@ class ViewHomeSmartphone extends StatelessWidget {
             children: [
               Expanded(
                 child: Image(
-                  image: AssetImage('asset/image/LOGO_GMOVE.jpg'),
+                  image: AssetImage('asset/image/LOGO_GMOVE.png'),
                   filterQuality: FilterQuality.medium,
                 ),
               ),
@@ -87,7 +88,7 @@ class ViewHomeSmartphone extends StatelessWidget {
           ),
           ButtonBar(
             children: [
-              OutlinedButton.icon(
+              if (Fetcher.isLoggingEnabled) OutlinedButton.icon(
                 icon: Icon(Icons.logout),
                 label: Text('Logout'),
                 onPressed: () => _onLogoutButtonClick(context),
