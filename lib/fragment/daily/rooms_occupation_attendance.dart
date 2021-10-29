@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
 import 'package:elis_analytics_dashboard/model/enum/room_attendance.dart';
 import 'package:flutter/material.dart';
@@ -29,12 +31,20 @@ class FragmentDailyRoomsOccupationAttendance extends StatelessWidget {
           StackedColumnSeries<SensorAttendance, String>(
             dataSource: sensors,
             xValueMapper: (datum, index) => _chartTimeOfDayResolver.format(datum.timestamp),
-            yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
+            yValueMapper: (datum, index) => _yValueMapper(datum, index, room),
             legendItemText: '$room',
             animationDuration: 0,
           ),
       ],
     );
+  }
+
+  num? _yValueMapper(SensorAttendance datum, int index, RoomAttendance room) {
+    try {
+      return max(datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy ?? 0, 0);
+    } catch (e) {
+      return 0;
+    }
   }
 
 }

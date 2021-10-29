@@ -18,6 +18,11 @@ class SensorAttendance implements Comparable<SensorAttendance> {
     ),
   );
 
+  factory SensorAttendance.fromTimestamp(DateTime timestamp) => SensorAttendance(
+    timestamp: timestamp,
+    roomsData: [],
+  );
+
   // TEST: used only for testing purposes
   factory SensorAttendance.test([int index = 0]) {
     final random = Random();

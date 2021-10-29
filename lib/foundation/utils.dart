@@ -13,13 +13,16 @@ abstract class Utils {
     }
     // generate supported data format
     List<Map<String, dynamic>> dispatched = List<Map<String, dynamic>>.generate(
-        map.values.first.length, (_) => <String, dynamic>{}, growable: false
+        map.values.first.length, (_) => <String, dynamic>{}, growable: true
     );
     // dispatch
     map.forEach((key, value) {
       List<Map<String, dynamic>> values = List.generate(
-          value.length, (index) => value[index], growable: false
+        value.length, (index) => value[index], growable: false
       );
+      if (dispatched.length < values.length) {
+        dispatched.addAll(List.generate(values.length - dispatched.length, (index) => <String, dynamic>{}));
+      }
       for (int i = 0; i < values.length; i++) {
         dispatched[i]['ts'] = values[i]['ts'];
         dispatched[i][key] = double.tryParse(values[i]['value']) ?? values[i]['value'];
@@ -75,7 +78,6 @@ abstract class Utils {
       'agg': 'SUM'
     });
 
-  // TODO: modificare perché i dati sono differenti
   static Uri getDailySensorsAttendanceUri(DateTime day) =>
     Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtimeAttendance}/values/timeseries')
     .replace(queryParameters: {

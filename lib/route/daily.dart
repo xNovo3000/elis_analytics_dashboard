@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 
 class RouteDaily extends StatelessWidget {
 
-  static const _underConstruction = true;
+  static const _underConstruction = false;
 
   final fetcher = Fetcher();
 
@@ -62,10 +62,10 @@ class RouteDaily extends StatelessWidget {
     );
   }
 
-  // TODO: generate REAL data
+  // generate REAL data
   Future<Map<String, dynamic>> _getDailyData(DateTime day) async => {
     'weathers': await _getWeatherData(day),
-    'attendance': List.generate(48, (index) => SensorAttendance.test(index), growable: false),
+    'attendance': await _getSensorAttendanceData(day),
     'visits': await _getSensorVisitsData(day),
     'campus_vodafone': await _getVodafoneData(day, Area.campus),
     'neighborhood_vodafone': await _getVodafoneData(day, Area.neighborhood),
@@ -97,13 +97,59 @@ class RouteDaily extends StatelessWidget {
     return WeatherInstantList.fromListAndTotalDuration(Utils.dispatchThingsboardResponse(result), Duration(days: 1));
   }
 
-  // TODO: sti sensori mandano solo se ci sono aggiornamenti,
+  // sti sensori mandano solo se ci sono aggiornamenti,
   // bisogna fare un lavoro differente a livello di dati
-  Future<List<SensorAttendance>?> _getSensorAttendanceData(DateTime day) async {
-
+  Future<List<SensorAttendance>> _getSensorAttendanceData(DateTime day) async {
+    final response = await fetcher.get(Utils.getDailySensorsAttendanceUri(day));
+    switch (response.statusCode) {
+      case 200:
+        // Generate things
+        final dispatchedResponse = Utils.dispatchThingsboardResponse(json.decode(response.body));
+        // final temporaryAttendances = <SensorAttendance>[];
+        // dispatchedResponse.forEach((cluster) => temporaryAttendances.add(SensorAttendance.fromMap(cluster)));
+        // final attendances = <SensorAttendance>[];
+        // for (var temp in temporaryAttendances) {
+        //   final deltaTime = temp.timestamp.difference(day);
+        //   final position = (deltaTime.inMinutes / 30).floor();
+        //   while (attendances.length <= position) {
+        //     attendances.add(SensorAttendance.fromTimestamp(day.add(Duration(minutes: 30 * (position + 1))).subtract(Duration(minutes: 15))));
+        //   }
+        //   final tempAttendance = attendances.last;
+        //   final attendanceResult = SensorAttendance(
+        //     timestamp: tempAttendance.timestamp,
+        //     roomsData: List.generate(RoomAttendance.values.length, (index) => RoomAttendanceData(
+        //       room: RoomAttendance.values[index],
+        //       occupancy: max((tempAttendance.roomsData.singleWhere((roomAttendance) => roomAttendance.room == RoomAttendance.values[index]).occupancy ?? 0),
+        //           (temp.roomsData.singleWhere((roomAttendance) => roomAttendance.room == RoomAttendance.values[index]).occupancy ?? 0))
+        //     ))
+        //   );
+        //   attendances.add(attendanceResult);
+        // }
+        final result = List.generate(
+          dispatchedResponse.length,
+          (index) => SensorAttendance.fromMap(dispatchedResponse[index]),
+          growable: true
+        );
+        if (result.length < 48) {
+          for (int i = 0; i < 48; i++) {
+            final date = day.add(Duration(minutes: 30 * (i + 1))).subtract(Duration(minutes: 15));
+            try {
+              result.singleWhere((j) => j.timestamp.isAtSameMomentAs(date));
+            } catch (e) {
+              result.add(SensorAttendance.fromTimestamp(date));
+            }
+          }
+          result.sort();
+        }
+        return result;
+      case 401:
+        throw InvalidTokenException('');
+      default:
+        throw response.statusCode;
+    }
   }
 
-  Future<List<SensorVisits>?> _getSensorVisitsData(DateTime day) async {
+  Future<List<SensorVisits>> _getSensorVisitsData(DateTime day) async {
     final response = await fetcher.get(Utils.getDailySensorsVisitsUri(day));
     switch (response.statusCode) {
       case 200:
