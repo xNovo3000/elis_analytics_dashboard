@@ -17,14 +17,30 @@ class FragmentDailyWeatherReportSmartphone extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (var weather in weathers)
-          ListTile(
-            leading: BoxedIcon(weather.icon),
-            title: Text('${weather.ambientTemperature.floor()}°C'),
-            subtitle: Text('Umidità: ${weather.humidity.floor()}% · Vento: ${weather.windSpeed.floor()} km/h ${weather.windDirection}'),
-            trailing: Text('${_hourResolver.format(weather.beginTimestamp)}-${_hourResolver.format(weather.endTimestamp)}'),
-            onTap: () => Navigator.of(context).pushNamed('/daily/weather_report', arguments: {'weather_report': weather}),
+        SizedBox(height: 4),
+        Row(
+          children: List.generate(
+            weathers.length * 2 + 1,
+            (index) => index.isOdd ? Expanded(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                color: Colors.green[50],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 8),
+                    BoxedIcon(weathers[(index / 2).floor()].icon, size: 36),
+                    Text('${weathers[(index / 2).floor()].ambientTemperature.floor()}°C', textScaleFactor: 1.5),
+                    SizedBox(height: 8),
+                  ],
+                ),
+              ),
+            ) : SizedBox(width: index == 0 ? 24 : 8),
           ),
+        ),
+        SizedBox(height: 16),
       ],
     );
   }
