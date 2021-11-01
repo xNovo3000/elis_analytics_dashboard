@@ -13,7 +13,7 @@ class FragmentWeeklyKpiSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     // Build list of selectable kpis
     final selectable = KPI.values  // Remove complex KPIs if second or blacklisted in the first place
-      .where((kpi) => firstSelected != null ? (!kpi.isComplex && !KPI.blacklist[firstSelected]!.contains(kpi)) : true);
+      .where((kpi) => firstSelected != null ? (!kpi.isComplex && !(KPI.blacklist[firstSelected]?.contains(kpi) ?? false)) : true);
     // Build UI
     return SimpleDialog(
       title: Text('Seleziona il ${firstSelected != null ? 'secondo' : 'primo'} dato'),

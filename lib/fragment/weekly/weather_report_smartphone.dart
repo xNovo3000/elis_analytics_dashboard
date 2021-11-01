@@ -42,7 +42,7 @@ class FragmentWeeklyWeatherReportSmartphone extends StatelessWidget {
                   ),
                 ),
               ),
-            ) : SizedBox(width: index == 0 ? 12 : 4),
+            ) : SizedBox(width: 4),
           ),
         ),
         SizedBox(height: 16),

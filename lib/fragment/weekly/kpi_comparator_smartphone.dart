@@ -47,6 +47,7 @@ class _FragmentWeeklyKpiComparatorSmartphoneState extends State<FragmentWeeklyKp
       children: [
         ListTile(
           title: Text('VISUALIZZA DATI', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+          subtitle: Text('$first e $second'),
           trailing: IconButton(
             icon: Icon(Icons.swap_horiz),
             onPressed: _onKpiChange,
