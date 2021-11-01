@@ -1,5 +1,3 @@
-import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
-
 class KPI {
 
   factory KPI.fromTechnicalName(final String technicalName) =>
@@ -40,15 +38,16 @@ class KPI {
   static const neighborhoodMunicipality = KPI._(displayName: 'Città nel quartiere', technicalName: 'neighborhood_municipality', isComplex: true, is100Percent: false);
   static const campusHomeDistance = KPI._(displayName: 'Distanza da casa nel campus', technicalName: 'campus_home_distance', isComplex: true, is100Percent: false);
   static const neighborhoodHomeDistance = KPI._(displayName: 'Distanza da casa nel quartiere', technicalName: 'neighborhood_home_distance', isComplex: true, is100Percent: false);
-  static const campusHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel campus', technicalName: 'campus_home_distance_average', isComplex: false, is100Percent: false);
-  static const neighborhoodHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel quartiere', technicalName: 'neighborhood_home_distance_average', isComplex: false, is100Percent: false);
   static const campusWorkDistance = KPI._(displayName: 'Distanza da lavoro nel campus', technicalName: 'campus_work_distance', isComplex: true, is100Percent: false);
   static const neighborhoodWorkDistance = KPI._(displayName: 'Distanza da lavoro nel quartiere', technicalName: 'neighborhood_work_distance', isComplex: true, is100Percent: false);
+  static const campusHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel campus', technicalName: 'campus_home_distance_average', isComplex: false, is100Percent: false);
+  static const neighborhoodHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel quartiere', technicalName: 'neighborhood_home_distance_average', isComplex: false, is100Percent: false);
   static const campusWorkDistanceAverage = KPI._(displayName: 'Distanza da lavoro media nel campus', technicalName: 'campus_work_distance_average', isComplex: false, is100Percent: false);
   static const neighborhoodWorkDistanceAverage = KPI._(displayName: 'Distanza da lavoro media nel quartiere', technicalName: 'neighborhood_work_distance_average', isComplex: false, is100Percent: false);
 
   /* G-move KPI */
-  static const roomsOccupancy = KPI._(displayName: 'Occupazione aule', technicalName: 'rooms_occupancy', isComplex: true, is100Percent: false);
+  static const roomsAttendance = KPI._(displayName: 'Occupazione aule', technicalName: 'rooms_attendance', isComplex: true, is100Percent: false);
+  static const roomsVisits = KPI._(displayName: 'Transito aule', technicalName: 'rooms_visits', isComplex: true, is100Percent: false);
 
   /* None */
   static const na = KPI._(displayName: 'N/A', technicalName: '', isComplex: false, is100Percent: false);
@@ -62,9 +61,12 @@ class KPI {
     campusHomeDistance, neighborhoodHomeDistance, campusHomeDistanceAverage, neighborhoodHomeDistanceAverage,
     campusWorkDistance, neighborhoodWorkDistance, campusWorkDistanceAverage, neighborhoodWorkDistanceAverage,
     /* G-move KPI */
-    roomsOccupancy,
+    roomsAttendance, roomsVisits,
   ];
 
-  /* TODO: Blacklist system */
+  // Blacklist system
+  static const blacklist = <KPI, List<KPI>>{
+
+  };
 
 }
