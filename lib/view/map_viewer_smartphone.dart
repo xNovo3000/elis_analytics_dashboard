@@ -2,6 +2,7 @@ import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/model/inherited/map_data.dart';
 import 'package:elis_analytics_dashboard/view/error.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
 class ViewMapViewerSmartphone extends StatelessWidget {
@@ -34,14 +35,21 @@ class _ViewMapViewerSmartphoneData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Build Viewer
-    return SfMaps(
-      layers: [
-        MapShapeLayer(
-          source: mapShapeSource,
-          showDataLabels: true,
-          zoomPanBehavior: MapZoomPanBehavior(),
+    return SfMapsTheme(
+      data: SfMapsThemeData(
+        dataLabelTextStyle: TextStyle(
+          color: Colors.black,
         ),
-      ],
+      ),
+      child: SfMaps(
+        layers: [
+          MapShapeLayer(
+            source: mapShapeSource,
+            showDataLabels: true,
+            zoomPanBehavior: MapZoomPanBehavior(),
+          ),
+        ],
+      )
     );
   }
 

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 class RouteWeekly extends StatelessWidget {
 
-  static const _underConstruction = true;
+  static const _underConstruction = false;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class RouteWeekly extends StatelessWidget {
     final child = ResponsiveLayout(
       smartphoneWidget: ViewWeeklySmartphone(),
     );
-    // TODO: unfinished
+    // Unfinished
     if (_underConstruction) {
       return ModelInheritedError(
         child: child,

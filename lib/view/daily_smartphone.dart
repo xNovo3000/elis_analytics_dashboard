@@ -153,8 +153,8 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Cache
-    final neighborhoodVodafoneByRegion = neighborhoodVodafone.collapse(VodafoneClusterAttribute.region);
-    final campusVodafoneByMunicipality = campusVodafone.collapse(VodafoneClusterAttribute.municipality);
+    final neighborhoodVodafoneByRegion = neighborhoodVodafone.collapse(VodafoneClusterAttribute.region, collapseNa: true);
+    final campusVodafoneByMunicipality = campusVodafone.collapse(VodafoneClusterAttribute.municipality, collapseNa: true);
     // Build UI
     return Column(
       children: [
@@ -223,13 +223,13 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
     final percentage = visitors / total;
     // Generate color
     if (percentage > 0.9) {
-      return Colors.red;
+      return Colors.red[200];
     } else if (percentage > 0.75) {
-      return Colors.yellow;
+      return Colors.yellow[200];
     } else if (percentage > 0.5) {
-      return Colors.green;
+      return Colors.green[200];
     } else if (percentage > 0) {
-      return Colors.blue;
+      return Colors.blue[200];
     }
   }
 

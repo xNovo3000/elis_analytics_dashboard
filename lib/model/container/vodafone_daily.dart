@@ -1,12 +1,10 @@
 import 'dart:collection';
 
-import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/enum/age.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
 import 'package:elis_analytics_dashboard/model/enum/distance.dart';
 import 'package:elis_analytics_dashboard/model/enum/gender.dart';
-import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
 import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 import 'package:elis_analytics_dashboard/model/enum/region.dart';
 
@@ -140,10 +138,10 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
           gender: attribute == VodafoneClusterAttribute.gender ? cluster.gender : Gender.na,
           age: attribute == VodafoneClusterAttribute.age ? cluster.age : Age.na,
           nationality: attribute == VodafoneClusterAttribute.nationality ? cluster.nationality : Nationality.na,
-          country: attribute == VodafoneClusterAttribute.country ? cluster.country : '',
+          country: attribute == VodafoneClusterAttribute.country ? cluster.country : 'null',
           region: attribute == VodafoneClusterAttribute.region ? cluster.region : Region.na,
-          province: attribute == VodafoneClusterAttribute.province ? cluster.province : '',
-          municipality: attribute == VodafoneClusterAttribute.municipality ? cluster.municipality : '',
+          province: attribute == VodafoneClusterAttribute.province ? cluster.province : 'null',
+          municipality: attribute == VodafoneClusterAttribute.municipality ? cluster.municipality : 'null',
           homeDistance: attribute == VodafoneClusterAttribute.homeDistance ? cluster.homeDistance : Distance.na,
           workDistance: attribute == VodafoneClusterAttribute.workDistance ? cluster.workDistance : Distance.na,
           visitors: cluster.visitors,
@@ -158,15 +156,15 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
     if (collapseNa) {
       final found = result.where(
         (cluster) =>
-          cluster.gender == Gender.na &&
-          cluster.age == Age.na &&
-          cluster.nationality == Nationality.na &&
-          cluster.country == '' &&
-          cluster.region == Region.na &&
-          cluster.province == '' &&
-          cluster.municipality == '' &&
-          cluster.homeDistance == Distance.na &&
-          cluster.workDistance == Distance.na
+          (attribute == VodafoneClusterAttribute.gender ? cluster.gender == Gender.na : true) &&
+          (attribute == VodafoneClusterAttribute.age ? cluster.age == Age.na : true) &&
+          (attribute == VodafoneClusterAttribute.nationality ? cluster.nationality == Nationality.na : true) &&
+          (attribute == VodafoneClusterAttribute.country ? cluster.country == 'null' : true) &&
+          (attribute == VodafoneClusterAttribute.region ? cluster.region == Region.na : true) &&
+          (attribute == VodafoneClusterAttribute.province ? cluster.province == 'null' : true) &&
+          (attribute == VodafoneClusterAttribute.municipality ? cluster.municipality == 'null' : true) &&
+          (attribute == VodafoneClusterAttribute.homeDistance ? cluster.homeDistance == Distance.na : true) &&
+          (attribute == VodafoneClusterAttribute.workDistance ? cluster.workDistance == Distance.na : true)
       );
       if (found.length == 1) {
         final na = found.single;

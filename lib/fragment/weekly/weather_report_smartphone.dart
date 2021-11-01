@@ -5,26 +5,59 @@ import 'package:flutter/material.dart';
 
 class FragmentWeeklyWeatherReportSmartphone extends StatelessWidget {
 
-  static final _dateResolver = DateFormat('EEEE d MMMM y', 'it');
-
   const FragmentWeeklyWeatherReportSmartphone({
-    required this.weatherDailyList,
+    required this.weathers,
   });
 
-  final List<WeatherDaily> weatherDailyList;
+  final List<WeatherDaily> weathers;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (var weatherDaily in weatherDailyList)
-          ListTile(
-            leading: BoxedIcon(weatherDaily.icon),
-            title: Text('${weatherDaily.ambientTemperatureMin.floor()}°C - ${weatherDaily.ambientTemperatureMax.floor()}°C'),
-            subtitle: Text(_dateResolver.format(weatherDaily.timestamp)),
+        SizedBox(height: 4),
+        Row(
+          children: List.generate(
+            weathers.length * 2 + 1,
+            (index) => index.isOdd ? Expanded(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                color: Colors.green[50],
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () => Navigator.of(context).pushNamed('/daily/weather_report', arguments: {
+                    'weather_report': weathers[(index / 2).floor()],
+                  }),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 4),
+                      BoxedIcon(weathers[(index / 2).floor()].icon),
+                      Text('${weathers[(index / 2).floor()].ambientTemperatureMin.round()}°C'),
+                      Text('${weathers[(index / 2).floor()].ambientTemperatureMax.round()}°C'),
+                      SizedBox(height: 4),
+                    ],
+                  ),
+                ),
+              ),
+            ) : SizedBox(width: index == 0 ? 12 : 4),
           ),
+        ),
+        SizedBox(height: 16),
       ],
     );
+    // return Column(
+    //   children: [
+    //     for (var weatherDaily in weatherDailyList)
+    //       ListTile(
+    //         leading: BoxedIcon(weatherDaily.icon),
+    //         title: Text('${weatherDaily.ambientTemperatureMin.floor()}°C - ${weatherDaily.ambientTemperatureMax.floor()}°C'),
+    //         subtitle: Text(_dateResolver.format(weatherDaily.timestamp)),
+    //       ),
+    //   ],
+    // );
   }
 
 }
