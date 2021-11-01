@@ -1,5 +1,6 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
 import 'package:elis_analytics_dashboard/fragment/view.dart';
+import 'package:elis_analytics_dashboard/fragment/weekly/appbar_bottom_date.dart';
 import 'package:elis_analytics_dashboard/fragment/weekly/kpi_comparator_smartphone.dart';
 import 'package:elis_analytics_dashboard/fragment/weekly/weather_report_smartphone.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
@@ -7,14 +8,9 @@ import 'package:elis_analytics_dashboard/model/inherited/weekly_data.dart';
 import 'package:elis_analytics_dashboard/view/error.dart';
 import 'package:elis_analytics_dashboard/view/wait.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewWeeklySmartphone extends StatelessWidget {
-
-  static const _oneSecond = Duration(seconds: 1);
-  static final _weekStartResolver = DateFormat('d', 'it');
-  static final _weekEndResolver = DateFormat('d MMMM yyyy', 'it');
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +23,16 @@ class ViewWeeklySmartphone extends StatelessWidget {
     }
     // Get week
     final week = (ModalRoute.of(context)!.settings.arguments as Map)['week'] as DateTimeRange;
+    final lastWeekRange = (ModalRoute.of(context)!.settings.arguments as Map)['last_available_week'] as DateTimeRange;
     // Check data
     final data = ModelInheritedWeeklyData.maybeOf(context);
     // Build UI
     return Scaffold(
       appBar: ColoredAppBar(
         title: const Text('Visualizzazione settimanale'),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(56),
-          child: ListTile(
-            title: Text('${_weekStartResolver.format(week.start)} - ${_weekEndResolver.format(week.end.subtract(_oneSecond))}'),
-          ),
+        bottom: FragmentWeeklyAppbarBottomDate(
+          weekRange: week,
+          lastAvailableWeekRange: lastWeekRange,
         ),
       ),
       body: data != null

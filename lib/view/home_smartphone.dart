@@ -125,6 +125,7 @@ class ViewHomeSmartphone extends StatelessWidget {
   void _onWeeklyButtonClick(BuildContext context, DateTimeRange lastWeekRange) {
     Navigator.of(context).pushNamed('/weekly', arguments: {
       'week': lastWeekRange,
+      'last_available_week': lastWeekRange,
     });
   }
 

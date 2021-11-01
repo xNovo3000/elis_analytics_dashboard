@@ -19,7 +19,7 @@ class FragmentDailyAppbarBottomDate extends StatelessWidget implements Preferred
       title: Text(_dateResolver.format(day)),
       trailing: Wrap(
         children: [
-          if (_canGoBackwardInTime(day)) IconButton(
+          if (_canGoBackwardInTime) IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => _onDatePreviousPressed(context),
           ),
@@ -27,7 +27,7 @@ class FragmentDailyAppbarBottomDate extends StatelessWidget implements Preferred
             icon: const Icon(Icons.calendar_today),
             onPressed: () => _onDateSelectPressed(context),
           ),
-          if (_canGoForwardInTime(day)) IconButton(
+          if (_canGoForwardInTime) IconButton(
             icon: const Icon(Icons.arrow_forward),
             onPressed: () => _onDateForwardPressed(context),
           ),
@@ -65,7 +65,7 @@ class FragmentDailyAppbarBottomDate extends StatelessWidget implements Preferred
     Navigator.of(context).popAndPushNamed('/daily', arguments: {'day': day.add(_oneDay)});
   }
 
-  bool _canGoBackwardInTime(DateTime day) => day.isAfter(_minimumDate);
-  bool _canGoForwardInTime(DateTime day) => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
+  bool get _canGoBackwardInTime => day.isAfter(_minimumDate);
+  bool get _canGoForwardInTime => day.add(_oneDay).isBefore(DateTime.now().subtract(_oneDay));
 
 }

@@ -29,7 +29,7 @@ class RouteWeekly extends StatelessWidget {
     }
     // Get specific week from route arguments dispatch
     final args = ModalRoute.of(context)?.settings.arguments;
-    if (args == null || !(args is Map<String, dynamic>) || !(args['week'] is DateTimeRange)) {
+    if (args == null || !(args is Map<String, dynamic>) || !(args['week'] is DateTimeRange) || !(args['last_available_week'] is DateTimeRange)) {
       return ModelInheritedError(
         child: child,
         error: 'Si è verificato un errore sconosciuto',
