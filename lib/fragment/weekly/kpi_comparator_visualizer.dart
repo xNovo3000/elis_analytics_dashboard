@@ -41,7 +41,6 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         majorGridLines: null,
         opposedPosition: false,
         minimum: 0,
-        maximum: first.maximum,
       ),
       axes: [
         NumericAxis(
@@ -49,7 +48,6 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
           majorGridLines: MajorGridLines(width: 0),
           opposedPosition: true,
           minimum: 0,
-          maximum: second.maximum,
         ),
       ],
       legend: Legend(
@@ -68,7 +66,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Gender gender in Gender.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.gender)
@@ -81,7 +79,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Gender gender in Gender.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.gender)
@@ -94,7 +92,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Age age in Age.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.age)
@@ -107,7 +105,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Age age in Age.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.age)
@@ -119,7 +117,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
       case KPI.campusAgeAverage:
         return [
           if (!isSecond) StackedColumnSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.campusVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.ageAverage,
@@ -127,7 +125,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
             animationDuration: 0
           ),
           if (isSecond) LineSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.campusVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.ageAverage,
@@ -138,7 +136,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
       case KPI.neighborhoodAgeAverage:
         return [
           if (!isSecond) StackedColumnSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.neighborhoodVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.ageAverage,
@@ -146,7 +144,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
             animationDuration: 0
           ),
           if (isSecond) LineSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.neighborhoodVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.ageAverage,
@@ -158,7 +156,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Nationality nationality in Nationality.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality)
@@ -171,7 +169,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Nationality nationality in Nationality.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality)
@@ -183,7 +181,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
       case KPI.campusForeigners:
         return [
           if (!isSecond) StackedColumnSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.campusVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.foreignersRatio,
@@ -191,7 +189,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
             animationDuration: 0
           ),
           if (isSecond) LineSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.campusVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.foreignersRatio,
@@ -202,7 +200,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
       case KPI.neighborhoodForeigners:
         return [
           if (!isSecond) StackedColumnSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.neighborhoodVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.foreignersRatio,
@@ -210,7 +208,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
             animationDuration: 0
           ),
           if (isSecond) LineSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.neighborhoodVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.foreignersRatio,
@@ -231,7 +229,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (String country in countries)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.whereCondition((cluster) => cluster.country == country).visitors,
@@ -252,7 +250,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (String country in countries)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.whereCondition((cluster) => cluster.country == country).visitors,
@@ -264,7 +262,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Region region in Region.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality)
@@ -277,7 +275,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Region region in Region.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality)
@@ -299,7 +297,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (String province in provinces)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.whereCondition((cluster) => cluster.province == province).visitors,
@@ -320,7 +318,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (String province in provinces)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.whereCondition((cluster) => cluster.province == province).visitors,
@@ -341,7 +339,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (String municipality in municipalities)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.whereCondition((cluster) => cluster.municipality == municipality).visitors,
@@ -362,7 +360,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (String municipality in municipalities)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.whereCondition((cluster) => cluster.municipality == municipality).visitors,
@@ -374,7 +372,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Distance distance in Distance.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.homeDistance)
@@ -387,7 +385,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Distance distance in Distance.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.homeDistance)
@@ -400,7 +398,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Distance distance in Distance.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.workDistance)
@@ -413,7 +411,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (Distance distance in Distance.values)
             StackedColumnSeries<VodafoneDaily, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
               yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.workDistance)
@@ -425,7 +423,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
       case KPI.campusHomeDistanceAverage:
         return [
           if (!isSecond) StackedColumnSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.campusVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.homeDistanceAverage,
@@ -433,7 +431,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
             animationDuration: 0
           ),
           if (isSecond) LineSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.campusVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.homeDistanceAverage,
@@ -444,7 +442,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
       case KPI.neighborhoodHomeDistanceAverage:
         return [
           if (!isSecond) StackedColumnSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.neighborhoodVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.homeDistanceAverage,
@@ -452,7 +450,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
             animationDuration: 0
           ),
           if (isSecond) LineSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.neighborhoodVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.homeDistanceAverage,
@@ -463,7 +461,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
       case KPI.campusWorkDistanceAverage:
         return [
           if (!isSecond) StackedColumnSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.campusVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.workDistanceAverage,
@@ -471,7 +469,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
             animationDuration: 0
           ),
           if (isSecond) LineSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.campusVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.workDistanceAverage,
@@ -482,7 +480,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
       case KPI.neighborhoodWorkDistanceAverage:
         return [
           if (!isSecond) StackedColumnSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.neighborhoodVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.workDistanceAverage,
@@ -490,7 +488,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
             animationDuration: 0
           ),
           if (isSecond) LineSeries<VodafoneDaily, String>(
-            yAxisName:  kpi.technicalName,
+            yAxisName: kpi.technicalName,
             dataSource: data.neighborhoodVodafone,
             xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
             yValueMapper: (datum, index) => datum.workDistanceAverage,
@@ -502,7 +500,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (RoomAttendance room in RoomAttendance.values)
             StackedColumnSeries<SensorAttendance, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.attendance,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.timestamp),
               yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,
@@ -514,7 +512,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         return [
           for (RoomVisits room in RoomVisits.values)
             StackedColumnSeries<SensorVisits, String>(
-              yAxisName:  kpi.technicalName,
+              yAxisName: kpi.technicalName,
               dataSource: data.visits,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.timestamp),
               yValueMapper: (datum, index) => datum.roomsData.singleWhere((roomData) => roomData.room == room).occupancy,

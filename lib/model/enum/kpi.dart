@@ -7,13 +7,11 @@ class KPI {
     required this.displayName,
     required this.technicalName,
     required this.isComplex,
-    this.maximum,
   });
 
   final String displayName;
   final String technicalName;
   final bool isComplex;
-  final double? maximum;
 
   @override String toString() => displayName;
 
@@ -22,12 +20,12 @@ class KPI {
   static const neighborhoodGender = KPI._(displayName: 'Genere nel quartiere', technicalName: 'neighborhood_gender', isComplex: true);
   static const campusAge = KPI._(displayName: 'Età nel campus', technicalName: 'campus_age', isComplex: true);
   static const neighborhoodAge = KPI._(displayName: 'Età nel quartiere', technicalName: 'neighborhood_age', isComplex: true);
-  static const campusAgeAverage = KPI._(displayName: 'Età media nel campus', technicalName: 'campus_age_average', isComplex: false, maximum: 70);
-  static const neighborhoodAgeAverage = KPI._(displayName: 'Età media nel quartiere', technicalName: 'neighborhood_age_average', isComplex: false, maximum: 70);
+  static const campusAgeAverage = KPI._(displayName: 'Età media nel campus', technicalName: 'campus_age_average', isComplex: false);
+  static const neighborhoodAgeAverage = KPI._(displayName: 'Età media nel quartiere', technicalName: 'neighborhood_age_average', isComplex: false);
   static const campusNationality = KPI._(displayName: 'Nazionalità nel campus', technicalName: 'campus_nationality', isComplex: true);
   static const neighborhoodNationality = KPI._(displayName: 'Nazionalità nel quartiere', technicalName: 'neighborhood_nationality', isComplex: true);
-  static const campusForeigners = KPI._(displayName: 'Stranieri nel campus', technicalName: 'campus_foreigners', isComplex: false, maximum: 100);
-  static const neighborhoodForeigners = KPI._(displayName: 'Stranieri nel quartiere', technicalName: 'neighborhood_foreigners', isComplex: false, maximum: 100);
+  static const campusForeigners = KPI._(displayName: 'Stranieri nel campus', technicalName: 'campus_foreigners', isComplex: false);
+  static const neighborhoodForeigners = KPI._(displayName: 'Stranieri nel quartiere', technicalName: 'neighborhood_foreigners', isComplex: false);
   static const campusCountries = KPI._(displayName: 'Nazioni nel campus', technicalName: 'campus_countries', isComplex: true);
   static const neighborhoodCountries = KPI._(displayName: 'Nazioni nel quartiere', technicalName: 'neighborhood_countries', isComplex: true);
   static const campusRegion = KPI._(displayName: 'Regioni nel campus', technicalName: 'campus_regions', isComplex: true);
@@ -40,17 +38,17 @@ class KPI {
   static const neighborhoodHomeDistance = KPI._(displayName: 'Distanza da casa nel quartiere', technicalName: 'neighborhood_home_distance', isComplex: true);
   static const campusWorkDistance = KPI._(displayName: 'Distanza da lavoro nel campus', technicalName: 'campus_work_distance', isComplex: true);
   static const neighborhoodWorkDistance = KPI._(displayName: 'Distanza da lavoro nel quartiere', technicalName: 'neighborhood_work_distance', isComplex: true);
-  static const campusHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel campus', technicalName: 'campus_home_distance_average', isComplex: false, maximum: 60);
-  static const neighborhoodHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel quartiere', technicalName: 'neighborhood_home_distance_average', isComplex: false, maximum: 60);
-  static const campusWorkDistanceAverage = KPI._(displayName: 'Distanza da lavoro media nel campus', technicalName: 'campus_work_distance_average', isComplex: false, maximum: 60);
-  static const neighborhoodWorkDistanceAverage = KPI._(displayName: 'Distanza da lavoro media nel quartiere', technicalName: 'neighborhood_work_distance_average', isComplex: false, maximum: 60);
+  static const campusHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel campus', technicalName: 'campus_home_distance_average', isComplex: false);
+  static const neighborhoodHomeDistanceAverage = KPI._(displayName: 'Distanza da casa media nel quartiere', technicalName: 'neighborhood_home_distance_average', isComplex: false);
+  static const campusWorkDistanceAverage = KPI._(displayName: 'Distanza da lavoro media nel campus', technicalName: 'campus_work_distance_average', isComplex: false);
+  static const neighborhoodWorkDistanceAverage = KPI._(displayName: 'Distanza da lavoro media nel quartiere', technicalName: 'neighborhood_work_distance_average', isComplex: false);
 
   /* G-move KPI */
-  static const roomsAttendance = KPI._(displayName: 'Occupazione aule', technicalName: 'rooms_attendance', isComplex: true, maximum: 100);
-  static const roomsVisits = KPI._(displayName: 'Transito aule', technicalName: 'rooms_visits', isComplex: true, maximum: 100);
+  static const roomsAttendance = KPI._(displayName: 'Occupazione aule', technicalName: 'rooms_attendance', isComplex: true);
+  static const roomsVisits = KPI._(displayName: 'Transito aule', technicalName: 'rooms_visits', isComplex: true);
 
   /* None */
-  static const na = KPI._(displayName: 'N/A', technicalName: '', isComplex: false, maximum: 100);
+  static const na = KPI._(displayName: 'N/A', technicalName: '', isComplex: false);
 
   static const values = <KPI>[
     /* Vodafone KPI */
