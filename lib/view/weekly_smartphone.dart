@@ -1,8 +1,12 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
+import 'package:elis_analytics_dashboard/foundation/utils.dart';
+import 'package:elis_analytics_dashboard/fragment/map.dart';
 import 'package:elis_analytics_dashboard/fragment/view.dart';
 import 'package:elis_analytics_dashboard/fragment/weekly/appbar_bottom_date.dart';
 import 'package:elis_analytics_dashboard/fragment/weekly/kpi_comparator_smartphone.dart';
+import 'package:elis_analytics_dashboard/fragment/weekly/map_manager.dart';
 import 'package:elis_analytics_dashboard/fragment/weekly/weather_report_smartphone.dart';
+import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/weekly_data.dart';
 import 'package:elis_analytics_dashboard/view/error.dart';
@@ -21,7 +25,7 @@ class ViewWeeklySmartphone extends StatelessWidget {
         error: error.error,
       );
     }
-    // Get week
+    // Get week and weekRange
     final week = (ModalRoute.of(context)!.settings.arguments as Map)['week'] as DateTimeRange;
     final lastWeekRange = (ModalRoute.of(context)!.settings.arguments as Map)['last_available_week'] as DateTimeRange;
     // Check data
@@ -75,7 +79,7 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check data
+    // Get data
     final data = ModelInheritedWeeklyData.of(context);
     // Build UI
     return CustomScrollView(
@@ -98,6 +102,18 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
             future: SharedPreferences.getInstance(),
             builder: (context, snapshot) => snapshot.hasData
               ? FragmentWeeklyKpiComparatorSmartphone(preferences: snapshot.data!)
+              : FragmentWait(message: 'Attendi...'),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: FutureBuilder<SharedPreferences>(
+            future: SharedPreferences.getInstance(),
+            builder: (context, snapshot) => snapshot.hasData
+              ? FragmentWeeklyMapManager(
+                  preferences: snapshot.data!,
+                  campusVodafoneByRegion: data.campusVodafone.collapse(VodafoneClusterAttribute.region, collapseNa: true),
+                  neighborhoodVodafoneByRegion: data.neighborhoodVodafone.collapse(VodafoneClusterAttribute.region, collapseNa: true),
+                )
               : FragmentWait(message: 'Attendi...'),
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
+import 'package:elis_analytics_dashboard/foundation/utils.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/appbar_bottom_date.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/gender_chart.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/municipality_chart.dart';
@@ -140,8 +141,6 @@ class _ViewDailySmartphoneData extends StatelessWidget {
 
 class _ComponentVodafoneDataExists extends StatelessWidget {
 
-  static final _mapNumberFormat = NumberFormat('###,###,##0');
-
   const _ComponentVodafoneDataExists({
     required this.campusVodafone,
     required this.neighborhoodVodafone,
@@ -162,31 +161,7 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
           title: Text('REGIONI DI PROVENIENZA NEL QUARTIERE', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
           trailing: IconButton(
             icon: Icon(Icons.arrow_forward),
-            onPressed: () => Navigator.of(context).pushNamed(
-              '/daily/region_map',
-              arguments: {
-                'title': 'Mappa delle provenienze',
-                'map_shape_source': MapShapeSource.asset(
-                  'asset/map/italy.geojson',
-                  shapeDataField: 'reg_name',
-                  dataCount: 20,
-                  primaryValueMapper: (index) => Region.values[index].name,
-                  dataLabelMapper: (index) => _mapNumberFormat.format(
-                    neighborhoodVodafoneByRegion.singleWhere(
-                      (cluster) => cluster.region == Region.values[index],
-                      orElse: () => VodafoneCluster.empty(),
-                    ).visitors
-                  ),
-                  shapeColorValueMapper: (index) => _getRegionColorByPercentage(
-                    visitors: neighborhoodVodafoneByRegion.singleWhere(
-                      (cluster) => cluster.region == Region.values[index],
-                      orElse: () => VodafoneCluster.empty(),
-                    ).visitors,
-                    total: neighborhoodVodafoneByRegion.visitors,
-                  ),
-                ),
-              }
-            ),
+            onPressed: () => Utils.onRegionOriginMapClick(context, neighborhoodVodafoneByRegion),
           ),
         ),
         FragmentDailyRegionChartSmartphone(
@@ -213,24 +188,6 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  Color? _getRegionColorByPercentage({
-    required int visitors,
-    required int total,
-  }) {
-    // Cache percentage
-    final percentage = visitors / total;
-    // Generate color
-    if (percentage > 0.9) {
-      return Colors.red[200];
-    } else if (percentage > 0.75) {
-      return Colors.yellow[200];
-    } else if (percentage > 0.5) {
-      return Colors.green[200];
-    } else if (percentage > 0) {
-      return Colors.blue[200];
-    }
   }
 
 }

@@ -1,4 +1,10 @@
+import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
+import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
+import 'package:elis_analytics_dashboard/model/enum/region.dart';
 import 'package:elis_analytics_dashboard/model/enum/thingsboard_device.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_maps/maps.dart';
 
 abstract class Utils {
 
@@ -97,5 +103,58 @@ abstract class Utils {
       'interval': '1800000',
       'agg': 'AVG'
     });
+
+  /* Region map shape generator */
+  static final _mapNumberFormat = NumberFormat('###,###,##0');
+
+  static void onRegionOriginMapClick(BuildContext context, VodafoneDaily vodafoneByRegion) {
+    Navigator.of(context).pushNamed(
+      '/daily/region_map',
+      arguments: {
+        'title': 'Mappa delle provenienze',
+        'map_shape_source': generateMapShapeSourceFromVodafoneRegionData(vodafoneByRegion),
+      }
+    );
+  }
+
+  static MapShapeSource generateMapShapeSourceFromVodafoneRegionData(VodafoneDaily vodafoneByRegion) {
+    return MapShapeSource.asset(
+      'asset/map/italy.geojson',
+      shapeDataField: 'reg_name',
+      dataCount: 20,
+      primaryValueMapper: (index) => Region.values[index].name,
+      dataLabelMapper: (index) => _mapNumberFormat.format(
+        vodafoneByRegion.singleWhere(
+          (cluster) => cluster.region == Region.values[index],
+          orElse: () => VodafoneCluster.empty(),
+        ).visitors
+      ),
+      shapeColorValueMapper: (index) => _getRegionColorByPercentage(
+        visitors: vodafoneByRegion.singleWhere(
+          (cluster) => cluster.region == Region.values[index],
+          orElse: () => VodafoneCluster.empty(),
+        ).visitors,
+        total: vodafoneByRegion.visitors,
+      ),
+    );
+  }
+
+  static Color? _getRegionColorByPercentage({
+    required int visitors,
+    required int total,
+  }) {
+    // Cache percentage
+    final percentage = visitors / total;
+    // Generate color
+    if (percentage > 0.9) {
+      return Colors.red[200];
+    } else if (percentage > 0.75) {
+      return Colors.yellow[200];
+    } else if (percentage > 0.5) {
+      return Colors.green[200];
+    } else if (percentage > 0) {
+      return Colors.blue[200];
+    }
+  }
 
 }
