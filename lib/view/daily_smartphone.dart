@@ -6,7 +6,7 @@ import 'package:elis_analytics_dashboard/fragment/daily/municipality_chart.dart'
 import 'package:elis_analytics_dashboard/fragment/daily/region_chart_smartphone.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/rooms_occupation_attendance.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/rooms_occupation_visits.dart';
-import 'package:elis_analytics_dashboard/fragment/daily/vodafone_summary.dart';
+import 'package:elis_analytics_dashboard/fragment/vodafone_summary.dart';
 import 'package:elis_analytics_dashboard/fragment/daily/weather_report_smartphone.dart';
 import 'package:elis_analytics_dashboard/fragment/info.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
@@ -176,7 +176,7 @@ class _ComponentVodafoneDataExists extends StatelessWidget {
         ListTile(
           title: Text('RIASSUNTO GIORNALIERO', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         ),
-        FragmentDailyVodafoneSummary(
+        FragmentVodafoneSummary(
           campusVodafone: campusVodafone,
           neighborhoodVodafone: neighborhoodVodafone
         ),

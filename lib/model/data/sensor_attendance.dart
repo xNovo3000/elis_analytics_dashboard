@@ -20,7 +20,10 @@ class SensorAttendance implements Comparable<SensorAttendance> {
 
   factory SensorAttendance.fromTimestamp(DateTime timestamp) => SensorAttendance(
     timestamp: timestamp,
-    roomsData: [],
+    roomsData: List.generate(RoomAttendance.values.length, (index) => RoomAttendanceData(
+      room: RoomAttendance.values[index],
+      occupancy: 0
+    )),
   );
 
   // TEST: used only for testing purposes

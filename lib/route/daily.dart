@@ -97,7 +97,7 @@ class RouteDaily extends StatelessWidget {
     return WeatherInstantList.fromListAndTotalDuration(Utils.dispatchThingsboardResponse(result), Duration(days: 1));
   }
 
-  // sti sensori mandano solo se ci sono aggiornamenti,
+  // Sti sensori mandano solo se ci sono aggiornamenti,
   // bisogna fare un lavoro differente a livello di dati
   Future<List<SensorAttendance>> _getSensorAttendanceData(DateTime day) async {
     final response = await fetcher.get(Utils.getDailySensorsAttendanceUri(day));
@@ -105,26 +105,6 @@ class RouteDaily extends StatelessWidget {
       case 200:
         // Generate things
         final dispatchedResponse = Utils.dispatchThingsboardResponse(json.decode(response.body));
-        // final temporaryAttendances = <SensorAttendance>[];
-        // dispatchedResponse.forEach((cluster) => temporaryAttendances.add(SensorAttendance.fromMap(cluster)));
-        // final attendances = <SensorAttendance>[];
-        // for (var temp in temporaryAttendances) {
-        //   final deltaTime = temp.timestamp.difference(day);
-        //   final position = (deltaTime.inMinutes / 30).floor();
-        //   while (attendances.length <= position) {
-        //     attendances.add(SensorAttendance.fromTimestamp(day.add(Duration(minutes: 30 * (position + 1))).subtract(Duration(minutes: 15))));
-        //   }
-        //   final tempAttendance = attendances.last;
-        //   final attendanceResult = SensorAttendance(
-        //     timestamp: tempAttendance.timestamp,
-        //     roomsData: List.generate(RoomAttendance.values.length, (index) => RoomAttendanceData(
-        //       room: RoomAttendance.values[index],
-        //       occupancy: max((tempAttendance.roomsData.singleWhere((roomAttendance) => roomAttendance.room == RoomAttendance.values[index]).occupancy ?? 0),
-        //           (temp.roomsData.singleWhere((roomAttendance) => roomAttendance.room == RoomAttendance.values[index]).occupancy ?? 0))
-        //     ))
-        //   );
-        //   attendances.add(attendanceResult);
-        // }
         final result = List.generate(
           dispatchedResponse.length,
           (index) => SensorAttendance.fromMap(dispatchedResponse[index]),

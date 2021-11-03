@@ -1,7 +1,7 @@
 import 'package:elis_analytics_dashboard/component/colored_app_bar.dart';
-import 'package:elis_analytics_dashboard/foundation/utils.dart';
-import 'package:elis_analytics_dashboard/fragment/map.dart';
+import 'package:elis_analytics_dashboard/fragment/daily/gender_chart.dart';
 import 'package:elis_analytics_dashboard/fragment/view.dart';
+import 'package:elis_analytics_dashboard/fragment/vodafone_summary.dart';
 import 'package:elis_analytics_dashboard/fragment/weekly/appbar_bottom_date.dart';
 import 'package:elis_analytics_dashboard/fragment/weekly/kpi_comparator_smartphone.dart';
 import 'package:elis_analytics_dashboard/fragment/weekly/map_manager.dart';
@@ -81,6 +81,9 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
   Widget build(BuildContext context) {
     // Get data
     final data = ModelInheritedWeeklyData.of(context);
+    // Collapse
+    final campusVodafone = data.campusVodafone.toVodafoneDaily();
+    final neighborhoodVodafone = data.neighborhoodVodafone.toVodafoneDaily();
     // Build UI
     return CustomScrollView(
       key: PageStorageKey('_ViewWeeklySmartphoneDataCustomScrollView'),
@@ -115,6 +118,25 @@ class _ViewWeeklySmartphoneData extends StatelessWidget {
                   neighborhoodVodafoneByRegion: data.neighborhoodVodafone.collapse(VodafoneClusterAttribute.region, collapseNa: true),
                 )
               : FragmentWait(message: 'Attendi...'),
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              ListTile(
+                title: Text('RIASSUNTO GIORNALIERO', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+              ),
+              FragmentVodafoneSummary(
+                campusVodafone: campusVodafone,
+                neighborhoodVodafone: neighborhoodVodafone
+              ),
+              ListTile(
+                title: Text('SUDDIVISIONE PER GENERE', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+              ),
+              FragmentDailyGenderChart(
+                campusVodafoneByGender: campusVodafone.collapse(VodafoneClusterAttribute.gender, collapseNa: true),
+              ),
+            ]
           ),
         ),
       ],

@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
-import 'package:elis_analytics_dashboard/model/enum/kpi.dart';
 
 class VodafoneDailyList extends ListBase<VodafoneDaily> {
 
@@ -58,6 +57,14 @@ class VodafoneDailyList extends ListBase<VodafoneDaily> {
         growable: false,
       )
     );
+  }
+
+  VodafoneDaily toVodafoneDaily() {
+    final result = <VodafoneCluster>[];
+    for (VodafoneDaily daily in this) {
+      result.addAll(daily);
+    }
+    return VodafoneDaily(result, date: DateTime(1970), area: area);
   }
 
 }

@@ -52,11 +52,11 @@ abstract class Utils {
   /* Common URIs */
   static Uri getVodafoneUriFromDay(ThingsboardDevice device, DateTime begin, DateTime end) =>
     Uri.parse('plugins/telemetry/DEVICE/$device/values/timeseries')
-    .replace(queryParameters: {
-      'startTs': '${begin.toUtc().millisecondsSinceEpoch}',
-      'endTs': '${end.toUtc().millisecondsSinceEpoch}',
-      'keys': 'age,country,gender,homeDistance,workDistance,nationality,region,province,municipality,totalDwellTime,visitors,visits'
-    });
+      .replace(queryParameters: {
+        'startTs': '${begin.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${end.toUtc().millisecondsSinceEpoch}',
+        'keys': 'age,country,gender,homeDistance,workDistance,nationality,region,province,municipality,totalDwellTime,visitors,visits'
+      });
 
   /* Realtime URIs */
   static final realtimeWeatherUri = Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries');
@@ -66,43 +66,84 @@ abstract class Utils {
   /* Daily URIs */
   static Uri getDailyCompleteWeatherUri(DateTime day) =>
     Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
-    .replace(queryParameters: {
-      'startTs': '${day.toUtc().millisecondsSinceEpoch}',
-      'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
-      'keys': 'humidity,ambient_temperature,pressure,wind_speed_mean,wind_direction_average,wind_gust,ground_temperature',
-      'interval': '21600000',
-      'agg': 'AVG'
-    });
+      .replace(queryParameters: {
+        'startTs': '${day.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
+        'keys': 'humidity,ambient_temperature,pressure,wind_speed_mean,wind_direction_average,wind_gust,ground_temperature',
+        'interval': '21600000',
+        'agg': 'AVG'
+      });
 
   static Uri getDailyRainfallWeatherUri(DateTime day) =>
     Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
-    .replace(queryParameters: {
-      'startTs': '${day.toUtc().millisecondsSinceEpoch}',
-      'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
-      'keys': 'rainfall',
-      'interval': '21600000',
-      'agg': 'SUM'
-    });
+      .replace(queryParameters: {
+        'startTs': '${day.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
+        'keys': 'rainfall',
+        'interval': '21600000',
+        'agg': 'SUM'
+      });
 
   static Uri getDailySensorsAttendanceUri(DateTime day) =>
     Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtimeAttendance}/values/timeseries')
-    .replace(queryParameters: {
-      'startTs': '${day.toUtc().millisecondsSinceEpoch}',
-      'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
-      'keys': 'presenze_lagrange,presenze_tesla',
-      'interval': '1800000',
-      'agg': 'AVG'
-    });
+      .replace(queryParameters: {
+        'startTs': '${day.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
+        'keys': 'presenze_lagrange,presenze_tesla',
+        'interval': '1800000',
+        'agg': 'AVG'
+      });
 
   static Uri getDailySensorsVisitsUri(DateTime day) =>
     Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.sensorsRealtimeVisits}/values/timeseries')
-    .replace(queryParameters: {
-      'startTs': '${day.toUtc().millisecondsSinceEpoch}',
-      'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
-      'keys': 'tasso_di_ritorno,tempo_medio_permanenza,visitatori_corridoio,visitatori_hall,visitatori_openspace,visitatori_pascal,visitatori_Pinnhub',
-      'interval': '1800000',
-      'agg': 'AVG'
-    });
+      .replace(queryParameters: {
+        'startTs': '${day.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${day.toUtc().add(Duration(days: 1)).millisecondsSinceEpoch}',
+        'keys': 'tasso_di_ritorno,tempo_medio_permanenza,visitatori_corridoio,visitatori_hall,visitatori_openspace,visitatori_pascal,visitatori_Pinnhub',
+        'interval': '1800000',
+        'agg': 'AVG'
+      });
+
+  /* Weekly URIs */
+  static Uri getWeeklyWeatherTemperatureMaxUri(DateTimeRange week) =>
+    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
+      .replace(queryParameters: {
+        'startTs': '${week.start.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${week.end.toUtc().millisecondsSinceEpoch}',
+        'keys': 'ambient_temperature',
+        'interval': '86400000',
+        'agg': 'MAX'
+      });
+
+  static Uri getWeeklyWeatherTemperatureMinUri(DateTimeRange week) =>
+    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
+      .replace(queryParameters: {
+        'startTs': '${week.start.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${week.end.toUtc().millisecondsSinceEpoch}',
+        'keys': 'ambient_temperature',
+        'interval': '86400000',
+        'agg': 'MIN'
+      });
+
+  static Uri getWeeklyWeatherWindAndHumidityAverageUri(DateTimeRange week) =>
+    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
+      .replace(queryParameters: {
+        'startTs': '${week.start.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${week.end.toUtc().millisecondsSinceEpoch}',
+        'keys': 'humidity,wind_speed_mean,wind_direction_average',
+        'interval': '86400000',
+        'agg': 'AVG'
+      });
+
+  static Uri getWeeklyWeatherRainfallSumUri(DateTimeRange week) =>
+    Uri.parse('plugins/telemetry/DEVICE/${ThingsboardDevice.weatherStation}/values/timeseries')
+      .replace(queryParameters: {
+        'startTs': '${week.start.toUtc().millisecondsSinceEpoch}',
+        'endTs': '${week.end.toUtc().millisecondsSinceEpoch}',
+        'keys': 'rainfall',
+        'interval': '86400000',
+        'agg': 'SUM'
+      });
 
   /* Region map shape generator */
   static final _mapNumberFormat = NumberFormat('###,###,##0');

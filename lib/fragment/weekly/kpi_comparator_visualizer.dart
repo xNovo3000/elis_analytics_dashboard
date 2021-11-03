@@ -60,6 +60,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
     );
   }
 
+  // TODO: collapseNa
   static List<ChartSeries> _getSeries(KPI kpi, bool isSecond, ModelInheritedWeeklyData data) {
     switch (kpi) {
       case KPI.campusGender:
@@ -508,7 +509,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               animationDuration: 0
             )
         ];
-      case KPI.roomsAttendance:
+      case KPI.roomsVisits:
         return [
           for (RoomVisits room in RoomVisits.values)
             StackedColumnSeries<SensorVisits, String>(

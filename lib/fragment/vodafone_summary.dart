@@ -3,9 +3,9 @@ import 'package:elis_analytics_dashboard/model/data/vodafone_cluster.dart';
 import 'package:elis_analytics_dashboard/model/enum/nationality.dart';
 import 'package:flutter/material.dart';
 
-class FragmentDailyVodafoneSummary extends StatelessWidget {
+class FragmentVodafoneSummary extends StatelessWidget {
 
-  const FragmentDailyVodafoneSummary({
+  const FragmentVodafoneSummary({
     this.gridView = false,
     required this.campusVodafone,
     required this.neighborhoodVodafone,
