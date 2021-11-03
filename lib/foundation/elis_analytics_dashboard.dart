@@ -21,6 +21,8 @@ class ELISAnalyticsDashboard extends StatelessWidget {
       yield LicenseEntryWithLineBreaks(['Open Sans'], license);
       license = await rootBundle.loadString('asset/license/GDPR/LICENSE.txt');
       yield LicenseEntryWithLineBreaks(['GDPR'], license);
+      license = await rootBundle.loadString('asset/license/Creator/LICENSE.txt');
+      yield LicenseEntryWithLineBreaks(['Creator'], license);
     });
     // Build the application
     return MaterialApp(

@@ -265,21 +265,21 @@ packages:
       name: syncfusion_flutter_charts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.3.47"
+    version: "19.3.48"
   syncfusion_flutter_core:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.3.47"
+    version: "19.3.48"
   syncfusion_flutter_maps:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_maps
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.3.47-beta"
+    version: "19.3.48-beta"
   term_glyph:
     dependency: transitive
     description:
