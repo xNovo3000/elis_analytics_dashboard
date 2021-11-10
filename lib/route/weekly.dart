@@ -4,11 +4,13 @@ import 'package:elis_analytics_dashboard/component/managed_future_builder.dart';
 import 'package:elis_analytics_dashboard/component/responsive_layout.dart';
 import 'package:elis_analytics_dashboard/foundation/fetcher.dart';
 import 'package:elis_analytics_dashboard/foundation/utils.dart';
+import 'package:elis_analytics_dashboard/model/container/vodafone_daily.dart';
 import 'package:elis_analytics_dashboard/model/container/vodafone_daily_list.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor_attendance.dart';
 import 'package:elis_analytics_dashboard/model/data/sensor_visits.dart';
 import 'package:elis_analytics_dashboard/model/data/weather_daily.dart';
 import 'package:elis_analytics_dashboard/model/enum/area.dart';
+import 'package:elis_analytics_dashboard/model/enum/thingsboard_device.dart';
 import 'package:elis_analytics_dashboard/model/exception/invalid_token.dart';
 import 'package:elis_analytics_dashboard/model/inherited/error.dart';
 import 'package:elis_analytics_dashboard/model/inherited/weekly_data.dart';
@@ -19,6 +21,7 @@ class RouteWeekly extends StatelessWidget {
 
   static const _underConstruction = false;
   static const _isShowingHumidityAndWind = false;
+  static const _oneDay = Duration(days: 1);
 
   final fetcher = Fetcher();
 
@@ -67,8 +70,8 @@ class RouteWeekly extends StatelessWidget {
     'weathers': await _getWeatherData(range),
     'attendance': List.generate(7, (index) => SensorAttendance.test(index), growable: false),
     'visits': List.generate(7, (index) => SensorVisits.test(index), growable: false),
-    'campus_vodafone': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.campus),
-    'neighborhood_vodafone': VodafoneDailyList.test(startingDate: DateTime.now(), area: Area.neighborhood)
+    'campus_vodafone': await _getVodafoneData(range, ThingsboardDevice.vodafoneCampus),
+    'neighborhood_vodafone': await _getVodafoneData(range, ThingsboardDevice.vodafoneNeighborhood)
   };
 
   Future<List<WeatherDaily>> _getWeatherData(final DateTimeRange range) async {
@@ -129,6 +132,29 @@ class RouteWeekly extends StatelessWidget {
     // Return data
     final dispatched = Utils.dispatchThingsboardResponse(result);
     return List.generate(dispatched.length, (index) => WeatherDaily.fromMap(dispatched[index]));
+  }
+
+  Future<VodafoneDailyList> _getVodafoneData(final DateTimeRange range, final ThingsboardDevice device) async {
+    final result = <VodafoneDaily>[];
+    for (int i = 0; i < DateTime.daysPerWeek; i++) {
+      final vodafoneResponse = await fetcher.get(Utils.getVodafoneUriFromDay(
+        device, range.start.add(_oneDay * i), range.start.add(_oneDay * (i + 1))
+      ));
+      switch (vodafoneResponse.statusCode) {
+        case 200:
+          result.add(VodafoneDaily.fromList(
+            list: Utils.dispatchThingsboardResponse(json.decode(vodafoneResponse.body)),
+            date: range.start.add(_oneDay * i),
+            area: device == ThingsboardDevice.vodafoneCampus ? Area.campus : Area.neighborhood
+          ));
+          break;
+        case 401:
+          throw InvalidTokenException('');
+        default:
+          throw vodafoneResponse.statusCode;
+      }
+    }
+    return VodafoneDailyList(result);
   }
 
 }
