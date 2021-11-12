@@ -28,7 +28,6 @@ class RouteDaily extends StatelessWidget {
     final child = ResponsiveLayout(
       smartphoneWidget: ViewDailySmartphone(),
     );
-    // TODO: unfinished
     if (_underConstruction) {
       return ModelInheritedError(
         child: child,

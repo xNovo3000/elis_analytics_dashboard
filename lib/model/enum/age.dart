@@ -23,15 +23,15 @@ class Age {
   static const Age from45to55 = Age._(name: '45-55', technicalName: '(45-55]', median: 50);
   static const Age from55to65 = Age._(name: '55-65', technicalName: '(55-65]', median: 60);
   static const Age from65plus = Age._(name: '65+', technicalName: '>65', median: 70);
-  static const Age na = Age._(name: 'N/A', technicalName: '', median: 45);
 
   // special instance for clusters (also not included in enumeration)
+  static const Age na = Age._(name: 'N/A', technicalName: '', median: 45);
   static const Age other = Age._(name: 'Altro', technicalName: '', median: 0);
 
   // recursive enumeration
   static const List<Age> values = const <Age>[
-    from15to25, from25to35, from35to45, from45to55,
-    from55to65, from65plus, na
+    from15to25, from25to35, from35to45,
+    from45to55, from55to65, from65plus
   ];
 
 }

@@ -19,14 +19,12 @@ class Nationality {
   // instances
   static const Nationality italian = Nationality._(singular: 'Italiano', plural: 'Italiani', technicalName: 'ITALIANS');
   static const Nationality foreigner = Nationality._(singular: 'Straniero', plural: 'Stranieri', technicalName: 'FOREIGNERS');
-  static const Nationality na = Nationality._(singular: 'N/A', plural: 'N/A', technicalName: '');
 
   // special instance for clusters (also not included in enumeration)
+  static const Nationality na = Nationality._(singular: 'N/A', plural: 'N/A', technicalName: '');
   static const Nationality other = Nationality._(singular: 'Altro', plural: 'Altri', technicalName: '');
 
   // recursive enumeration
-  static const List<Nationality> values = const <Nationality>[
-    italian, foreigner, na
-  ];
+  static const List<Nationality> values = const <Nationality>[italian, foreigner];
 
 }

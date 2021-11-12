@@ -16,7 +16,7 @@ class RoomAttendanceData implements Comparable<RoomAttendanceData> {
   final RoomAttendance room;
   final int? occupancy;
 
-  double get percentage => (occupancy ?? -1) / room.capacity;
+  double get percentage => (occupancy ?? 0) / room.capacity;
 
   Color get color {
     if (percentage >= 1) {

@@ -39,7 +39,6 @@ class FragmentRealtimeRoomsVisits extends StatelessWidget {
                 padding: EdgeInsets.all(4),
                 child: Text('${roomsData[index].room}: ${roomsData[index].occupancy}'),
               ),
-              // TODO: add image here
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),

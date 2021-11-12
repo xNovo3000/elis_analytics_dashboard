@@ -6,7 +6,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class FragmentDailyMunicipalityChart extends StatelessWidget {
 
   const FragmentDailyMunicipalityChart({
-    this.legendPosition = LegendPosition.right,
+    this.legendPosition = LegendPosition.bottom,
     required this.campusVodafoneByMunicipality,
   });
 
@@ -19,12 +19,15 @@ class FragmentDailyMunicipalityChart extends StatelessWidget {
       legend: Legend(
         isVisible: true,
         position: legendPosition,
+        overflowMode: LegendItemOverflowMode.scroll,
       ),
       series: [
         PieSeries<VodafoneCluster, String>(
           dataSource: campusVodafoneByMunicipality,
-          xValueMapper: (datum, index) => '${datum.municipality}',
+          xValueMapper: (datum, index) => datum.municipality,
           yValueMapper: (datum, index) => datum.visitors,
+          dataLabelSettings: DataLabelSettings(isVisible: true),
+          dataLabelMapper: (datum, index) => '${datum.visits}',
           animationDuration: 0,
         ),
       ],

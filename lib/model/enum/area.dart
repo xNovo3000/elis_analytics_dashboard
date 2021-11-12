@@ -22,11 +22,13 @@ class Area {
   @override String toString() => name;
 
   // instances
-  static const Area campus = Area._(name: 'Campus', technicalName: 'INDOOR', device: ThingsboardDevice.vodafoneCampus);
-  static const Area neighborhood = Area._(name: 'Quartiere', technicalName: 'OUTDOOR', device: ThingsboardDevice.vodafoneNeighborhood);
+  static const campus = Area._(name: 'Campus', technicalName: 'INDOOR', device: ThingsboardDevice.vodafoneCampus);
+  static const neighborhood = Area._(name: 'Quartiere', technicalName: 'OUTDOOR', device: ThingsboardDevice.vodafoneNeighborhood);
+
+  // other instances
   static const Area na = Area._(name: 'N/A', technicalName: '', device: ThingsboardDevice.na);
 
   // recursive enumeration
-  static const List<Area> values = const <Area>[campus, neighborhood, na];
+  static const values = const <Area>[campus, neighborhood];
 
 }

@@ -70,7 +70,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.gender)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.gender, collapseNa: true)
                 .whereCondition((cluster) => cluster.gender == gender).visitors,
               legendItemText: '$gender',
               animationDuration: 0
@@ -83,7 +83,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.gender)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.gender, collapseNa: true)
                 .whereCondition((cluster) => cluster.gender == gender).visitors,
               legendItemText: '$gender',
               animationDuration: 0
@@ -96,7 +96,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.age)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.age, collapseNa: true)
                 .whereCondition((cluster) => cluster.age == age).visitors,
               legendItemText: '$age',
               animationDuration: 0
@@ -109,7 +109,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.age)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.age, collapseNa: true)
                 .whereCondition((cluster) => cluster.age == age).visitors,
               legendItemText: '$age',
               animationDuration: 0
@@ -160,7 +160,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality, collapseNa: true)
                 .whereCondition((cluster) => cluster.nationality == nationality).visitors,
               legendItemText: '$nationality',
               animationDuration: 0
@@ -173,7 +173,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality, collapseNa: true)
                 .whereCondition((cluster) => cluster.nationality == nationality).visitors,
               legendItemText: '$nationality',
               animationDuration: 0
@@ -221,7 +221,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         // Collapse before
         final collapsedDailyList = <VodafoneDaily>[];
         for (VodafoneDaily daily in data.campusVodafone) {
-          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.country));
+          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.country, collapseNa: true));
         }
         // Then get all the countries
         final countries = HashSet<String>();
@@ -242,7 +242,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         // Collapse before
         final collapsedDailyList = <VodafoneDaily>[];
         for (VodafoneDaily daily in data.neighborhoodVodafone) {
-          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.country));
+          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.country, collapseNa: true));
         }
         // Then get all the countries
         final countries = HashSet<String>();
@@ -266,7 +266,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality, collapseNa: true)
                 .whereCondition((cluster) => cluster.region == region).visitors,
               legendItemText: '$region',
               animationDuration: 0
@@ -279,7 +279,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.nationality, collapseNa: true)
                 .whereCondition((cluster) => cluster.region == region).visitors,
               legendItemText: '$region',
               animationDuration: 0
@@ -289,7 +289,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         // Collapse before
         final collapsedDailyList = <VodafoneDaily>[];
         for (VodafoneDaily daily in data.campusVodafone) {
-          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.province));
+          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.province, collapseNa: true));
         }
         // Then get all the provinces
         final provinces = HashSet<String>();
@@ -310,7 +310,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         // Collapse before
         final collapsedDailyList = <VodafoneDaily>[];
         for (VodafoneDaily daily in data.neighborhoodVodafone) {
-          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.province));
+          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.province, collapseNa: true));
         }
         // Then get all the provinces
         final provinces = HashSet<String>();
@@ -331,7 +331,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         // Collapse before
         final collapsedDailyList = <VodafoneDaily>[];
         for (VodafoneDaily daily in data.campusVodafone) {
-          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.municipality));
+          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.municipality, collapseNa: true));
         }
         // Then get all the municipalities
         final municipalities = HashSet<String>();
@@ -352,7 +352,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
         // Collapse before
         final collapsedDailyList = <VodafoneDaily>[];
         for (VodafoneDaily daily in data.neighborhoodVodafone) {
-          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.municipality));
+          collapsedDailyList.add(daily.collapse(VodafoneClusterAttribute.municipality, collapseNa: true));
         }
         // Then get all the municipalities
         final municipalities = HashSet<String>();
@@ -376,7 +376,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.homeDistance)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.homeDistance, collapseNa: true)
                 .whereCondition((cluster) => cluster.homeDistance == distance).visitors,
               legendItemText: '$distance',
               animationDuration: 0
@@ -389,7 +389,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.homeDistance)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.homeDistance, collapseNa: true)
                 .whereCondition((cluster) => cluster.homeDistance == distance).visitors,
               legendItemText: '$distance',
               animationDuration: 0
@@ -402,7 +402,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.campusVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.workDistance)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.workDistance, collapseNa: true)
                 .whereCondition((cluster) => cluster.workDistance == distance).visitors,
               legendItemText: '$distance',
               animationDuration: 0
@@ -415,7 +415,7 @@ class FragmentWeeklyKpiComparatorVisualizer extends StatelessWidget {
               yAxisName: kpi.technicalName,
               dataSource: data.neighborhoodVodafone,
               xValueMapper: (datum, index) => _chartDateResolver.format(datum.date),
-              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.workDistance)
+              yValueMapper: (datum, index) => datum.collapse(VodafoneClusterAttribute.workDistance, collapseNa: true)
                 .whereCondition((cluster) => cluster.workDistance == distance).visitors,
               legendItemText: '$distance',
               animationDuration: 0

@@ -17,7 +17,7 @@ class FragmentRealtimeRoomsAttendance extends StatelessWidget {
     // TODO: not important: make this Widget expandable
     // Get rooms data
     final roomLagrangeData = sensorData.roomsData.singleWhere((roomData) => roomData.room == RoomAttendance.lagrange);
-    final roomPascalData = sensorData.roomsData.singleWhere((roomData) => roomData.room == RoomAttendance.tesla);
+    final roomPascalData = sensorData.roomsData.singleWhere((roomData) => roomData.room == RoomAttendance.pioneers);
     // Build children
     final children = [
       Expanded(
@@ -46,7 +46,7 @@ class FragmentRealtimeRoomsAttendance extends StatelessWidget {
                 padding: EdgeInsets.all(4),
                 child: roomLagrangeData.occupancy != null ? Text(
                   '${roomLagrangeData.occupancy! >= roomLagrangeData.room.capacity ? 'ALT' : 'OK'}: '
-                  '${roomLagrangeData.occupancy}/${roomLagrangeData.room.capacity}'
+                  '${roomLagrangeData.occupancy?.clamp(0, double.infinity)}/${roomLagrangeData.room.capacity}'
                 ) : Text('N/A'),
                 decoration: BoxDecoration(
                   color: roomLagrangeData.color,
@@ -84,7 +84,7 @@ class FragmentRealtimeRoomsAttendance extends StatelessWidget {
                 padding: EdgeInsets.all(4),
                 child: roomPascalData.occupancy != null ? Text(
                   '${roomPascalData.occupancy! >= roomPascalData.room.capacity ? 'ALT' : 'OK'}: '
-                  '${roomPascalData.occupancy}/${roomPascalData.room.capacity}'
+                  '${roomPascalData.occupancy?.clamp(0, double.infinity)}/${roomPascalData.room.capacity}'
                 ) : Text('N/A'),
                 decoration: BoxDecoration(
                   color: roomPascalData.color,

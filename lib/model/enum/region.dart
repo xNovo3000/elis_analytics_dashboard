@@ -35,16 +35,16 @@ class Region {
   static const Region umbria = Region._(name: 'Umbria', technicalName: 'UMBRIA');
   static const Region valleAosta = Region._(name: 'Valle d\'Aosta', technicalName: 'VALLE D\'AOSTA/VALLE\'E D\'AOSTE');
   static const Region veneto = Region._(name: 'Veneto', technicalName: 'VENETO');
-  static const Region na = Region._(name: 'N/A', technicalName: '');
 
   // special instance for clusters (also not included in enumeration)
+  static const Region na = Region._(name: 'N/A', technicalName: '');
   static const Region other = Region._(name: 'Altro', technicalName: '');
 
   // recursive enumeration
   static const List<Region> values = const <Region>[
     abruzzo, basilicata, calabria, campania, emiliaRomagna, friuliVeneziaGiulia,
     lazio, liguria, lombardia, marche, molise, piemonte, puglia, sardegna,
-    sicilia, toscana, trentinoAltoAdige, umbria, valleAosta, veneto, na
+    sicilia, toscana, trentinoAltoAdige, umbria, valleAosta, veneto
   ];
 
 }

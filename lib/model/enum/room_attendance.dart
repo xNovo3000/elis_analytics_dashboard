@@ -21,14 +21,20 @@ class RoomAttendance {
 
   // Instances
   static const lagrange = RoomAttendance._(displayName: 'Aula Lagrange', technicalName: 'presenze_lagrange', capacity: 40);
-  static const tesla = RoomAttendance._(displayName: 'Aula Tesla', technicalName: 'presenze_tesla', capacity: 30);
+  static const pioneers = RoomAttendance._(displayName: 'Aula Pionieri', technicalName: 'presenze_tesla', capacity: 25);
 
   // Error catching
   static const na = RoomAttendance._(displayName: '', technicalName: '', capacity: 1);
 
   // Values
   static const values = <RoomAttendance>[
-    lagrange, tesla
+    lagrange, pioneers
   ];
+
+  /*
+   * Aula Tesla è stata rinominata in Aula Pionieri,
+   * il vecchio "technical_name" rimane uguale poiché
+   * è legato ai dati precedenti inviati da G-move
+   */
 
 }

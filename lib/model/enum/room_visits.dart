@@ -23,15 +23,15 @@ class RoomVisits {
   static const pascal = RoomVisits._(name: 'Aula Pascal', technicalName: 'visitatori_pascal');
   static const corridoio = RoomVisits._(name: 'Corridoio', technicalName: 'visitatori_corridoio');
   static const pinnhub = RoomVisits._(name: 'Innovation Hub', technicalName: 'visitatori_Pinnhub');
-  // static const OpenItalyLagrange = Room._(name: 'OpenItaly aula Lagrange', technicalName: 'ELIS1941239439293_OpenItalyLagrange', capacity: 10);
-  // static const OpenItalyTesla = Room._(name: 'OpenItaly aula Tesla', technicalName: 'ELIS1941239439293_OpenItalyLagrange', capacity: 10);
+  // static const openItalyLagrange = Room._(name: 'OpenItaly aula Lagrange', technicalName: 'ELIS1941239439293_OpenItalyLagrange', capacity: 10);
+  // static const openItalyTesla = Room._(name: 'OpenItaly aula Tesla', technicalName: 'ELIS1941239439293_OpenItalyLagrange', capacity: 10);
 
   // Error catching
   static const na = RoomVisits._(name: '', technicalName: '');
 
   // Values
   static const values = const <RoomVisits>[
-    hall,/* openSpace, */ pascal, corridoio, pinnhub
+    hall, openSpace, corridoio, pinnhub, pascal
   ];
 
 }
