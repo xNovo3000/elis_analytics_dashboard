@@ -54,7 +54,7 @@ class VodafoneDaily extends ListBase<VodafoneCluster> implements Comparable<Voda
   int get visitors {
     int total = 0;
     forEach((cluster) => total += cluster.visitors);
-    return total;
+    return total != 0 ? total : 1;
   }
 
   Duration get dwellTime {
